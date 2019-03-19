@@ -1,9 +1,0 @@
-/**
- * 
- */
-/**
- * @author siggelabor
- *
- */
-module Zenit {
-}
