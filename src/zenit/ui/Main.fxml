@@ -21,7 +21,7 @@
 
 <VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
-    <MenuBar VBox.vgrow="NEVER">
+    <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
@@ -64,7 +64,7 @@
       <items>
         <AnchorPane SplitPane.resizableWithParent="false">
                <children>
-                  <TreeView prefHeight="549.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <TreeView fx:id="treeView" prefHeight="549.0" prefWidth="221.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                </children>
         </AnchorPane>
         <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="-1.0" prefWidth="-1.0">
@@ -75,7 +75,7 @@
                           <items>
                             <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                  <children>
-                                    <TabPane accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                    <TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                       <tabs>
                                         <Tab text="Main.fxml">
                                           <content>

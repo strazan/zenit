@@ -18,7 +18,9 @@ public class TestUI extends Application {
 	@Override
 	public void start(Stage stage) throws Exception {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
-		loader.setController(new MainController());
+		MainController controller = new MainController();
+		controller.initialize(stage);
+		loader.setController(controller);
 		
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
