@@ -1,10 +1,13 @@
 package zenit.ui;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.HashMap;
 
 import javafx.collections.ObservableList;
 import javafx.event.Event;
@@ -25,12 +28,16 @@ import javafx.stage.Stage;
  */
 public class MainController {
 	private Stage stage;
+	private HashMap<Tab, File> currentlySelectedFiles;
 	
 	@FXML
 	private TextArea taConsole;
 	
 	@FXML
 	private MenuItem openFile;
+	
+	@FXML
+	private MenuItem saveFile;
 	
 	@FXML
 	private TabPane tabPane;
@@ -44,8 +51,8 @@ public class MainController {
 	 */
 	public void initialize(Stage stage) {
 		this.stage = stage;
+		currentlySelectedFiles = new HashMap<>();
 	}
-	
 	
 	/**
 	 * Opens a file dialog and tries to read the file's 
@@ -55,17 +62,71 @@ public class MainController {
 	@FXML
 	public void openFile(Event event) {
 		FileChooser fileChooser = new FileChooser();
-		File selectedFile = fileChooser.showOpenDialog(stage);
-		
+
 		try {
 			Tab selectedTab = getSelectedTab();
 			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
 			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
-	
-			selectedTab.setText(selectedFile.getName());
-			textArea.setText(readFile(selectedFile));
+
+			currentlySelectedFiles.put(selectedTab, fileChooser.showOpenDialog(stage));
+			
+			selectedTab.setText(currentlySelectedFiles.get(selectedTab).getName());
+			textArea.setText(readFile(currentlySelectedFiles.get(selectedTab)));
 		} catch (NullPointerException ex) {
-			// TODO: handle exceptions
+			ex.printStackTrace();
+
+			// TODO: handle exception
+		}
+	}
+	
+	/**
+	 * Opens a FileChooser dialog, and creates a new Tab if newTab is true.
+	 * @param newTab Whether or not to create a new tab.
+	 */
+	public void openFile(boolean newTab) {
+		if (newTab) {
+			Tab tab = new Tab();
+			AnchorPane anchorPane = new AnchorPane();
+			TextArea textArea = new TextArea();
+			
+			anchorPane.getChildren().add(textArea);
+			tab.setContent(anchorPane);
+			
+			AnchorPane.setTopAnchor(textArea, 0.0);
+			AnchorPane.setRightAnchor(textArea, 0.0);
+			AnchorPane.setBottomAnchor(textArea, 0.0);
+			AnchorPane.setLeftAnchor(textArea, 0.0);
+			
+			tabPane.getTabs().add(tab);
+			
+			var selectionModel = tabPane.getSelectionModel();
+			selectionModel.select(tab);
+		}
+		
+		openFile(null);
+	}
+	
+	public static void saveFile() {}
+	
+	/**
+	 * Gets the text from the currently selected Tab and writes it to the currently selected file.
+	 * @param event
+	 */
+	@FXML
+	public void saveFile(Event event) {
+		try {
+			Tab selectedTab = getSelectedTab();
+			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
+			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+			
+			if (currentlySelectedFiles.containsKey(selectedTab)) {
+				writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
+			}
+			
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+			
+			// TODO: handle exception
 		}
 	}
 	
@@ -77,8 +138,8 @@ public class MainController {
 	 */
 	private String readFile(File file) {
 		try (
-			FileReader fileReader = new FileReader(file);
-			BufferedReader bufferedReader = new BufferedReader(fileReader);
+			var fileReader = new FileReader(file);
+			var bufferedReader = new BufferedReader(fileReader);
 		) {
 			StringBuilder builder = new StringBuilder();
 
@@ -90,13 +151,33 @@ public class MainController {
 			
 			return builder.toString();
 		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+
 			// TODO: give the user feedback that the file could not be found
-			ex.printStackTrace();
 		} catch (IOException ex) {
-			// TODO: handle IO exception
 			ex.printStackTrace();
+			
+			// TODO: handle IO exception
 		}
 		return null;
+	}
+	
+	/**
+	 * Writes the given text to the given file. Only used for text files.
+	 * @param file The File to write to.
+	 * @param text The text to write to the File.
+	 */
+	private void writeTextFile(File file, String text) {
+		try (
+			var fileWriter = new FileWriter(file);
+			var bufferedWriter = new BufferedWriter(fileWriter);
+		) {
+			bufferedWriter.write(text);
+		} catch (IOException ex) {
+			ex.printStackTrace();
+
+			// TODO: handle IO exception
+		}
 	}
 	
 	/**
@@ -104,7 +185,7 @@ public class MainController {
 	 * @return The Tab that is currently selected. Null if none was found.
 	 */
 	private Tab getSelectedTab() {
-		ObservableList<Tab> tabs = tabPane.getTabs();
+		var tabs = tabPane.getTabs();
 
 		for (Tab tab : tabs) {
 			if (tab.isSelected()) {
