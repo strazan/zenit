@@ -15,5 +15,10 @@
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.swing.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.web.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/src.zip"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons-exec-test-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-tests.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
