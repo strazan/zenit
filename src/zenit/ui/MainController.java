@@ -111,13 +111,7 @@ public class MainController {
 		try {
 			if (file != null) {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-				String absolutePath = file.getAbsolutePath();
-				String targetDirectory = absolutePath.substring(
-					0,(absolutePath.lastIndexOf('/'))
-				);
-				compiler.compileAndRunJavaFileWithoutPackage(
-					absolutePath, targetDirectory, System.getProperty("java.home")
-				);
+				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
 			}
 		}
 		catch (Exception e){
