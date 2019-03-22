@@ -1,5 +1,6 @@
 package javacodeCompiler;
 
+import java.io.File;
 import java.io.IOException;
 
 import org.apache.commons.exec.CommandLine;
@@ -18,7 +19,13 @@ import org.apache.commons.exec.ExecuteException;
 public class JavaSourceCodeCompiler {
 	
 	private DefaultExecutor executor = new DefaultExecutor();
+	private char slash;
 
+	
+	public JavaSourceCodeCompiler() {
+		slash = System.getProperty("os.name").startsWith("Windows") ? '\\' : '/';
+	}
+	
 	/**
 	 * Compiles and runs a [Foo.java] file, placed in a package.
 	 * 
@@ -27,18 +34,17 @@ public class JavaSourceCodeCompiler {
 	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
 	 * @param dependenciesPath are the paths to dependent libraries.
 	 */
-	public void compileAndRunJavaFileInPackage(
-		String absolutePath,
-		String targetDirectorPathIn,
-		String dependenciesPath
-	) {
-		String fileName = absolutePath.substring(absolutePath.lastIndexOf("/") + 1).trim();
-		String targetDirectoryPath = formatDirectoryPath(targetDirectorPathIn);
+		
+	public void compileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
+		String absolutePath = file.getAbsolutePath();
+		
+		String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
+		String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
 		CommandLine clCompileJavaFile = CommandLine.parse(
-			"javac " + absolutePath + " -d " + targetDirectoryPath
+			"javac \"" + absolutePath + "\" -d \"" + targetDirectoryPath + "\""
 		);
 		CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-			"java -classpath " + dependenciesPath + " " + targetDirectoryPath + fileName
+			"java -classpath \"" + System.getProperty("java.home") + "\" \"" + targetDirectoryPath + fileName + "\""
 		);
 		
 		try {
@@ -51,6 +57,7 @@ public class JavaSourceCodeCompiler {
 			System.err.println("Something went wrong.");
 			e.printStackTrace();
 		}
+		
 	}
 	
 	/**
@@ -61,24 +68,19 @@ public class JavaSourceCodeCompiler {
 	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
 	 * @param dependenciesPath are the paths to dependent libraries.
 	 */
-	public void compileAndRunJavaFileWithoutPackage(
-		String absolutePath, 
-		String targetDirectoryPathIn, 
-		String dependenciesPathIn
-	) {
-		String fileName = absolutePath.substring(absolutePath.lastIndexOf("/") + 1).trim();
-		String dependenciesPath = "";
-		if (dependenciesPathIn.length() > 0) {
-			dependenciesPath = " -classpath " + dependenciesPathIn;
-		}
-		String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
-		fileName = fileName.substring(0,(fileName.lastIndexOf('.')));
+	public void compileAndRunJavaFileWithoutPackage(File file, String targetDirectoryPathIn ) {
+		String absolutePath = file.getAbsolutePath();
 		
+		String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
+
+
+		fileName = fileName.substring(0,(fileName.lastIndexOf('.')));
+
 		CommandLine clCompileJavaFile = CommandLine.parse(
-			"javac " + absolutePath + " -d " + targetDirectoryPath
+			"javac \"" + absolutePath + "\" -d \"" + targetDirectoryPathIn + "\""
 		);
 		CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-			"java" + dependenciesPath + " -cp " + targetDirectoryPath  + " " + fileName
+			"java -classpath \"" + System.getProperty("java.home") + "\" -cp \"" + targetDirectoryPathIn  + "\" \"" + fileName + "\""
 		);
 		
 		try {
@@ -136,10 +138,11 @@ public class JavaSourceCodeCompiler {
 	 */
 	public String formatDirectoryPath(String targetDirectoryPathIn) {
 		String finalDirectoryPath = targetDirectoryPathIn;
-		
-		if ((finalDirectoryPath.charAt(finalDirectoryPath.length() - 1)) != '/') {
-			finalDirectoryPath += "/";
+	
+		if ((finalDirectoryPath.charAt(finalDirectoryPath.length() - 1)) != slash) {
+			finalDirectoryPath += slash;
 		}
+		
 		return finalDirectoryPath;
 	}
 }
