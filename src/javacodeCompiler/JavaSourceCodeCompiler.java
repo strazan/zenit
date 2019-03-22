@@ -20,7 +20,7 @@ public class JavaSourceCodeCompiler {
 	private DefaultExecutor executor = new DefaultExecutor();
 
 	/**
-	 * This method will both compile and the run a [Foo.java] file, placed in a package.
+	 * Compiles and runs a [Foo.java] file, placed in a package.
 	 * 
 	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
 	 * method is. 
@@ -54,7 +54,7 @@ public class JavaSourceCodeCompiler {
 	}
 	
 	/**
-	 * This method will both compile and the run a [Foo.java] file that is not placed in a package.
+	 * Compiles and runs [Foo.java] file that is not placed in a package.
 	 * 
 	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
 	 * method is. 
@@ -64,9 +64,13 @@ public class JavaSourceCodeCompiler {
 	public void compileAndRunJavaFileWithoutPackage(
 		String absolutePath, 
 		String targetDirectoryPathIn, 
-		String dependenciesPath
+		String dependenciesPathIn
 	) {
 		String fileName = absolutePath.substring(absolutePath.lastIndexOf("/") + 1).trim();
+		String dependenciesPath = "";
+		if (dependenciesPathIn.length() > 0) {
+			dependenciesPath = " -classpath " + dependenciesPathIn;
+		}
 		String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
 		fileName = fileName.substring(0,(fileName.lastIndexOf('.')));
 		
@@ -74,7 +78,7 @@ public class JavaSourceCodeCompiler {
 			"javac " + absolutePath + " -d " + targetDirectoryPath
 		);
 		CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-			"java -classpath " + dependenciesPath + " -cp " + targetDirectoryPath  + " " + fileName
+			"java" + dependenciesPath + " -cp " + targetDirectoryPath  + " " + fileName
 		);
 		
 		try {
@@ -90,7 +94,7 @@ public class JavaSourceCodeCompiler {
 	}
 	
 	/**
-	 * This method will compile a [Foo.java] file into a target directory.
+	 * Compiles a [Foo.java] file into a target directory.
 	 * 
 	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
 	 * method is. 
@@ -118,7 +122,14 @@ public class JavaSourceCodeCompiler {
 	}
 	
 	/**
-	 * This method will take a (String) directory-path and correct it if it misses the final '/'. 
+	 * NOT COMPLETE
+	 */
+	public void terminate() {
+		
+	}
+	
+	/**
+	 * Takes a (String) directory-path and correct it if it misses the final '/'. 
 	 * 
 	 * @param directoryIn
 	 * @return finalDirectory
