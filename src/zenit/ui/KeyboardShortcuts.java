@@ -48,5 +48,9 @@ public final class KeyboardShortcuts {
 		KeyboardShortcuts.add(scene, KeyCode.W, KeyCombination.CONTROL_DOWN, () -> {
 			controller.defaultCloseTabOperation();
 		}); 
+		
+		KeyboardShortcuts.add(scene, KeyCode.R, KeyCombination.CONTROL_DOWN, () -> {
+			controller.compileAndRun();
+		});
 	}
 }
