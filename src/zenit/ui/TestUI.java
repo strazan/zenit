@@ -1,12 +1,10 @@
 package zenit.ui;
 
+import java.io.IOException;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyCodeCombination;
-import javafx.scene.input.KeyCombination;
 import javafx.stage.Stage;
 
 /**
@@ -19,27 +17,20 @@ public class TestUI extends Application {
 	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it.
 	 */
 	@Override
-	public void start(Stage stage) throws Exception {
+	public void start(Stage stage) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
 	
 		controller.initialize(stage);
 		loader.setController(controller);
 		
-		Parent root = loader.load();
-		Scene scene = new Scene(root);
+		Scene scene = new Scene(loader.load());
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
 		stage.show();
 		
-		KeyboardShortcuts.add(scene, KeyCode.S, KeyCombination.CONTROL_DOWN, () -> {
-			controller.saveFile(null);
-		});
-		
-		KeyboardShortcuts.add(scene, KeyCode.O, KeyCombination.CONTROL_DOWN, () -> {
-			controller.openFile(true);
-		});
+		KeyboardShortcuts.setupMain(scene, controller);
 	}
 	
 	/**

@@ -8,10 +8,13 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
+import java.util.Optional;
 
-import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
@@ -32,6 +35,9 @@ public class MainController {
 	
 	@FXML
 	private TextArea taConsole;
+	
+	@FXML
+	private MenuItem newFile;
 	
 	@FXML
 	private MenuItem openFile;
@@ -55,6 +61,15 @@ public class MainController {
 	}
 	
 	/**
+	 * Adds a new tab to the TabPane.
+	 * @param event
+	 */
+	@FXML
+	public void newFile(Event event) {
+		addTab();
+	}
+	
+	/**
 	 * Opens a file dialog and tries to read the file's 
 	 * name and content to the currently selected tab.
 	 * @param event
@@ -62,51 +77,86 @@ public class MainController {
 	@FXML
 	public void openFile(Event event) {
 		FileChooser fileChooser = new FileChooser();
+		//TODO: Add filters
 
 		try {
-			Tab selectedTab = getSelectedTab();
-			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
-
-			currentlySelectedFiles.put(selectedTab, fileChooser.showOpenDialog(stage));
+			File file = fileChooser.showOpenDialog(stage);
 			
-			selectedTab.setText(currentlySelectedFiles.get(selectedTab).getName());
-			textArea.setText(readFile(currentlySelectedFiles.get(selectedTab)));
+			if (file != null) {
+				Tab selectedTab = addTab();
+				AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
+				TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+
+				currentlySelectedFiles.put(selectedTab, file);
+				selectedTab.setText(currentlySelectedFiles.get(selectedTab).getName());
+				textArea.setText(readFile(currentlySelectedFiles.get(selectedTab)));
+			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
-
+			
 			// TODO: handle exception
 		}
 	}
-	
+
 	/**
-	 * Opens a FileChooser dialog, and creates a new Tab if newTab is true.
-	 * @param newTab Whether or not to create a new tab.
+	 * Creates a new tab with a TextArea filling it, adds it to the TabPane, and focuses on it.
+	 * @param onClick The Runnable to run when the tab should be closed.
+	 * @return The new Tab.
 	 */
-	public void openFile(boolean newTab) {
-		if (newTab) {
-			Tab tab = new Tab();
-			AnchorPane anchorPane = new AnchorPane();
-			TextArea textArea = new TextArea();
-			
-			anchorPane.getChildren().add(textArea);
-			tab.setContent(anchorPane);
-			
-			AnchorPane.setTopAnchor(textArea, 0.0);
-			AnchorPane.setRightAnchor(textArea, 0.0);
-			AnchorPane.setBottomAnchor(textArea, 0.0);
-			AnchorPane.setLeftAnchor(textArea, 0.0);
-			
-			tabPane.getTabs().add(tab);
-			
-			var selectionModel = tabPane.getSelectionModel();
-			selectionModel.select(tab);
-		}
+	public Tab addTab() {
+		Tab tab = new Tab("Untitled");
+		AnchorPane anchorPane = new AnchorPane();
+		TextArea textArea = new TextArea();
 		
-		openFile(null);
+		anchorPane.getChildren().add(textArea);
+		tab.setContent(anchorPane);
+		textArea.setStyle("-fx-font-family: monospace");
+		
+		AnchorPane.setTopAnchor(textArea, 0.0);
+		AnchorPane.setRightAnchor(textArea, 0.0);
+		AnchorPane.setBottomAnchor(textArea, 0.0);
+		AnchorPane.setLeftAnchor(textArea, 0.0);
+		
+		tab.setOnCloseRequest(event -> defaultCloseTabOperation());
+		
+		tabPane.getTabs().add(tab);
+		
+		var selectionModel = tabPane.getSelectionModel();
+		selectionModel.select(tab);
+		
+		return tab;
 	}
 	
-	public static void saveFile() {}
+	/**
+	 * From https://code.makery.ch/blog/javafx-dialogs-official/
+	 */
+	public void defaultCloseTabOperation() {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		
+		alert.setTitle("Close this tab?");
+		alert.setHeaderText("Look, a Confirmation Dialog");
+		alert.setContentText("Are you ok with this?");
+
+		Optional<ButtonType> result = alert.showAndWait();
+		
+		if (result.get() == ButtonType.OK) {
+		    closeTab();
+		} else {
+			System.out.println("Canceling");
+		}
+	}
+
+	/**
+	 * Gets the currently selected tab, and removes it from the TabPane.
+	 */
+	public void closeTab() {
+		Tab selectedTab = getSelectedTab();
+		var tabs = tabPane.getTabs();
+		
+		if (tabs.indexOf(selectedTab) >= 0) {
+			tabs.remove(selectedTab);
+		}
+	}
 	
 	/**
 	 * Gets the text from the currently selected Tab and writes it to the currently selected file.
@@ -122,12 +172,33 @@ public class MainController {
 			if (currentlySelectedFiles.containsKey(selectedTab)) {
 				writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
 			}
+			else {
+				currentlySelectedFiles.put(selectedTab, createFile(textArea.getText()));
+			}
 			
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
 			
 			// TODO: handle exception
 		}
+	}
+	
+	/**
+	 * Creates a new file and writes the given text to it.
+	 * @param text 
+	 * @return
+	 */
+	private File createFile(String text) {
+		FileChooser fileChooser = new FileChooser();
+		File file = fileChooser.showSaveDialog(stage);
+		
+		if (file == null) {
+			return null;
+		}
+		
+		boolean ok = writeTextFile(file, text);
+		
+		return ok ? file : null;
 	}
 	
 	/**
@@ -167,7 +238,7 @@ public class MainController {
 	 * @param file The File to write to.
 	 * @param text The text to write to the File.
 	 */
-	private void writeTextFile(File file, String text) {
+	private boolean writeTextFile(File file, String text) {
 		try (
 			var fileWriter = new FileWriter(file);
 			var bufferedWriter = new BufferedWriter(fileWriter);
@@ -175,9 +246,10 @@ public class MainController {
 			bufferedWriter.write(text);
 		} catch (IOException ex) {
 			ex.printStackTrace();
-
-			// TODO: handle IO exception
+			
+			return false;
 		}
+		return true;
 	}
 	
 	/**

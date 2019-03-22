@@ -3,6 +3,7 @@ package zenit.ui;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
 
 /**
@@ -24,5 +25,28 @@ public final class KeyboardShortcuts {
 			new KeyCodeCombination(code, modifier), 
 			action
 		);
+	}
+	
+	/**
+	 * Sets up keyboard shortcuts for the main scene, using methods of the MainController.
+	 * @param scene The scene to be used.
+	 * @param controller The controller to call methods from.
+	 */
+	public static final void setupMain(Scene scene, MainController controller) {
+		KeyboardShortcuts.add(scene, KeyCode.S, KeyCombination.CONTROL_DOWN, () -> {
+			controller.saveFile(null);
+		});
+		
+		KeyboardShortcuts.add(scene, KeyCode.O, KeyCombination.CONTROL_DOWN, () -> {
+			controller.openFile(null);
+		});
+		
+		KeyboardShortcuts.add(scene, KeyCode.N, KeyCombination.CONTROL_DOWN, () -> {
+			controller.addTab();
+		});
+		
+		KeyboardShortcuts.add(scene, KeyCode.W, KeyCombination.CONTROL_DOWN, () -> {
+			controller.defaultCloseTabOperation();
+		}); 
 	}
 }
