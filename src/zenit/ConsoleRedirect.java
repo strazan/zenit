@@ -17,6 +17,13 @@ public class ConsoleRedirect {
 			TextAreaOutputStream tacos = new TextAreaOutputStream(ta);
 			PrintStream ps = new PrintStream(tacos);
 			System.setOut(ps);
+			System.setErr(ps);
+			
+			/* 
+			 * TODO
+			 * System.setIn(in);
+			 */
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
