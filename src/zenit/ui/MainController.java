@@ -25,6 +25,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
+import zenit.FileHandler;
 
 /**
  * The controller part of the main GUI.
@@ -34,6 +35,7 @@ import javacodeCompiler.JavaSourceCodeCompiler;
 public class MainController {
 	private Stage stage;
 	private HashMap<Tab, File> currentlySelectedFiles;
+	private FileHandler fileHandler;
 
 	@FXML
 	private TextArea taConsole;
@@ -61,6 +63,7 @@ public class MainController {
 	public void initialize(Stage stage) {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
+		fileHandler = new FileHandler();
 	}
 
 	/**
@@ -91,8 +94,12 @@ public class MainController {
 				TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
 
 				currentlySelectedFiles.put(selectedTab, file);
-				selectedTab.setText(currentlySelectedFiles.get(selectedTab).getName());
-				textArea.setText(readFile(currentlySelectedFiles.get(selectedTab)));
+				
+				String fileName = currentlySelectedFiles.get(selectedTab).getName();
+				String fileContent = fileHandler.readFile(currentlySelectedFiles.get(selectedTab));
+
+				selectedTab.setText(fileName);
+				textArea.setText(fileContent);
 			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
@@ -113,8 +120,7 @@ public class MainController {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
 				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
 			}
-		}
-		catch (Exception e){
+		} catch (Exception e){
 			e.printStackTrace();
 			
 			// TODO: handle exception
@@ -193,9 +199,8 @@ public class MainController {
 			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
 
 			if (currentlySelectedFiles.containsKey(selectedTab)) {
-				writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
-			}
-			else {
+				fileHandler.writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
+			} else {
 				currentlySelectedFiles.put(selectedTab, createFile(textArea.getText()));
 			}
 
@@ -208,8 +213,8 @@ public class MainController {
 
 	/**
 	 * Creates a new file and writes the given text to it.
-	 * @param text 
-	 * @return
+	 * @param text The text to write to the new file.
+	 * @return The created File if everything goes well, else null.
 	 */
 	private File createFile(String text) {
 		FileChooser fileChooser = new FileChooser();
@@ -219,60 +224,9 @@ public class MainController {
 			return null;
 		}
 
-		boolean ok = writeTextFile(file, text);
+		boolean ok = fileHandler.writeTextFile(file, text);
 
 		return ok ? file : null;
-	}
-
-	/**
-	 * Reads a file line by line.
-	 * @param file The File to read.
-	 * @return A String containing all the lines of the File content. 
-	 * Null if the file could not be read.
-	 */
-	private String readFile(File file) {
-		try (
-				var fileReader = new FileReader(file);
-				var bufferedReader = new BufferedReader(fileReader);
-				) {
-			StringBuilder builder = new StringBuilder();
-
-			String line;
-			while ((line = bufferedReader.readLine()) != null) {
-				builder.append(line);
-				builder.append(System.lineSeparator());
-			}
-
-			return builder.toString();
-		} catch (FileNotFoundException ex) {
-			ex.printStackTrace();
-
-			// TODO: give the user feedback that the file could not be found
-		} catch (IOException ex) {
-			ex.printStackTrace();
-
-			// TODO: handle IO exception
-		}
-		return null;
-	}
-
-	/**
-	 * Writes the given text to the given file. Only used for text files.
-	 * @param file The File to write to.
-	 * @param text The text to write to the File.
-	 */
-	private boolean writeTextFile(File file, String text) {
-		try (
-				var fileWriter = new FileWriter(file);
-				var bufferedWriter = new BufferedWriter(fileWriter);
-				) {
-			bufferedWriter.write(text);
-		} catch (IOException ex) {
-			ex.printStackTrace();
-
-			return false;
-		}
-		return true;
 	}
 
 	/**
