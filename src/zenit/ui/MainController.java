@@ -23,6 +23,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import zenit.ConsoleRedirect;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.FileHandler;
@@ -64,6 +65,7 @@ public class MainController {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
 		fileHandler = new FileHandler();
+		new ConsoleRedirect(taConsole);
 	}
 
 	/**

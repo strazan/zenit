@@ -20,14 +20,14 @@ public class TestUI extends Application {
 	public void start(Stage stage) throws IOException {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
-	
-		controller.initialize(stage);
-		loader.setController(controller);
 		
-		Scene scene = new Scene(loader.load());
+		loader.setController(controller);
+		Parent root = loader.load();
+		Scene scene = new Scene(root);
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
+		controller.initialize(stage);
 		stage.show();
 		
 		KeyboardShortcuts.setupMain(scene, controller);
