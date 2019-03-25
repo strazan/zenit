@@ -23,6 +23,12 @@ public class TextAreaOutputStream extends OutputStream {
 
 	@Override
 	public void close() {
+		try {
+			super.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	@Override
@@ -46,5 +52,4 @@ public class TextAreaOutputStream extends OutputStream {
 	public void write(byte b[], int off, int len) throws IOException {
 		ta.appendText(new String(b, off, len));
 	}
-
 }

@@ -17,6 +17,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import zenit.ConsoleRedirect;
 
 /**
  * The controller part of the main GUI.
@@ -44,6 +45,7 @@ public class MainController {
 	 */
 	public void initialize(Stage stage) {
 		this.stage = stage;
+		new ConsoleRedirect(taConsole);
 	}
 	
 	
