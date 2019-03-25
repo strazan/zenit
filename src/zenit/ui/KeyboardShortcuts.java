@@ -33,23 +33,23 @@ public final class KeyboardShortcuts {
 	 * @param controller The controller to call methods from.
 	 */
 	public static final void setupMain(Scene scene, MainController controller) {
-		KeyboardShortcuts.add(scene, KeyCode.S, KeyCombination.CONTROL_DOWN, () -> {
+		add(scene, KeyCode.S, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.saveFile(null);
 		});
 		
-		KeyboardShortcuts.add(scene, KeyCode.O, KeyCombination.CONTROL_DOWN, () -> {
+		add(scene, KeyCode.O, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.openFile(null);
 		});
 		
-		KeyboardShortcuts.add(scene, KeyCode.N, KeyCombination.CONTROL_DOWN, () -> {
+		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.addTab();
 		});
 		
-		KeyboardShortcuts.add(scene, KeyCode.W, KeyCombination.CONTROL_DOWN, () -> {
+		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.defaultCloseTabOperation();
 		}); 
 		
-		KeyboardShortcuts.add(scene, KeyCode.R, KeyCombination.CONTROL_DOWN, () -> {
+		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.compileAndRun();
 		});
 	}
