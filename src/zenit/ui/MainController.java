@@ -246,4 +246,12 @@ public class MainController {
 
 		return null;
 	}
+	
+	/**
+	 * Clears the text from console window.
+	 */
+	@FXML
+	private void clearConsole() {
+		taConsole.clear();
+	}
 }

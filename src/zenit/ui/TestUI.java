@@ -2,10 +2,14 @@ package zenit.ui;
 
 import java.io.IOException;
 
+import javax.swing.text.html.StyleSheet;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+
 
 /**
  * Class for testing the UI.
@@ -14,7 +18,7 @@ import javafx.stage.Stage;
  */
 public class TestUI extends Application {
 	/**
-	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it.
+	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it. 
 	 */
 	@Override
 	public void start(Stage stage) throws IOException {
@@ -24,6 +28,9 @@ public class TestUI extends Application {
 		loader.setController(controller);
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("mainStyle.css").toString());
+
+		
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		

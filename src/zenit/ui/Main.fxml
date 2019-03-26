@@ -20,7 +20,9 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
+
+
+<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/10.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -81,8 +83,8 @@
                                     	  <TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                           <HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="22.0" prefWidth="112.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="0.0">
                                              <children>
-                                                <Button fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" prefHeight="13.0" prefWidth="50.0" text="Run">
-                                                   <font>
+                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" onAction="#compileAndRun" prefHeight="13.0" prefWidth="50.0" text="Run">
+                                                  <font>
                                                       <Font size="10.0" />
                                                    </font>
                                                 </Button>
@@ -106,7 +108,7 @@
                                                 </ScrollPane>
                                              </content>
                                              <graphic>
-                                                <Button mnemonicParsing="false" prefHeight="12.0" prefWidth="54.0" text="Clear">
+                                                <Button mnemonicParsing="false" onAction="#clearConsole" prefHeight="12.0" prefWidth="54.0" text="Clear">
                                                    <font>
                                                       <Font size="8.0" />
                                                    </font>
