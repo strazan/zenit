@@ -10,6 +10,9 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.fxmisc.richtext.CodeArea;
+import org.fxmisc.richtext.LineNumberFactory;
+
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -27,6 +30,7 @@ import zenit.ConsoleRedirect;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.FileHandler;
+import zenit.textFlow.SyntaxHighlight;
 
 /**
  * The controller part of the main GUI.
@@ -93,7 +97,7 @@ public class MainController {
 			if (file != null) {
 				Tab selectedTab = addTab();
 				AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-				TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+				CodeArea codeArea = (CodeArea) anchorPane.getChildren().get(0);
 
 				currentlySelectedFiles.put(selectedTab, file);
 				
@@ -101,7 +105,9 @@ public class MainController {
 				String fileContent = fileHandler.readFile(currentlySelectedFiles.get(selectedTab));
 
 				selectedTab.setText(fileName);
-				textArea.setText(fileContent);
+				codeArea.replaceText(fileContent);
+				new SyntaxHighlight(codeArea);
+				
 			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
@@ -137,7 +143,8 @@ public class MainController {
 	public Tab addTab() {
 		Tab tab = new Tab("Untitled");
 		AnchorPane anchorPane = new AnchorPane();
-		TextArea textArea = new TextArea();
+		CodeArea textArea = new CodeArea();
+		textArea.setParagraphGraphicFactory(LineNumberFactory.get(textArea));
 
 		anchorPane.getChildren().add(textArea);
 		tab.setContent(anchorPane);
@@ -198,7 +205,7 @@ public class MainController {
 		try {
 			Tab selectedTab = getSelectedTab();
 			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+			CodeArea textArea = (CodeArea) anchorPane.getChildren().get(0);
 
 			if (currentlySelectedFiles.containsKey(selectedTab)) {
 				fileHandler.writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
