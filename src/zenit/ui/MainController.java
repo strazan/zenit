@@ -1,11 +1,6 @@
 package zenit.ui;
 
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
@@ -21,41 +16,59 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
-import zenit.FileHandler;
+import zenit.filesystem.controller.FileController;
+import zenit.filesystem.helpers.CodeSnippets;
+import zenit.ui.tree.FileTree;
+import zenit.ui.tree.FileTreeItem;
+import zenit.ui.tree.TreeClickListener;
+import zenit.ui.tree.TreeContextMenu;
 
 /**
  * The controller part of the main GUI.
- * @author Pontus Laos, Oskar Molander
+ * @author Pontus Laos, Oskar Molander, Alexander Libot
  *
  */
 public class MainController {
 	private Stage stage;
 	private HashMap<Tab, File> currentlySelectedFiles;
-	private FileHandler fileHandler;
+	private FileController fileController;
 
 	@FXML
 	private TextArea taConsole;
 
 	@FXML
 	private MenuItem newFile;
+	
+	@FXML
+	private MenuItem newProject;
 
 	@FXML
 	private MenuItem openFile;
 
 	@FXML
 	private MenuItem saveFile;
+	
+	@FXML
+	private MenuItem changeWorkspace;
 
 	@FXML
 	private TabPane tabPane;
 
 	@FXML
-	private TreeView treeView;
+	private TreeView<String> treeView;
 
-
+	/**
+	 * Setter for FileController instance. Used to access the file system.
+	 */
+	public void setFileController(FileController fileController) {
+		this.fileController = fileController;
+	}
+	
 	/**
 	 * Performs initialization steps when the controller is set.
 	 * @param stage The stage to run the initialization on.
@@ -63,7 +76,82 @@ public class MainController {
 	public void initialize(Stage stage) {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
-		fileHandler = new FileHandler();
+
+		initTree();
+	}
+	
+	/**
+	 * Initializes the treeview. Creates a root node from the workspace-file in the fileController
+	 * class. Calls FileTree-method to add all files in the workspace folder to the tree. Creates a
+	 * TreeContextMenu for displaying when right clicking nodes in the tree and an event handler
+	 * for clicking nodes in the tree.
+	 */
+	private void initTree() {
+		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "Workspace");
+		zenit.ui.tree.FileTree.createNodes(rootItem, fileController.getWorkspace());
+		treeView.setRoot(rootItem);
+		treeView.setShowRoot(false);
+		
+		TreeContextMenu tcm = new TreeContextMenu(this, treeView);
+		TreeClickListener tcl = new TreeClickListener(this, treeView);
+		treeView.setContextMenu(tcm);
+		treeView.setOnMouseClicked(tcl);
+	}
+	
+	/**
+	 * Input name from dialog box and creates a new file in specified parent folder.
+	 * @param parent The parent folder of the file to be created.
+	 * @param typeCOde The type of code snippet that should be implemented in the file.
+	 * Use contants from CodeSnippets class.
+	 * @return The File if created, otherwise null.
+	 */
+	public File createFile(File parent, int typeCode) {
+		File file = null;
+		String className = DialogBoxes.inputDialog(null, "New file", "Create new file", "Enter new file name",
+				"File name");
+		if (className != null) {
+			String filepath = parent.getPath() + "/" + className;
+			file = new File(filepath);
+			
+			file = fileController.createFile(typeCode, file);
+			
+			openFile(file);
+		}
+		return file;
+	}
+
+	/**
+	 * Grabs the text from the currently selected Tab and writes it to the currently selected file.
+	 * If no file selected, opens a file chooser for selection of file to overwrite.
+	 * @param event
+	 */
+	@FXML
+	public void saveFile(Event event) {
+		try {
+			Tab selectedTab = getSelectedTab();
+			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
+			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+			String content = textArea.getText();
+			
+			if (currentlySelectedFiles.containsKey(selectedTab)) {
+				fileController.writeFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), content);
+			} else {
+				File newFile = chooseFile();
+				fileController.createFile(CodeSnippets.CLASS, newFile, content);
+				currentlySelectedFiles.put(selectedTab, newFile);
+			}
+		} catch (NullPointerException ex) {
+			ex.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Opens a file chooser and returns the selected file.
+	 */
+	private File chooseFile() {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(fileController.getWorkspace());
+		return fileChooser.showSaveDialog(stage);
 	}
 
 	/**
@@ -76,38 +164,105 @@ public class MainController {
 	}
 
 	/**
-	 * Opens a file dialog and tries to read the file's 
+	 * Opens a file chooser and tries to read the file's 
 	 * name and content to the currently selected tab.
 	 * @param event
 	 */
 	@FXML
 	public void openFile(Event event) {
 		FileChooser fileChooser = new FileChooser();
+		fileChooser.setInitialDirectory(fileController.getWorkspace());
 		//TODO: Add filters
 
 		try {
 			File file = fileChooser.showOpenDialog(stage);
+			
+			openFile(file);
 
-			if (file != null) {
-				Tab selectedTab = addTab();
-				AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-				TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
-
-				currentlySelectedFiles.put(selectedTab, file);
-				
-				String fileName = currentlySelectedFiles.get(selectedTab).getName();
-				String fileContent = fileHandler.readFile(currentlySelectedFiles.get(selectedTab));
-
-				selectedTab.setText(fileName);
-				textArea.setText(fileContent);
-			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
-
-			// TODO: handle exception
 		}
 	}
+	
+	/**
+	 * Tries to open the content of a file into a new tab using the FileController instance.
+	 * If tab containing file-content is already open, switches to that tab.
+	 * @param file The file which content to be opened.
+	 */
+	public void openFile(File file) {
+		if (file != null && !currentlySelectedFiles.containsValue(file)) {
+			
+			Tab selectedTab = addTab();
+			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
+			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
 
+			currentlySelectedFiles.put(selectedTab, file);
+
+			String fileContent = fileController.readFileContent(file);
+
+			selectedTab.setText(file.getName());
+			textArea.setText(fileContent);
+		} else if (file != null && currentlySelectedFiles.containsValue(file)) { //Tab already open
+			var tabs = tabPane.getTabs();
+			File tempFile;
+			for (Tab tab : tabs) {
+				 tempFile = currentlySelectedFiles.get(tab);
+				if (file.equals(tempFile)) {
+					tabPane.getSelectionModel().select(tab);
+					break;
+				}
+			}
+		}
+	}
+	
+	/**
+	 * Method for renaming a file or folder. Opens a new input dialog for input of new name.
+	 * Renames the tab text if file is in an open tab.
+	 * @param file The file to rename.
+	 * @return
+	 */
+	public File renameFile(File file) {
+		File newFile = null;
+		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", "new name");
+		if (newName != null) {
+			newFile = fileController.renameFile(file, newName);
+			var tabs = tabPane.getTabs();
+			for (Tab tab : tabs) {
+				if (tab.getText().equals(file.getName())) {
+					tab.setText(newName);
+					currentlySelectedFiles.put(tab, newFile);
+					break;
+				}
+			}
+		}
+		return newFile;
+	}
+	
+	/**
+	 * Tries to delete a file or folder.
+	 * @param file The file to be deleted.
+	 */
+	public void deleteFile(File file) {
+		fileController.deleteFile(file);
+		//TODO Remove open tab aswell
+	}
+	
+	/**
+	 * Opens a input dialog to choose project name and then creates a new project with that name
+	 * in the selected workspace folder
+	 * @param event
+	 */
+	@FXML
+	public void newProject(Event event) {
+		String projectName = DialogBoxes.inputDialog(null, "New project", "Create new project", "Enter a new projectname", "Project name");
+		if (projectName != null) {
+			File newProject = fileController.createProject(projectName);
+			if (newProject != null) {
+				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), newProject);
+			}
+		}
+	}
+	
 	/**
 	 * If the file of the current tab is a .java file if will be compiled, into the same
 	 * folder/directory, and the executed with only java standard lib.
@@ -186,47 +341,26 @@ public class MainController {
 			tabs.remove(selectedTab);
 		}
 	}
-
+	
 	/**
-	 * Gets the text from the currently selected Tab and writes it to the currently selected file.
-	 * @param event
+	 * Changes the workspace to another folder and restarts the program.
 	 */
 	@FXML
-	public void saveFile(Event event) {
-		try {
-			Tab selectedTab = getSelectedTab();
-			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
-
-			if (currentlySelectedFiles.containsKey(selectedTab)) {
-				fileHandler.writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
-			} else {
-				currentlySelectedFiles.put(selectedTab, createFile(textArea.getText()));
+	public void changeWorkspace() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Select new workspace folder");
+		File workspace = directoryChooser.showDialog(stage);
+		if (workspace != null) {
+			boolean success = fileController.changeWorkspace(workspace);
+			if (success) {
+				stage.close();
+				try {
+					new TestUI().start(stage);
+				} catch (IOException ex) {
+					System.err.println("MainController.changeWorkspace: IOException: " + ex.getMessage());
+				}
 			}
-
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
-
-			// TODO: handle exception
 		}
-	}
-
-	/**
-	 * Creates a new file and writes the given text to it.
-	 * @param text The text to write to the new file.
-	 * @return The created File if everything goes well, else null.
-	 */
-	private File createFile(String text) {
-		FileChooser fileChooser = new FileChooser();
-		File file = fileChooser.showSaveDialog(stage);
-
-		if (file == null) {
-			return null;
-		}
-
-		boolean ok = fileHandler.writeTextFile(file, text);
-
-		return ok ? file : null;
 	}
 
 	/**
@@ -241,7 +375,6 @@ public class MainController {
 				return tab;
 			}
 		}
-
 		return null;
 	}
 }

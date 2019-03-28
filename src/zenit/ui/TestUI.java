@@ -1,11 +1,15 @@
 package zenit.ui;
 
+import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
+import zenit.filesystem.controller.FileController;
+import zenit.filesystem.handlers.WorkspaceHandler;
 
 /**
  * Class for testing the UI.
@@ -18,13 +22,32 @@ public class TestUI extends Application {
 	 */
 	@Override
 	public void start(Stage stage) throws IOException {
+		
+		/*
+		 * TODO Test if you like this idea. Saves and opens a local File-instance of your 
+		 * selected workspace. Only prompts when unset and can be changed from within gui
+		 * Alex
+		 */
+		File workspace = WorkspaceHandler.readWorkspace();
+		
+		if (workspace == null) {
+			DirectoryChooser directoryChooser = new DirectoryChooser();
+			directoryChooser.setTitle("Choose workspace");
+			workspace = directoryChooser.showDialog(stage);
+			WorkspaceHandler.createWorkspace(workspace);
+		}
+		
+		FileController fileController = new FileController(workspace);
+		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
+		controller.setFileController(fileController);
 	
-		controller.initialize(stage);
+		
 		loader.setController(controller);
 		
 		Scene scene = new Scene(loader.load());
+		controller.initialize(stage);
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
