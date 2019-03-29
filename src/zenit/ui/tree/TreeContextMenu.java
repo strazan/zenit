@@ -13,8 +13,8 @@ import zenit.filesystem.helpers.CodeSnippets;
 import zenit.ui.MainController;
 
 /**
- * Class that extends ContextMenu with static menu items with dynamic text.
- * Also contains event handler.
+ * Class that extends {@link javafx.scene.control.ContextMenu} with static menu items with dynamic
+ * text. Also contains event handler.
  * @author Alexander Libot
  *
  */
@@ -31,10 +31,13 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private MenuItem deleteItem = new MenuItem("Delete");
 	
 	/**
-	 * Creates a new TreeContextMenu that can manipulate a specific TreeView instance
-	 * and call methods in a specific MainController.
-	 * @param controller The MainController instance where methods will be called
-	 * @param treeView The TreeView instance which will be manipulated
+	 * Creates a new {@link TreeContextMenu} that can manipulate a specific {@link
+	 * javafx.scene.control.TreeView TreeView} instance and call methods in a specific
+	 * {@link zenit.ui.MainController MainController}
+	 * @param controller The {@link zenit.ui.MainController MainController} instance where methods
+	 * will be called
+	 * @param treeView The {@link javafx.scene.control.TreeView TreeView} instance which will
+	 * be manipulated
 	 */
 	public TreeContextMenu(MainController controller, TreeView<String> treeView) {
 		super();
@@ -61,8 +64,9 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	}
 	
 	/**
-	 * Overrides the show method in ContextMenu. Dynamically updates the menu items before
-	 * showing the context menu.
+	 * Overrides {@link javafx.scene.control.ContextMenu#show(Node, double, double) show(...)} in
+	 * {@link javafx.scene.control.ContextMenu ContextMenu}. Dynamically updates the menu
+	 * items before showing the context menu.
 	 */
 	@Override
 	public void show(Node node, double x, double y) {
@@ -86,8 +90,9 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	}
 	
 	/**
-	 * To create a new file, calls the createFile method in MainController.
-	 * @param typeCode The type of item to be created. Use constants from the CodeSnippets-class
+	 * To create a new file, calls {@link zenit.ui.MainController#createFile(File, int)}
+	 * @param typeCode The type of item to be created. Use constants from {@link 
+	 * zenit.filesystem.helpers.CodeSnippets CodeSnippets}
 	 */
 	private void newFile(int typeCode) {
 		FileTreeItem<String> parent = (FileTreeItem<String>) 
@@ -100,8 +105,8 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	}
 
 	/**
-	 * Event handler for TreeContextMenu. Calls different methods in MainController
-	 * depending on input.
+	 * Event handler for TreeContextMenu. Calls different methods in {@link zenit.ui.MainController
+	 * MainController} depending on input.
 	 */
 	@Override
 	public void handle(ActionEvent actionEvent) {
@@ -123,7 +128,6 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 			controller.deleteFile(selectedFile);
 			selectedItem.getParent().getChildren().remove(selectedItem);
 		} else if (actionEvent.getSource().equals(createPackage)) {
-			System.out.println("Test");
 			File packageFile = controller.newPackage(selectedFile);
 			if (packageFile != null) {
 				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName());
