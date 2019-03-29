@@ -21,7 +21,6 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-
 <VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
@@ -85,15 +84,21 @@
                                     	  <TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
                                           <HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="22.0" prefWidth="112.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="0.0">
                                              <children>
-                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" onAction="#compileAndRun" prefHeight="13.0" prefWidth="50.0">
+                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" onAction="#compileAndRun" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent" prefHeight="0.0" prefWidth="15.0">
                                                    <graphic>
-                                                      <FontIcon iconLiteral="fa-play-circle" iconSize="18" iconColor="green"/>
+                                                      <FontIcon fx:id="iconRun" iconColor="green" iconLiteral="fa-play-circle" iconSize="24" />
                                                    </graphic>
+                                                   <padding>
+                                                      <Insets top="1.0" />
+                                                   </padding>
                                                 </Button>
-                                                <Button fx:id="btnStop" mnemonicParsing="false" prefHeight="13.0" prefWidth="50.0">
+                                                <Button id="btnStop" fx:id="btnStop" mnemonicParsing="false" prefHeight="0.0" prefWidth="15.0" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent">
                                                    <graphic>
-                                                      <FontIcon iconLiteral="fa-stop-circle" iconSize="18" iconColor="red"/>
+                                                      <FontIcon fx:id="iconStop" iconColor="red" iconLiteral="fa-stop-circle" iconSize="24" />
                                                    </graphic>
+                                                   <padding>
+                                                      <Insets top="1.0" />
+                                                   </padding>
                                                 </Button>
                                              </children>
                                           </HBox>
