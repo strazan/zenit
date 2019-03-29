@@ -29,6 +29,7 @@
         <Menu mnemonicParsing="false" text="File">
           <items>
             <MenuItem fx:id="newFile" mnemonicParsing="false" onAction="#newFile" text="New" />
+                  <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProject" text="New Project..." />
             <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openFile" text="Open…" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -38,6 +39,7 @@
             <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Preferences…" />
+                  <MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />
             <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Quit" />
           </items>
