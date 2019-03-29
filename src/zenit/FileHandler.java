@@ -20,16 +20,32 @@ public class FileHandler {
 	 * @param file The File to write to.
 	 * @param text The text to write to the File.
 	 */
-	public boolean writeTextFile(File file, String text) {
-		try (
-			var fileWriter = new FileWriter(file);
-			var bufferedWriter = new BufferedWriter(fileWriter);
-		) {
+	public static boolean writeTextFile(File file, String text) {
+		FileWriter fileWriter = null;
+		BufferedWriter bufferedWriter = null;
+		
+		try {
+			if (!file.exists()) {
+				file.createNewFile();
+			}
+			
+			fileWriter = new FileWriter(file);
+			bufferedWriter = new BufferedWriter(fileWriter);
+			
 			bufferedWriter.write(text);
+			bufferedWriter.flush();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 
+			System.out.println("FileHandler: caught exception");
 			return false;
+		}
+		finally {
+			try {
+				fileWriter.close();
+				bufferedWriter.close();
+				System.out.println("FileHandler: closed streams");
+			} catch (IOException e) {}
 		}
 		return true;
 	}
@@ -40,7 +56,11 @@ public class FileHandler {
 	 * @return A String containing all the lines of the File content. 
 	 * Null if the file could not be read.
 	 */
-	public String readFile(File file) {
+	public static String readFile(File file) {
+		if (file == null) {
+			return "";
+		}
+		
 		try (
 			var fileReader = new FileReader(file);
 			var bufferedReader = new BufferedReader(fileReader);

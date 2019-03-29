@@ -4,6 +4,7 @@ import java.io.IOException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
@@ -17,7 +18,7 @@ public class TestUI extends Application {
 	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it.
 	 */
 	@Override
-	public void start(Stage stage) throws IOException {
+	public void start(Stage stage) throws IOException {		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
 		

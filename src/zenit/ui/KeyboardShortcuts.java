@@ -1,5 +1,6 @@
 package zenit.ui;
 
+import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -46,7 +47,7 @@ public final class KeyboardShortcuts {
 		});
 		
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.defaultCloseTabOperation();
+			controller.getSelectedTab().getOnCloseRequest().handle(new Event(null));
 		}); 
 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, () -> {
