@@ -23,6 +23,7 @@ import zenit.ConsoleRedirect;
 
 import zenit.filesystem.FileController;
 import zenit.javacodeCompiler.JavaSourceCodeCompiler;
+import zenit.textFlow.ZenCodeArea;
 import zenit.ui.tree.FileTree;
 import zenit.ui.tree.FileTreeItem;
 import zenit.ui.tree.TreeClickListener;
@@ -133,8 +134,8 @@ public class MainController {
 		try {
 			Tab selectedTab = getSelectedTab();
 			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
-			String content = textArea.getText();
+			ZenCodeArea zenCodeArea = (ZenCodeArea) anchorPane.getChildren().get(0);
+			String content = zenCodeArea.getText();
 			
 			if (currentlySelectedFiles.containsKey(selectedTab)) {
 				fileController.writeFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), content);
@@ -207,14 +208,14 @@ public class MainController {
 			
 			Tab selectedTab = addTab();
 			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			TextArea textArea = (TextArea) anchorPane.getChildren().get(0);
+			ZenCodeArea zenCodeArea = (ZenCodeArea) anchorPane.getChildren().get(0);
 
 			currentlySelectedFiles.put(selectedTab, file);
 
 			String fileContent = fileController.readFileContent(file);
 
 			selectedTab.setText(file.getName());
-			textArea.setText(fileContent);
+			zenCodeArea.replaceText(fileContent);
 		} else if (file != null && currentlySelectedFiles.containsValue(file)) { //Tab already open
 			var tabs = tabPane.getTabs();
 			File tempFile;
@@ -316,23 +317,23 @@ public class MainController {
 	}
 
 	/**
-	 * Creates a new tab with a TextArea filling it, adds it to the TabPane, and focuses on it.
+	 * Creates a new tab with a {@link zenit.textFlow.ZenCodeArea ZenCodeArea}  filling it, adds it to the TabPane, and focuses on it.
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
 	 */
 	public Tab addTab() {
 		Tab tab = new Tab("Untitled");
 		AnchorPane anchorPane = new AnchorPane();
-		TextArea textArea = new TextArea();
+		ZenCodeArea zenCodeArea = new ZenCodeArea();
 
-		anchorPane.getChildren().add(textArea);
+		anchorPane.getChildren().add(zenCodeArea);
 		tab.setContent(anchorPane);
-		textArea.setStyle("-fx-font-family: monospace");
+//		zenCodeArea.setStyle("-fx-font-family: monospace");
 
-		AnchorPane.setTopAnchor(textArea, 0.0);
-		AnchorPane.setRightAnchor(textArea, 0.0);
-		AnchorPane.setBottomAnchor(textArea, 0.0);
-		AnchorPane.setLeftAnchor(textArea, 0.0);
+		AnchorPane.setTopAnchor(zenCodeArea, 0.0);
+		AnchorPane.setRightAnchor(zenCodeArea, 0.0);
+		AnchorPane.setBottomAnchor(zenCodeArea, 0.0);
+		AnchorPane.setLeftAnchor(zenCodeArea, 0.0);
 
 		tab.setOnCloseRequest(event -> defaultCloseTabOperation());
 
