@@ -21,7 +21,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
-import zenit.filesystem.controller.FileController;
+import zenit.filesystem.FileController;
 import zenit.filesystem.helpers.CodeSnippets;
 import zenit.ui.tree.FileTree;
 import zenit.ui.tree.FileTreeItem;
@@ -101,19 +101,19 @@ public class MainController {
 	/**
 	 * Input name from dialog box and creates a new file in specified parent folder.
 	 * @param parent The parent folder of the file to be created.
-	 * @param typeCOde The type of code snippet that should be implemented in the file.
-	 * Use contants from CodeSnippets class.
+	 * @param typeCode The type of code snippet that should be implemented in the file.
+	 * Use contants from {@link zenit.filesystem.helpers.CodeSnippets CodeSnippets} class.
 	 * @return The File if created, otherwise null.
 	 */
 	public File createFile(File parent, int typeCode) {
 		File file = null;
-		String className = DialogBoxes.inputDialog(null, "New file", "Create new file", "Enter new file name",
-				"File name");
+		String className = DialogBoxes.inputDialog(null, "New file", "Create new file", 
+				"Enter new file name", "File name");
 		if (className != null) {
 			String filepath = parent.getPath() + "/" + className;
 			file = new File(filepath);
 			
-			file = fileController.createFile(typeCode, file);
+			file = fileController.createFile(file, typeCode);
 			
 			openFile(file);
 		}
@@ -137,7 +137,7 @@ public class MainController {
 				fileController.writeFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), content);
 			} else {
 				File newFile = chooseFile();
-				fileController.createFile(CodeSnippets.CLASS, newFile, content);
+				fileController.createFile(newFile, content, CodeSnippets.CLASS);
 				currentlySelectedFiles.put(selectedTab, newFile);
 			}
 		} catch (NullPointerException ex) {

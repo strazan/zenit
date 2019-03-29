@@ -1,4 +1,4 @@
-package zenit.filesystem.handlers;
+package zenit.filesystem;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;

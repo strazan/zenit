@@ -8,8 +8,8 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import zenit.filesystem.controller.FileController;
-import zenit.filesystem.handlers.WorkspaceHandler;
+import zenit.filesystem.FileController;
+import zenit.filesystem.WorkspaceHandler;
 
 /**
  * Class for testing the UI.

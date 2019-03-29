@@ -1,4 +1,4 @@
-package zenit.filesystem.handlers;
+package zenit.filesystem;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -14,56 +14,60 @@ import zenit.filesystem.helpers.CodeSnippets;
 import zenit.filesystem.helpers.FileNameHelpers;
 
 /**
- * Methods for creating, reading, writing, renaming and deleting classes in filesystem.
- * TODO This is currently a big (but working ;) ) big mess. I'm doing some experimentation
- * with the structure and will probably settle on something until next commit.
+ * Methods for creating, reading, writing, renaming and deleting .java files in file system.
+ * Text encoding is by default "UTF-8" but can be changed with {@link #setTextEncoding(String)
+ * setTextEncoding}.
+ * Use constant {@link #UTF UTF} for UTF-8.
+ * Only to be accessed using {@link FileController FileController} methods.
+ * 
  * @author Alexander Libot
  *
  */
-public class ClassHandler {
+public class JavaFileHandler {
 	
-	private static String textEncoding = "UTF-8"; //Text-encoding
+	public final static String UTF = "UTF-8";
+	
+	private static String textEncoding = UTF; //Text-encoding
 	
 	/**
-	 * Tries to create a new file.
-	 * Writes a codesnippet for a new class.
-	 * @param filepath Filepath of the file to create
-	 * @return Returns the created file
-	 * @throws IOException Throws IOException if file couldn't be created.
+	 * Changes text encoding. Use {@link JavaFileHandler ClassHandler} constants.
+	 * @param encoding The new text encoding.
 	 */
-//	public static File createFile(String filepath) throws IOException {
-//		
-//		File file = new File(filepath); //Sets new filepath
-//		
-//		try {
-//			file.createNewFile();
-//			
-//			BufferedWriter br = new BufferedWriter(new OutputStreamWriter(
-//					new FileOutputStream(file), textEncoding));
-//			br.write(CodeSnippets.newClass(file.getName(), 
-//					FileNameHelpers.getPackagenameFromFile(file)));
-//			br.flush();
-//			br.close();
-//				
-//			return file;
-//		} catch (IOException e) {
-//			throw new IOException("Couldn't create new class");
-//		}
-//	}
+	public static void setTextEncoding(String encoding) {
+		textEncoding = encoding;
+	}
 	
-	public static File createFile(int typeCode, File file, String content) throws IOException {
+	/**
+	 * Tries to create a new .java file in file system. Adds .java to file name if not already 
+	 * added. If {@code content} is {@code null}, adds a code snippet from 
+	 * {@link zenit.filesystem.helpers.CodeSnippets CodeSnippets} using {@code typeCode}
+	 * parameter. If content is not {@code null}, writes the data from {@code content} to file.
+	 * 
+	 * @param file File to be created
+	 * @param content Content to be written to file. May be null.
+	 * @param typeCode If {@code content} is null, writes content from {@link 
+	 * zenit.filesystem.helpers.CodeSnippets CodeSnippets} using this parameter.
+	 * @return Created file if created, otherwise {@link java.io.IOException IOException} is thrown
+	 * @throws IOException Throws IOException if file already exists or it couldn't
+	 * be created.
+	 */
+	protected static File createFile(File file, String content, int typeCode) throws IOException {
 		try {
 			String fileName = file.getName();
+			//Adds .java if not already added
 			if (!fileName.endsWith(".java")) {
 				String filepath = file.getPath();
 				filepath += ".java";
 				file = new File(filepath);
 			}
+			//Checks if file already exists
 			if (file.exists()) {
-				throw new IOException();
+				throw new IOException("File already exists");
 			}
+			//Tries to create file
 			file.createNewFile();
 			
+			//Write content to file
 			if (content == null) {
 				try {
 					content = CodeSnippets.newSnippet(typeCode, file.getName(), FileNameHelpers.getPackagenameFromFile(file));
@@ -85,9 +89,11 @@ public class ClassHandler {
 	/**
 	 * Tries to read file from disk.
 	 * @param file The file to read
-	 * @return Returns DefaultStyledDocument-object if read succeeded, otherwise null
+	 * @return Returns String-object with content from {@code file} if read, otherwise
+	 * throws a {@link java.io.IOException IOException}
+	 * @throws IOException Throw IOException if file could be read.
 	 */
-	public static String readFile(File file) {
+	protected static String readFile(File file) throws IOException {
 		try (BufferedReader br = new BufferedReader(new InputStreamReader(
 				new FileInputStream(file), textEncoding))) {
 			
@@ -101,30 +107,25 @@ public class ClassHandler {
 			return stringBuilder;
 			
 		} catch (IOException ex) {
-			ex.printStackTrace();
+			throw new IOException("File couldn't be read");
 		}
-		return null;
 	}
 	
 	/**
-	 * Tries to save file to disk.
-	 * @param file The file to write over
-	 * @param dsd The new content of the file
-	 * @return true if save succeeded, otherwise false
+	 * Tries to save {@code content} to disk in {@code file}.
+	 * @param file The file to write over with {@code content}.
+	 * @param content The new content of the file
+	 * @throws IOException Throws {@link java.io.IOException IOException} if file
+	 * can't be saved.
 	 */
-	public static boolean saveFile(File file, String content) {
-		boolean returnValue;
+	protected static void saveFile(File file, String content) throws IOException {
 		try (BufferedWriter br = new BufferedWriter(new OutputStreamWriter(
 				new FileOutputStream(file), textEncoding))) {
-//			br.write(dsd.getText(0, dsd.getLength()));
 			br.write(content);
 			br.flush();
-			returnValue = true;
 		} catch (IOException ex) {
-			ex.printStackTrace();
-			returnValue = false;
+			throw new IOException(ex.getMessage());
 		}
-		return returnValue;
 	}
 	
 	/**
@@ -135,7 +136,7 @@ public class ClassHandler {
 	 * @throws IOException Throws IOException if file already exists with same name or 
 	 * if file couldn't be renamed
 	 */
-	public static File renameFile(File oldFile, String newFilename) throws IOException {
+	protected static File renameFile(File oldFile, String newFilename) throws IOException {
 		
 		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(oldFile); //Removes file name
 		
@@ -145,11 +146,6 @@ public class ClassHandler {
 		}
 		String newFilepath = tempFile.getPath() + "/" + newFilename;
 		File newFile = new File(newFilepath);
-		
-		//
-//		String oldFilename = oldFile.getName();
-//		String oldFilepath = oldFile.getPath() + "/" + oldFilename;
-//		oldFile = new File(oldFilepath);
 		
 		if (newFile.exists()) {
 			throw new IOException("File already exists");
@@ -165,10 +161,12 @@ public class ClassHandler {
 	}
 	
 	/**
-	 * Tries to delete the file. Returns true if deleted, false if not deleted
+	 * Tries to delete the file.
 	 * @param file The file to delete
+	 * @throws IOException Throws {@link java.io.IOException IOException} if file can't
+	 * be deleted.
 	 */
-	public static void deleteFile(File file) throws IOException {
+	protected static void deleteFile(File file) throws IOException {
 		if (!file.delete()) {
 			throw new IOException("Failed to delete " + file);
 		}
