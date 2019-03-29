@@ -85,12 +85,12 @@
                                              <children>
                                                 <Button id="btnRun" fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" onAction="#compileAndRun" prefHeight="13.0" prefWidth="50.0">
                                                    <graphic>
-                                                      <FontIcon iconLiteral="fa-play-circle-o" iconSize="18" iconColor="black"/>
+                                                      <FontIcon iconLiteral="fa-play-circle" iconSize="18" iconColor="green"/>
                                                    </graphic>
                                                 </Button>
                                                 <Button fx:id="btnStop" mnemonicParsing="false" prefHeight="13.0" prefWidth="50.0">
                                                    <graphic>
-                                                      <FontIcon iconLiteral="fa-stop-circle-o" iconSize="18" iconColor="black"/>
+                                                      <FontIcon iconLiteral="fa-stop-circle" iconSize="18" iconColor="red"/>
                                                    </graphic>
                                                 </Button>
                                              </children>
