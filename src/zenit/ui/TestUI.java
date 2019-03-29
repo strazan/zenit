@@ -3,13 +3,17 @@ package zenit.ui;
 import java.io.File;
 import java.io.IOException;
 
+import javax.swing.text.html.StyleSheet;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import zenit.filesystem.FileController;
 import zenit.filesystem.WorkspaceHandler;
+
 
 /**
  * Class for testing the UI.
@@ -18,7 +22,7 @@ import zenit.filesystem.WorkspaceHandler;
  */
 public class TestUI extends Application {
 	/**
-	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it.
+	 * Loads a file Main.fxml, sets a MainController as its Controller, and loads it. 
 	 */
 	@Override
 	public void start(Stage stage) throws IOException {
@@ -30,17 +34,6 @@ public class TestUI extends Application {
 		 */
 		File workspace = WorkspaceHandler.readWorkspace();
 		
-//		if (workspace == null) {
-//			DirectoryChooser directoryChooser = new DirectoryChooser();
-//			directoryChooser.setTitle("Choose workspace");
-//			workspace = directoryChooser.showDialog(stage);
-//			if (workspace != null) {
-//				WorkspaceHandler.createWorkspace(workspace);
-//			} else {
-//				System.exit(0);
-//			}
-//		}
-		
 		FileController fileController = new FileController(workspace);
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -49,12 +42,16 @@ public class TestUI extends Application {
 	
 		
 		loader.setController(controller);
+		Parent root = loader.load();
+		Scene scene = new Scene(root);
+		scene.getStylesheets().add(getClass().getResource("mainStyle.css").toString());
+
 		
-		Scene scene = new Scene(loader.load());
 		controller.initialize(stage);
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
+		controller.initialize(stage);
 		stage.show();
 		
 		KeyboardShortcuts.setupMain(scene, controller);

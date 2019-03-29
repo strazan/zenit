@@ -19,6 +19,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import zenit.ConsoleRedirect;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.filesystem.FileController;
@@ -76,6 +77,7 @@ public class MainController {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
 
+		new ConsoleRedirect(taConsole);
 		initTree();
 	}
 	
@@ -90,13 +92,13 @@ public class MainController {
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			zenit.ui.tree.FileTree.createNodes(rootItem, workspace);
-			treeView.setRoot(rootItem);
-			treeView.setShowRoot(false);
-			TreeContextMenu tcm = new TreeContextMenu(this, treeView);
-			TreeClickListener tcl = new TreeClickListener(this, treeView);
-			treeView.setContextMenu(tcm);
-			treeView.setOnMouseClicked(tcl);
 		}
+		treeView.setRoot(rootItem);
+		treeView.setShowRoot(false);
+		TreeContextMenu tcm = new TreeContextMenu(this, treeView);
+		TreeClickListener tcl = new TreeClickListener(this, treeView);
+		treeView.setContextMenu(tcm);
+		treeView.setOnMouseClicked(tcl);
 	}
 	
 	/**
@@ -406,5 +408,13 @@ public class MainController {
 			}
 		}
 		return null;
+	}
+	
+	/**
+	 * Clears the text from console window.
+	 */
+	@FXML
+	private void clearConsole() {
+		taConsole.clear();
 	}
 }
