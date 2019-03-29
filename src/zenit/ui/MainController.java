@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 
 import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.filesystem.FileController;
-import zenit.filesystem.helpers.CodeSnippets;
 import zenit.ui.tree.FileTree;
 import zenit.ui.tree.FileTreeItem;
 import zenit.ui.tree.TreeClickListener;
@@ -137,8 +136,12 @@ public class MainController {
 				fileController.writeFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), content);
 			} else {
 				File newFile = chooseFile();
-				fileController.createFile(newFile, content, CodeSnippets.CLASS);
+				newFile = fileController.createFile(newFile, content);
 				currentlySelectedFiles.put(selectedTab, newFile);
+				FileTreeItem<String> newNode = new FileTreeItem<String>(newFile, newFile.getName());
+				treeView.getRoot().getChildren().add(newNode);
+				Tab tab = getSelectedTab();
+				tab.setText(newFile.getName());
 			}
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();

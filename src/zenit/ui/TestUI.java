@@ -34,7 +34,11 @@ public class TestUI extends Application {
 			DirectoryChooser directoryChooser = new DirectoryChooser();
 			directoryChooser.setTitle("Choose workspace");
 			workspace = directoryChooser.showDialog(stage);
-			WorkspaceHandler.createWorkspace(workspace);
+			if (workspace != null) {
+				WorkspaceHandler.createWorkspace(workspace);
+			} else {
+				System.exit(0);
+			}
 		}
 		
 		FileController fileController = new FileController(workspace);

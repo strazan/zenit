@@ -28,7 +28,7 @@ public class FileTree {
 		String itemName;
 		for (int index = 0; index < files.length; index++) {
 			itemName = files[index].getName();
-			if (!itemName.startsWith(".") && !itemName.equals("bin")) { //Doesn't include hidden files
+			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
 				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName);
 				parent.getChildren().add(item);
 				
