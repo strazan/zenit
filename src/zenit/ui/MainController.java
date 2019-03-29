@@ -180,12 +180,7 @@ public class MainController {
 	 */
 	@FXML
 	public void openFile(Event event) {
-//		FileChooser fileChooser = new FileChooser();
-//		fileChooser.setInitialDirectory(fileController.getWorkspace());
-		//TODO: Add filters
-
 		try {
-//			File file = fileChooser.showOpenDialog(stage);
 			File file = chooseFile();
 			
 			if (file != null) {
@@ -305,7 +300,8 @@ public class MainController {
 		try {
 			if (file != null) {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+//				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
 			e.printStackTrace();
