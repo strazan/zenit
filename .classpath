@@ -1,7 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 11.0.2 [11.0.2]"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.launching.macosx.MacOSXType/Java SE 11.0.2 [11.0.2]">
+		<attributes>
+			<attribute name="module" value="true"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx-swt.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.base.jar"/>
 	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.controls.jar"/>
@@ -16,8 +20,11 @@
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-tests.jar"/>
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/GIT/zenit/lib/icons/ikonli-core-11.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/GIT/zenit/lib/icons/ikonli-fontawesome-pack-11.1.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Admin/GIT/zenit/lib/icons/ikonli-javafx-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/jface/org.eclipse.jface-3.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/RichTextFX/richtextfx-fat-0.9.3.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr-4.7.2-complete.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-core-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-fontawesome-pack-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-javafx-11.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
