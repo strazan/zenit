@@ -165,18 +165,20 @@ public class FileController {
 		return success;
 	}
 	
-	//TODO Rewrite method
 	/**
-	 * Creates a new package inside the selected filepath.
-	 * Concatenates the workspace filepath, input filepath and packagename.
-	 * @param filepath The filepath within the workspace where package is created
-	 * @param packageName The name of the package
+	 * Tries to create a new package using {@link PackageHandler#createPackage(File)}.
+	 * Prints error message if package can't be created.
+	 * @param file The package file to be created.
+	 * @return {@code true} if package was created, otherwise {@code false}
 	 */
-	public void createPackage(String filepath, String packageName) {
-//		filepath = workspace + filepath + packageName;
-		
-//		File file = new File(filepath);
-//		boolean success = PackageHandler.createNewPackage(file);
+	public boolean createPackage(File file) {	
+		try {
+			PackageHandler.createPackage(file);
+			return true;
+		} catch (IOException ex) {
+			System.err.println("FileController.createPackage: " + ex.getMessage());
+			return false;
+		}
 	}
 	
 	//Project methods

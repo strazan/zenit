@@ -102,7 +102,7 @@ public class MainController {
 	 * Input name from dialog box and creates a new file in specified parent folder.
 	 * @param parent The parent folder of the file to be created.
 	 * @param typeCode The type of code snippet that should be implemented in the file.
-	 * Use contants from {@link zenit.filesystem.helpers.CodeSnippets CodeSnippets} class.
+	 * Use constants from {@link zenit.filesystem.helpers.CodeSnippets CodeSnippets} class.
 	 * @return The File if created, otherwise null.
 	 */
 	public File createFile(File parent, int typeCode) {
@@ -254,13 +254,32 @@ public class MainController {
 	 */
 	@FXML
 	public void newProject(Event event) {
-		String projectName = DialogBoxes.inputDialog(null, "New project", "Create new project", "Enter a new projectname", "Project name");
+		String projectName = DialogBoxes.inputDialog(null, "New project", "Create new project", 
+				"Enter a new projectname", "Project name");
 		if (projectName != null) {
 			File newProject = fileController.createProject(projectName);
 			if (newProject != null) {
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), newProject);
 			}
 		}
+	}
+	
+	public File newPackage(File parent) {
+		
+		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package", 
+				"Enter new package name", "Package name");
+		if (packageName != null) {
+			String filepath = parent.getPath() + "/" + packageName;
+			File packageFile = new File(filepath);
+			
+			boolean success = fileController.createPackage(packageFile);
+			
+			if (success) {
+				return packageFile;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

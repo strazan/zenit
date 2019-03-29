@@ -26,6 +26,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private Menu createItem = new Menu("New...");
 	private MenuItem createClass = new MenuItem("New class");
 	private MenuItem createInterface = new MenuItem("New interface");
+	private MenuItem createPackage = new MenuItem("New package");
 	private MenuItem renameItem = new MenuItem("Rename");
 	private MenuItem deleteItem = new MenuItem("Delete");
 	
@@ -51,6 +52,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		String deleteItemTitle = String.format("Delete \"%s\"", selectedNode);
 		renameItem.setText(renameItemTitle);
 		deleteItem.setText(deleteItemTitle);
+		
+		if (selectedNode.equals("src") && !createItem.getItems().contains(createPackage)) {
+			createItem.getItems().add(createPackage);
+		} else {
+			createItem.getItems().remove(createPackage);
+		}
 	}
 	
 	/**
@@ -75,6 +82,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		createInterface.setOnAction(this);
 		renameItem.setOnAction(this);
 		deleteItem.setOnAction(this);
+		createPackage.setOnAction(this);
 	}
 	
 	/**
@@ -97,24 +105,30 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	 */
 	@Override
 	public void handle(ActionEvent actionEvent) {
+		FileTreeItem<String> selectedItem = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
+		File selectedFile = selectedItem.getFile();
+		
 		if (actionEvent.getSource().equals(createClass)) {
 			newFile(CodeSnippets.CLASS);
 		} else if (actionEvent.getSource().equals(createInterface)) {
 			newFile(CodeSnippets.INTERFACE);
 		} else if (actionEvent.getSource().equals(renameItem)) {
-			FileTreeItem<String> item = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
-			File file = item.getFile();
-			File newFile = controller.renameFile(file);
+			File newFile = controller.renameFile(selectedFile);
 			if (newFile != null) {
-				item.setFile(newFile);
-				item.setValue(newFile.getName());
-				FileTree.changeFileForNodes(item, item.getFile());
+				selectedItem.setFile(newFile);
+				selectedItem.setValue(newFile.getName());
+				FileTree.changeFileForNodes(selectedItem, selectedItem.getFile());
 			}
 		} else if (actionEvent.getSource().equals(deleteItem)) {
-			FileTreeItem<String> item = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
-			File file = item.getFile();
-			controller.deleteFile(file);
-			item.getParent().getChildren().remove(item);
+			controller.deleteFile(selectedFile);
+			selectedItem.getParent().getChildren().remove(selectedItem);
+		} else if (actionEvent.getSource().equals(createPackage)) {
+			System.out.println("Test");
+			File packageFile = controller.newPackage(selectedFile);
+			if (packageFile != null) {
+				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName());
+				selectedItem.getChildren().add(packageNode);
+			}
 		}
 	}
 }
