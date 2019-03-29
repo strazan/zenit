@@ -26,8 +26,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import zenit.ConsoleRedirect;
 
-import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.filesystem.FileController;
+import zenit.javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.ui.tree.FileTree;
 import zenit.ui.tree.FileTreeItem;
 import zenit.ui.tree.TreeClickListener;
@@ -94,10 +94,12 @@ public class MainController {
 	 */
 	private void initTree() {
 		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "Workspace");
-		zenit.ui.tree.FileTree.createNodes(rootItem, fileController.getWorkspace());
+		File workspace = fileController.getWorkspace();
+		if (workspace != null) {
+			zenit.ui.tree.FileTree.createNodes(rootItem, workspace);
+		}
 		treeView.setRoot(rootItem);
 		treeView.setShowRoot(false);
-		
 		TreeContextMenu tcm = new TreeContextMenu(this, treeView);
 		TreeClickListener tcl = new TreeClickListener(this, treeView);
 		treeView.setContextMenu(tcm);
@@ -160,7 +162,10 @@ public class MainController {
 	 */
 	private File chooseFile() {
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory(fileController.getWorkspace());
+		File workspace = fileController.getWorkspace();
+		if (workspace != null) {
+			fileChooser.setInitialDirectory(fileController.getWorkspace());
+		}
 		return fileChooser.showSaveDialog(stage);
 	}
 
@@ -180,14 +185,17 @@ public class MainController {
 	 */
 	@FXML
 	public void openFile(Event event) {
-		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialDirectory(fileController.getWorkspace());
-		//TODO: Add filters
-
 		try {
+			FileChooser fileChooser = new FileChooser();
+			File workspace = fileController.getWorkspace();
+			if (workspace != null) {
+				fileChooser.setInitialDirectory(fileController.getWorkspace());
+			}
 			File file = fileChooser.showOpenDialog(stage);
 			
-			openFile(file);
+			if (file != null) {
+				openFile(file);
+			}
 
 		} catch (NullPointerException ex) {
 			ex.printStackTrace();
@@ -302,7 +310,8 @@ public class MainController {
 		try {
 			if (file != null) {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+//				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
 			e.printStackTrace();

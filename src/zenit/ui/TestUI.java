@@ -3,17 +3,15 @@ package zenit.ui;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.text.html.StyleSheet;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import zenit.filesystem.FileController;
 import zenit.filesystem.WorkspaceHandler;
 
+import zenit.textFlow.ZenCodeArea;
 
 /**
  * Class for testing the UI.
@@ -34,17 +32,6 @@ public class TestUI extends Application {
 		 */
 		File workspace = WorkspaceHandler.readWorkspace();
 		
-		if (workspace == null) {
-			DirectoryChooser directoryChooser = new DirectoryChooser();
-			directoryChooser.setTitle("Choose workspace");
-			workspace = directoryChooser.showDialog(stage);
-			if (workspace != null) {
-				WorkspaceHandler.createWorkspace(workspace);
-			} else {
-				System.exit(0);
-			}
-		}
-		
 		FileController fileController = new FileController(workspace);
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
@@ -57,8 +44,7 @@ public class TestUI extends Application {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("mainStyle.css").toString());
 
-		
-		controller.initialize(stage);
+		scene.getStylesheets().add(ZenCodeArea.class.getResource("keywords.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
