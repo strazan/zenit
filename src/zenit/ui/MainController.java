@@ -181,7 +181,12 @@ public class MainController {
 	@FXML
 	public void openFile(Event event) {
 		try {
-			File file = chooseFile();
+			FileChooser fileChooser = new FileChooser();
+			File workspace = fileController.getWorkspace();
+			if (workspace != null) {
+				fileChooser.setInitialDirectory(fileController.getWorkspace());
+			}
+			File file = fileChooser.showOpenDialog(stage);
 			
 			if (file != null) {
 				openFile(file);

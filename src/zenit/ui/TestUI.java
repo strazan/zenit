@@ -3,13 +3,10 @@ package zenit.ui;
 import java.io.File;
 import java.io.IOException;
 
-import javax.swing.text.html.StyleSheet;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import zenit.filesystem.FileController;
 import zenit.filesystem.WorkspaceHandler;
