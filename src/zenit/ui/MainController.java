@@ -259,7 +259,7 @@ public class MainController {
 	 * @throws FileNotFoundException
 	 */
 	
-	public void searchInFile() throws FileNotFoundException {
+	public void searchInFile() {
 		TextInputDialog dialog = new TextInputDialog("search");
 		dialog.setTitle("Search");
 		dialog.setHeaderText("What are you looking for?");
@@ -270,7 +270,12 @@ public class MainController {
 
 		Tab tab = getSelectedTab();
 		File file = currentlySelectedFiles.get(tab);
-		Scanner txtscan = new Scanner(file);
+		Scanner txtscan = null;
+		try {
+			txtscan = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
 
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()) {

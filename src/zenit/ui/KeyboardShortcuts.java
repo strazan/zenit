@@ -56,12 +56,8 @@ public final class KeyboardShortcuts {
 		});
 		
 		add(scene, KeyCode.F, KeyCombination.SHORTCUT_DOWN, () -> {
-			try {
-				controller.searchInFile();
-			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			controller.searchInFile();
+
 		});
 	}
 }
