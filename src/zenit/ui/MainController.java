@@ -21,8 +21,8 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import zenit.ConsoleRedirect;
 
-import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.filesystem.FileController;
+import zenit.javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.ui.tree.FileTree;
 import zenit.ui.tree.FileTreeItem;
 import zenit.ui.tree.TreeClickListener;

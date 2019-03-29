@@ -11,6 +11,7 @@ import javafx.stage.Stage;
 import zenit.filesystem.FileController;
 import zenit.filesystem.WorkspaceHandler;
 
+import zenit.textFlow.ZenCodeArea;
 
 /**
  * Class for testing the UI.
@@ -43,8 +44,7 @@ public class TestUI extends Application {
 		Scene scene = new Scene(root);
 		scene.getStylesheets().add(getClass().getResource("mainStyle.css").toString());
 
-		
-		controller.initialize(stage);
+		scene.getStylesheets().add(ZenCodeArea.class.getResource("keywords.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		
