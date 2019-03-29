@@ -1,114 +1,135 @@
 package zenit.textFlow;
 
 import javafx.concurrent.Task;
-import org.antlr.v4.runtime.*;
-import org.antlr.v4.runtime.tree.ParseTreeWalker;
-import org.antlr.v4.tool.Grammar;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
+
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.model.PlainTextChange;
+import org.fxmisc.richtext.LineNumberFactory;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
-import org.reactfx.EventStream;
+import org.fxmisc.wellbehaved.event.EventPattern;
+import org.fxmisc.wellbehaved.event.InputMap;
+import org.fxmisc.wellbehaved.event.Nodes;
 
 import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
-
-
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class ZenCodeArea extends CodeArea implements AutoCloseable {
-	    private Syntax syntax;
-	    private ExecutorService executor;
-	    private Grammar g;
-	    EventStream<PlainTextChange> textChanges;
+	private ExecutorService executor;
 
-	    public ZenCodeArea(Syntax s){
-	        super();
-	        syntax = s;
-	        setup();
-	    }
+	private static final String[] KEYWORDS = new String[] {
+		"abstract", "assert", "boolean", "break", "byte",
+		"case", "catch", "char", "class", "const",
+		"continue", "default", "do", "double", "else",
+		"enum", "extends", "false", "final", "finally", "float",
+		"for", "goto", "if", "implements", "import",
+		"instanceof", "int", "interface", "long", "native",
+		"new", "package", "private", "protected", "public",
+		"return", "short", "static", "strictfp", "super",
+		"switch", "synchronized", "this", "throw", "throws",
+		"transient", "true", "try", "void", "volatile", "while"
+	};
 
-	    public ZenCodeArea(Syntax s, String text){
-	        super(text);
-	        syntax = s;
-	        setup();
-	    }
+	private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
+	private static final String PAREN_PATTERN = "\\(|\\)";
+	private static final String BRACE_PATTERN = "\\{|\\}";
+	private static final String BRACKET_PATTERN = "\\[|\\]";
+	private static final String SEMICOLON_PATTERN = "\\;";
+	private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
+	private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
 
-	    private final void setup(){
-	        executor = Executors.newSingleThreadExecutor();
-	        g = syntax.getGrammar();
+	private static final Pattern PATTERN = Pattern.compile(
+		"(?<KEYWORD>" + KEYWORD_PATTERN + ")"
+		+ "|(?<PAREN>" + PAREN_PATTERN + ")"
+		+ "|(?<BRACE>" + BRACE_PATTERN + ")"
+		+ "|(?<BRACKET>" + BRACKET_PATTERN + ")"
+		+ "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
+		+ "|(?<STRING>" + STRING_PATTERN + ")"
+		+ "|(?<COMMENT>" + COMMENT_PATTERN + ")"
+	);
 
-	        textChanges = plainTextChanges();
+	public ZenCodeArea() {
+		setParagraphGraphicFactory(LineNumberFactory.get(this));
 
-	        textChanges.successionEnds(Duration.ofMillis(500))
-	                .supplyTask(this::computeHighlightingAsync)
-	                .awaitLatest(textChanges);/*
-	                .subscribe(this::applyHighlighting); */
-	    }
+		multiPlainChanges().successionEnds(
+			Duration.ofMillis(100)).subscribe(
+				ignore -> setStyleSpans(0, computeHighlighting(getText(
+			))));
 
-	    private Task<StyleSpans<Collection<String>>> computeHighlightingAsync(){
-	        String code = getText();
+		executor = Executors.newSingleThreadExecutor();
+		setParagraphGraphicFactory(LineNumberFactory.get(this));
+		multiPlainChanges().successionEnds(Duration.ofMillis(500)).supplyTask(
+			this::computeHighlightingAsync).awaitLatest(multiPlainChanges()).filterMap(t -> {
+				if(t.isSuccess()) {
+					return Optional.of(t.get());
+				} else {
+					t.getFailure().printStackTrace();
+					return Optional.empty();
+				}
+		}).subscribe(this::applyHighlighting);
+		computeHighlightingAsync();
+	}
 
-	        Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
-	            @Override
-	            protected StyleSpans<Collection<String>> call() throws Exception {
-	                return computeHighlighting(g, syntax.getStyles(), code);
-	            }
-	        };
-	        executor.execute(task);
-	        System.out.println("Executing task");
-	        return task;
-	    }
+	private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
+		String text = getText();
+		Task<StyleSpans<Collection<String>>> task = new Task<StyleSpans<Collection<String>>>() {
+			@Override
+			protected StyleSpans<Collection<String>> call() throws Exception {
+				return computeHighlighting(text);
+			}
+		};
+		executor.execute(task);
+		return task;
+	}
 
-	    private static StyleSpans<Collection<String>> computeHighlighting(Grammar g, Map<String, String> styles, String text){
-	        System.out.println("Starting to compute highlighting");
-	        StyleSpansBuilder<Collection<String>> spansBuilder = new StyleSpansBuilder<>();
+	private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
+		setStyleSpans(0, highlighting);
+		InputMap<KeyEvent> im = InputMap.consume(
+			EventPattern.keyPressed(KeyCode.TAB), 
+			e -> this.replaceSelection("    ")
+			);
+		Nodes.addInputMap(this, im);
+	}
 
-	        if(text.length() > 0){
-	            LexerInterpreter lex = g.createLexerInterpreter(new ANTLRInputStream(text));
-	            CommonTokenStream tokenStream = new CommonTokenStream(lex);
+	private static StyleSpans<Collection<String>> computeHighlighting(String text) {
+		Matcher matcher = PATTERN.matcher(text);
+		int lastKwEnd = 0;
+		StyleSpansBuilder<Collection<String>> spansBuilder
+		= new StyleSpansBuilder<>();
+		while(matcher.find()) {
+			String styleClass =
+					matcher.group("KEYWORD") != null ? "keyword" :
+						matcher.group("PAREN") != null ? "paren" :
+							matcher.group("BRACE") != null ? "brace" :
+								matcher.group("BRACKET") != null ? "bracket" :
+									matcher.group("SEMICOLON") != null ? "semicolon" :
+										matcher.group("STRING") != null ? "string" :
+											matcher.group("COMMENT") != null ? "comment" :
+												null; /* never happens */ 
+			assert styleClass != null;
+			spansBuilder.add(
+					Collections.emptyList(), matcher.start() - lastKwEnd
+					);
+			spansBuilder.add(
+					Collections.singleton(styleClass), matcher.end() - matcher.start()
+					);
+			lastKwEnd = matcher.end();
+		}
+		spansBuilder.add(Collections.emptyList(), text.length() - lastKwEnd);
 
-	            // parse
-	            int lastEnd = 0;
-	            for(Token t: lex.getAllTokens()){
-	                int spacer = t.getStartIndex() - lastEnd;
-	                if(spacer > 0) {
-	                    spansBuilder.add(Collections.emptyList(), spacer);
+		return spansBuilder.create();
+	}
 
-	                    int gap = t.getText().length();
-	                    spansBuilder.add(Collections.singleton(getStyleClass(lex,styles,t)), gap);
-	                    lastEnd = t.getStopIndex() + 1;
-	                }
-	            }
-	        }else{
-	            spansBuilder.add(Collections.emptyList(), 0);
-	        }
-	        return spansBuilder.create();
-	    }
+	@Override
+	public void close() throws Exception {
+		// TODO Auto-generated method stub
 
-	    private static String getStyleClass(Lexer lex, Map<String, String> styles, Token t){
-	        String[] tokenNames = lex.getRuleNames();
-	        String tokenName = tokenNames[t.getType() - 1];
-
-
-	        String css = styles.get(tokenName);
-	        if(css == null){
-	            return "";
-	        }
-	        return css;
-	    }
-
-	    private void applyHighlighting(StyleSpans<Collection<String>> highlighting) {
-	        if(highlighting.getSpanCount() > 0) {
-	            setStyleSpans(0, highlighting);
-	        }
-	    }
-
-	    @Override
-	    public void close(){
-	        executor.shutdownNow();
-	    }
+	}
 }

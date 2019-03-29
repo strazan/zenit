@@ -27,10 +27,9 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import zenit.ConsoleRedirect;
-
-import javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.FileHandler;
-import zenit.textFlow.SyntaxHighlight;
+import zenit.javacodeCompiler.JavaSourceCodeCompiler;
+import zenit.textFlow.ZenCodeArea;
 
 /**
  * The controller part of the main GUI.
@@ -97,7 +96,7 @@ public class MainController {
 			if (file != null) {
 				Tab selectedTab = addTab();
 				AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-				CodeArea codeArea = (CodeArea) anchorPane.getChildren().get(0);
+				ZenCodeArea codeArea = (ZenCodeArea) anchorPane.getChildren().get(0);
 
 				currentlySelectedFiles.put(selectedTab, file);
 				
@@ -106,7 +105,7 @@ public class MainController {
 
 				selectedTab.setText(fileName);
 				codeArea.replaceText(fileContent);
-				new SyntaxHighlight(codeArea);
+				
 				
 			}
 		} catch (NullPointerException ex) {
@@ -143,7 +142,7 @@ public class MainController {
 	public Tab addTab() {
 		Tab tab = new Tab("Untitled");
 		AnchorPane anchorPane = new AnchorPane();
-		CodeArea textArea = new CodeArea();
+		ZenCodeArea textArea = new ZenCodeArea();
 		textArea.setParagraphGraphicFactory(LineNumberFactory.get(textArea));
 
 		anchorPane.getChildren().add(textArea);
@@ -205,7 +204,7 @@ public class MainController {
 		try {
 			Tab selectedTab = getSelectedTab();
 			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			CodeArea textArea = (CodeArea) anchorPane.getChildren().get(0);
+			ZenCodeArea textArea = (ZenCodeArea) anchorPane.getChildren().get(0);
 
 			if (currentlySelectedFiles.containsKey(selectedTab)) {
 				fileHandler.writeTextFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), textArea.getText());				
@@ -254,3 +253,5 @@ public class MainController {
 		return null;
 	}
 }
+
+

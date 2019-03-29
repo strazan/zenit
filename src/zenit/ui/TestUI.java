@@ -7,7 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import zenit.textFlow.SyntaxHighlight;
+import zenit.textFlow.ZenCodeArea;
 
 /**
  * Class for testing the UI.
@@ -26,7 +26,7 @@ public class TestUI extends Application {
 		loader.setController(controller);
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
-		scene.getStylesheets().add(SyntaxHighlight.class.getResource("keywords.css").toExternalForm());
+		scene.getStylesheets().add(ZenCodeArea.class.getResource("keywords.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		

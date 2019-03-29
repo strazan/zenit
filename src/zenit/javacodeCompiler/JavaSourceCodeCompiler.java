@@ -1,4 +1,4 @@
-package javacodeCompiler;
+package zenit.javacodeCompiler;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,15 +24,32 @@ public class JavaSourceCodeCompiler {
 	public JavaSourceCodeCompiler() {
 		slash = System.getProperty("os.name").startsWith("Windows") ? '\\' : '/';
 	}
-
+	
+	/** 
+	 * starts a new thread where a .java file (in a defined package) will be compiled into chosen
+	 * directory and executed
+	 * @param file to be compiled and executed
+	 * @param targetDirectoryPath
+	 */
 	public void compileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
 		new CompileAndRunJavaFileInPackage(file, targetDirectoryPathIn);
 	}
 
+	/** 
+	 * starts a new thread where a .java file (without a defined package) will be compiled into
+	 * chosen directory and executed
+	 * @param file to be compiled and executed
+	 * @param targetDirectoryPath
+	 */
 	public void compileAndRunJavaFileWithoutPackage(File file, String targetDirectoryPathIn) {
 		new CompileAndRunJavaFileWithoutPackage(file, targetDirectoryPathIn).start();
 	}
 	
+	/** 
+	 * starts a new thread where the file will be compiled into chosen directory.
+	 * @param file to be compiled and executed
+	 * @param targetDirectoryPath
+	 */
 	public void compileJavaFile(File file, String targetDirectoryPathIn) {
 		new CompileJavaFile(file, targetDirectoryPathIn).start();
 	}
@@ -86,7 +103,7 @@ public class JavaSourceCodeCompiler {
 	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
 	 * @param dependenciesPath are the paths to dependent libraries.
 	 */	
-	public class CompileAndRunJavaFileWithoutPackage extends Thread {
+	private class CompileAndRunJavaFileWithoutPackage extends Thread {
 		private String targetDirectoryPathIn;
 		private File file;
 
@@ -126,7 +143,7 @@ public class JavaSourceCodeCompiler {
 	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
 	 * @param dependenciesPath are the paths to dependent libraries.
 	 */
-	public class CompileJavaFile extends Thread {
+	private class CompileJavaFile extends Thread {
 		private String targetDirectoryPathIn;
 		private File file;
 
@@ -167,7 +184,7 @@ public class JavaSourceCodeCompiler {
 	 * @param directoryIn
 	 * @return finalDirectory
 	 */
-	public synchronized String formatDirectoryPath(String targetDirectoryPathIn) {
+	private synchronized String formatDirectoryPath(String targetDirectoryPathIn) {
 		String finalDirectoryPath = targetDirectoryPathIn;
 
 		if ((finalDirectoryPath.charAt(finalDirectoryPath.length() - 1)) != slash) {
