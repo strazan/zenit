@@ -30,16 +30,16 @@ public class TestUI extends Application {
 		 */
 		File workspace = WorkspaceHandler.readWorkspace();
 		
-		if (workspace == null) {
-			DirectoryChooser directoryChooser = new DirectoryChooser();
-			directoryChooser.setTitle("Choose workspace");
-			workspace = directoryChooser.showDialog(stage);
-			if (workspace != null) {
-				WorkspaceHandler.createWorkspace(workspace);
-			} else {
-				System.exit(0);
-			}
-		}
+//		if (workspace == null) {
+//			DirectoryChooser directoryChooser = new DirectoryChooser();
+//			directoryChooser.setTitle("Choose workspace");
+//			workspace = directoryChooser.showDialog(stage);
+//			if (workspace != null) {
+//				WorkspaceHandler.createWorkspace(workspace);
+//			} else {
+//				System.exit(0);
+//			}
+//		}
 		
 		FileController fileController = new FileController(workspace);
 		
