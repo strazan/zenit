@@ -9,16 +9,20 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
+import java.util.Scanner;
 
+import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.FileChooser;
@@ -245,5 +249,48 @@ public class MainController {
 		}
 
 		return null;
+	}
+
+	/**
+	 * @author Fredrik EKlundh
+	 * 
+	 * Searches after a specific String in the currently selected tab 
+	 * and prints how many times it exist in the console.
+	 * @throws FileNotFoundException
+	 */
+	
+	public void searchInFile() throws FileNotFoundException {
+		TextInputDialog dialog = new TextInputDialog("search");
+		dialog.setTitle("Search");
+		dialog.setHeaderText("What are you looking for?");
+//		dialog.setContentText("Search in file");
+
+		String word = "";
+		int numberOfTimes = 0;
+
+		Tab tab = getSelectedTab();
+		File file = currentlySelectedFiles.get(tab);
+		Scanner txtscan = new Scanner(file);
+
+		Optional<String> result = dialog.showAndWait();
+		if (result.isPresent()) {
+			word = result.get();
+
+			while (txtscan.hasNextLine()) {
+				String str = txtscan.nextLine();
+				while (str.indexOf(word) != -1) {
+					numberOfTimes++;
+					str = str.substring(str.indexOf(word) + word.length());
+
+				}
+			}
+		}
+
+		if (numberOfTimes > 0) {
+			System.out.println("Exsist " + numberOfTimes + " times");
+		} else {
+			// System.out.println("LEARN TO SPELL");
+		}
+
 	}
 }

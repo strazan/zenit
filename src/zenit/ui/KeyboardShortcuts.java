@@ -1,5 +1,7 @@
 package zenit.ui;
 
+import java.io.FileNotFoundException;
+
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -51,6 +53,15 @@ public final class KeyboardShortcuts {
 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.compileAndRun();
+		});
+		
+		add(scene, KeyCode.F, KeyCombination.SHORTCUT_DOWN, () -> {
+			try {
+				controller.searchInFile();
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		});
 	}
 }
