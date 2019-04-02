@@ -306,8 +306,8 @@ public class MainController {
 		try {
 			if (file != null) {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-//				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
-				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
+				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+//				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
 			e.printStackTrace();
