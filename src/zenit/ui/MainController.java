@@ -2,8 +2,6 @@ package zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import javafx.event.Event;
 import javafx.fxml.FXML;
@@ -126,7 +124,8 @@ public class MainController {
 	 */
 	public void closeTab() {
 		FileTab selectedTab = getSelectedTab();
-		selectedTab.closeTab(this);
+//		selectedTab.getOnCloseRequest().handle(new Event(selectedTab, selectedTab, Tab.TAB_CLOSE_REQUEST_EVENT));
+		selectedTab.close();
 	}
 
 	/**
@@ -135,14 +134,10 @@ public class MainController {
 	 */
 	@FXML
 	public void saveFile(Event event) {
-		try {
-			FileTab selectedTab = getSelectedTab();
+		FileTab selectedTab = getSelectedTab();
 
-			if (selectedTab != null) {
-				selectedTab.save();
-			}
-		} catch (IOException ex) {
-			System.out.println("Could not save file.");
+		if (selectedTab != null) {
+			selectedTab.save();
 		}
 	}
 

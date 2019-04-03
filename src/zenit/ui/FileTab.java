@@ -1,12 +1,13 @@
 package zenit.ui;
 
 import java.io.File;
-import java.io.IOException;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.skin.TabPaneSkin;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
@@ -29,6 +30,9 @@ public class FileTab extends Tab {
 	
 	private boolean hasChanged;
 	
+	/**
+	 * Constructs a new FileTab without a file, setting the title to "Untitled".
+	 */
 	public FileTab() {
 		textArea = new TextArea();
 		initialTitle = "Untitled";
@@ -36,18 +40,33 @@ public class FileTab extends Tab {
 		initializeUI();
 	}
 	
+	/**
+	 * Initializes the UI. Attaches an AnchorPane with a TextArea that fills it, 
+	 * and sets additional data.
+	 */
 	private void initializeUI() {
 		AnchorPane anchorPane = new AnchorPane();	
 		AnchorPane.setTopAnchor(textArea, 0.0);
 		AnchorPane.setRightAnchor(textArea, 0.0);
 		AnchorPane.setBottomAnchor(textArea, 0.0);
 		AnchorPane.setLeftAnchor(textArea, 0.0);
-		
+
+		/**
+		 * Returns the text in the Tab's TextArea.
+		 * @return A String that holds the text in the Tab.
+		 */
+//		public String getFileText() {
+//			return textArea.getText();
+//		}
 		anchorPane.getChildren().add(textArea);
 		textArea.setStyle("-fx-font-family: monospace");
 		
 		setContent(anchorPane);
-		setOnCloseRequest(this::onCloseRequest);
+		setOnCloseRequest(event -> {
+	        if (hasChanged) {
+	        	showConfirmDialog(event);
+	        }
+		});
 		
 		setText(initialTitle);
 		
@@ -58,9 +77,16 @@ public class FileTab extends Tab {
 			updateUI();
 		});
 		
-		textArea.requestFocus();
+		Platform.runLater(textArea::requestFocus);
 	}
 	
+	public void close() {
+		getOnCloseRequest().handle(new Event(this, this, Tab.TAB_CLOSE_REQUEST_EVENT));
+	}
+	
+	/**
+	 * Updates the title of the tab.
+	 */
 	private void updateUI() {
 		if (hasChanged) {
 			setText(initialTitle + " *");
@@ -70,20 +96,30 @@ public class FileTab extends Tab {
 		}
 	}
 	
+	/**
+	 * Sets the file to the given one, and updates the UI.
+	 * @param file The File to set.
+	 */
 	private void update(File file) {
 		setFile(file, false);
 		hasChanged = false;
 		updateUI();
 	}
 	
+	/**
+	 * Returns the attached File.
+	 * @return The File.
+	 */
 	public File getFile() {
 		return file;
 	}
 	
-	public String getFileText() {
-		return textArea.getText();
-	}
-	
+	/**
+	 * Sets the File to the given one.
+	 * @param file The File to set.
+	 * @param shouldSetContent Whether or not to read the File and 
+	 * set the Tab's text content to it.
+	 */
 	public void setFile(File file, boolean shouldSetContent) {
 		this.initialFile = file;
 		this.file = file;
@@ -96,24 +132,33 @@ public class FileTab extends Tab {
 		}
 	}
 	
+	/**
+	 * Sets the given String to the TextArea.
+	 * @param text The String to write in the TextArea.
+	 */
 	public void setFileText(String text) {
 		textArea.setText(text);
 	}
-
-	public boolean hasChanged() {
-		return hasChanged;
-	}
 	
-	public void closeTab(Object source) {
-        onCloseRequest(new Event(this, this, null));
-    }
+	/**
+	 * Calls the onCloseRequest method from the given source.
+	 * @param source The source of the event.
+	 */
+//	public void close(Object source) {
+//		TabEntity e = new TabEntity();
+//		Event event = new Event(source, this, null);
+//        if (hasChanged) {
+//        	showConfirmDialog(event);
+//        } else {
+//        	Event.fireEvent(this, new Event(Tab.CLOSED_EVENT));
+//        }
+//    }
 		
-	private void onCloseRequest(Event event) {
-		if (hasChanged) {
-			showConfirmDialog(event);
-		}
-	}
-	
+	/**
+	 * Shows a confirm dialog and performs a corresponding action to whether the user 
+	 * chose OK, Cancel, or No.
+	 * @param event The event.
+	 */
 	private void showConfirmDialog(Event event) {
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		
@@ -125,34 +170,28 @@ public class FileTab extends Tab {
 		ButtonType noButton = new ButtonType("No", ButtonData.NO);
 		ButtonType cancelButton = new ButtonType("Cancel", ButtonData.CANCEL_CLOSE);
 
-		alert.getButtonTypes().setAll(okButton, noButton, cancelButton);
+		alert.getButtonTypes().setAll(cancelButton, okButton, noButton);
 		alert.showAndWait().ifPresent(result -> {
-//			if (result.getButtonData().isCancelButton()) {
-//				System.out.println("cancel");
-//			}
-//			else if (result == noButton){
-//				System.out.println("not cancel");
-//			}
 			if (result == cancelButton) {
 				event.consume();
 				return;
-			} else if (result == noButton) {
 			} else if (result == okButton) {
-				try {
-					save();
-				} catch (IOException ex) {}
+				boolean saved = save();
+				if (!saved) event.consume();
 			}
 		});
 	}
 	
-	public void save() throws IOException {
-		String text = getFileText();
-		System.out.println(text);
+	/**
+	 * Attempts to save the file. If it does not exist, a save dialog is shown.
+	 */
+	public boolean save() {
+		String text = textArea.getText();
 		
 		if (file != null) {
 			FileHandler.writeTextFile(file, text);
 			update(file);
-			return;
+			return true;
 		}
 		
 		File newFile = new FileChooser().showSaveDialog(null);
@@ -160,6 +199,9 @@ public class FileTab extends Tab {
 		if (newFile != null) {
 			FileHandler.writeTextFile(newFile, text);
 			update(newFile);
+			return true;
+		} else {
+			return false;
 		}
 	}
 }
