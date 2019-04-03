@@ -36,7 +36,7 @@ public class CodeSnippets {
 		classname = classname.substring(0, index);
 		
 		String codesnippet =
-				"package " + packagename + "\n" + 
+				"package " + packagename + ";\n" + 
 				"\n" +
 				"public class " + classname + " {\n" +
 				"\n" + 
