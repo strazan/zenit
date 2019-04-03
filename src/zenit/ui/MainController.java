@@ -428,6 +428,13 @@ public class MainController {
 		taConsole.clear();
 	}
 	
+	
+	/**
+	 * Fire this on mouse events (Mouse exit, enter, click etc) for buttons and other components.
+	 * Call this function on for example btnRun. ( btnRun onMouseExit="#onMouseEvent" )
+	 * @param MouseEvent 
+	 */
+	
 	@FXML
 	private void onMouseEvent(MouseEvent e) {
 	
@@ -443,21 +450,20 @@ public class MainController {
 		}
 		else if(e.getEventType() == MouseEvent.MOUSE_EXITED) {
 			if(sourceButton.equals(btnRun)) {
-				darkenIconColor(iconRun);
+				iconRun.setIconColor(Color.GREEN);
 			}
 			else if(sourceButton.equals(btnStop)) {
-				darkenIconColor(iconStop);
+				iconStop.setIconColor( Color.DARKRED);
 			}
 		}
 	}
 	
-	private void darkenIconColor(FontIcon icon) {
-		icon.setIconColor( ((Color) icon.getIconColor()).darker() );
-	}
 	
-	
-	private void lightenIconColor(FontIcon icon) {
-		
+	/*
+	 * Takes a fontIcon and sets the iconColor to a brighter colour
+	 * @param FontIcon
+	 */
+	private void lightenIconColor(FontIcon icon) {	
 		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
 	}
 }

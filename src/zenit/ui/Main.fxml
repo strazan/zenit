@@ -94,7 +94,7 @@
                                                 </Button>
                                                 <Button id="btnStop" fx:id="btnStop" mnemonicParsing="false" prefHeight="0.0" prefWidth="15.0" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent">
                                                    <graphic>
-                                                      <FontIcon fx:id="iconStop" iconColor="red" iconLiteral="fa-stop-circle" iconSize="24" />
+                                                      <FontIcon fx:id="iconStop" iconColor="darkred" iconLiteral="fa-stop-circle" iconSize="24" />
                                                    </graphic>
                                                    <padding>
                                                       <Insets top="1.0" />
