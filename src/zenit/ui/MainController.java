@@ -5,17 +5,23 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.kordamp.ikonli.javafx.FontIcon;
+
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.paint.Color;
+import javafx.scene.paint.Paint;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -62,6 +68,18 @@ public class MainController {
 
 	@FXML
 	private TreeView<String> treeView;
+	
+	@FXML 
+	private FontIcon iconRun;
+
+	@FXML 
+	private FontIcon iconStop;
+	
+	@FXML
+	private Button btnRun;
+	
+	@FXML 
+	private Button btnStop;
 
 	/**
 	 * Setter for FileController instance. Used to access the file system.
@@ -418,5 +436,44 @@ public class MainController {
 	@FXML
 	private void clearConsole() {
 		taConsole.clear();
+	}
+	
+	
+	/**
+	 * Fire this on mouse events (Mouse exit, enter, click etc) for buttons and other components.
+	 * Call this function on for example btnRun. ( btnRun onMouseExit="#onMouseEvent" )
+	 * @param MouseEvent 
+	 */
+	
+	@FXML
+	private void onMouseEvent(MouseEvent e) {
+	
+		Button sourceButton = (Button) e.getSource();
+		
+		if(e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+			if(sourceButton.equals(btnRun)) {
+				lightenIconColor(iconRun);
+			}
+			else if(sourceButton.equals(btnStop)) {
+				lightenIconColor(iconStop);
+			}
+		}
+		else if(e.getEventType() == MouseEvent.MOUSE_EXITED) {
+			if(sourceButton.equals(btnRun)) {
+				iconRun.setIconColor(Color.GREEN);
+			}
+			else if(sourceButton.equals(btnStop)) {
+				iconStop.setIconColor( Color.DARKRED);
+			}
+		}
+	}
+	
+	
+	/*
+	 * Takes a fontIcon and sets the iconColor to a brighter colour
+	 * @param FontIcon
+	 */
+	private void lightenIconColor(FontIcon icon) {	
+		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
 	}
 }
