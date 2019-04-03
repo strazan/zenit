@@ -302,18 +302,39 @@ public class MainController {
 	 */
 	public void compileAndRun() {
 		File file = currentlySelectedFiles.get(getSelectedTab());
-		saveFile(null);
+		File projectFile = getMetadataFile(file);
+
+
+		
+//		saveFile(null);
 		try {
-			if (file != null) {
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+			if (file != null && projectFile != null) {
+				compiler.compileAndRunJavaFileInPackage(file, projectFile);
+			} else if (file != null) {
 				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
-//				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
 			e.printStackTrace();
 			
 			// TODO: handle exception
 		}
+	}
+	
+	public static File getMetadataFile(File file) {
+		File[] files = file.listFiles();
+		if (files != null) {
+			for (File entry : files) {
+				if (entry.getName().equals(".metadata")) {
+					return entry.getParentFile();
+				}
+			}
+		}
+		File parent = file.getParentFile();
+		if (parent == null) {
+			return null;
+		}
+		return getMetadataFile(parent);
 	}
 
 	/**

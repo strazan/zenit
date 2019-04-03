@@ -31,6 +31,7 @@ public class ProjectHandler extends FolderHandler {
 			
 			PackageHandler.createPackage(packageFile);
 			PackageHandler.createPackage(binFile);
+			MetadataFileHandler.createMetadataFile(file);
 
 		} else {
 			throw new IOException("Couldn't create project");

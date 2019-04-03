@@ -17,6 +17,9 @@ public class PackageHandler extends FolderHandler {
 	 * @throws IOException See {@link FolderHandler#createNewFolder(File)}
 	 */
 	protected static void createPackage(File file) throws IOException {
+		if (file.getName().equals("package")) {
+			throw new IOException("Can't name package: " + file.getName());
+		}
 		createNewFolder(file);
 	}
 	
