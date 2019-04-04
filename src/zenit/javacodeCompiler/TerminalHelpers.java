@@ -26,7 +26,11 @@ public class TerminalHelpers {
 	protected static void runCommand(String command, File directory) {
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
-			builder.command("sh", "-c", command); //Only works for UNIX-based OS atm
+			if (System.getProperty("os.name").startsWith("Windows")) {
+				builder.command("cmd.exe", "/c", command);
+			} else {
+				builder.command("sh", "-c", command);
+			}
 
 			builder.directory(directory);
 

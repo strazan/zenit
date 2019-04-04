@@ -83,13 +83,13 @@ public class MainController {
 	}
 	
 	/**
-	 * Initializes the treeview. Creates a root node from the workspace-file in the fileController
-	 * class. Calls FileTree-method to add all files in the workspace folder to the tree. Creates a
-	 * TreeContextMenu for displaying when right clicking nodes in the tree and an event handler
-	 * for clicking nodes in the tree.
+	 * Initializes the {@link javafx.scene.control.TreeView TreeView}. Creates a root node from the
+	 * workspace-file in the fileController class. Calls FileTree-method to add all files in the
+	 * workspace folder to the tree. Creates a TreeContextMenu for displaying when right clicking 
+	 * nodes in the tree and an event handler for clicking nodes in the tree.
 	 */
 	private void initTree() {
-		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "Workspace");
+		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace", FileTreeItem.WORKSPACE);
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			zenit.ui.tree.FileTree.createNodes(rootItem, workspace);
@@ -143,7 +143,7 @@ public class MainController {
 				File newFile = chooseFile();
 				newFile = fileController.createFile(newFile, content);
 				currentlySelectedFiles.put(selectedTab, newFile);
-				FileTreeItem<String> newNode = new FileTreeItem<String>(newFile, newFile.getName());
+				FileTreeItem<String> newNode = new FileTreeItem<String>(newFile, newFile.getName(), 0);
 				treeView.getRoot().getChildren().add(newNode);
 				Tab tab = getSelectedTab();
 				tab.setText(newFile.getName());

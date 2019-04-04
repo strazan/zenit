@@ -138,6 +138,7 @@ public class JavaSourceCodeCompiler {
 
 			//Runs command
 			TerminalHelpers.runCommand(command, binFile);
+			
 		}
 	}
 
