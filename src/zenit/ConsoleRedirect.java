@@ -3,6 +3,10 @@ package zenit;
 import java.io.PrintStream;
 
 import javafx.scene.control.TextArea;
+import zenit.console.ConsoleArea;
+import zenit.console.ConsoleAreaErrorStream;
+import zenit.console.ConsoleAreaOutputStream;
+import zenit.textFlow.ZenCodeArea;
 
 /**
  * 
@@ -12,12 +16,15 @@ import javafx.scene.control.TextArea;
  */
 public class ConsoleRedirect {
 	
-	public ConsoleRedirect(TextArea ta) {
+	public ConsoleRedirect(ConsoleArea ta) {
 		try {
-			TextAreaOutputStream tacos = new TextAreaOutputStream(ta);
+			ConsoleAreaOutputStream tacos = new ConsoleAreaOutputStream(ta);
+			ConsoleAreaErrorStream socat = new ConsoleAreaErrorStream(ta);
 			PrintStream ps = new PrintStream(tacos);
+			PrintStream err = new PrintStream(socat);
+			
 			System.setOut(ps);
-			System.setErr(ps);
+			System.setErr(err);
 			
 			/* 
 			 * TODO

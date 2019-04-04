@@ -20,7 +20,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import zenit.ConsoleRedirect;
-
+import zenit.console.ConsoleArea;
 import zenit.filesystem.FileController;
 import zenit.javacodeCompiler.JavaSourceCodeCompiler;
 import zenit.textFlow.ZenCodeArea;
@@ -40,7 +40,7 @@ public class MainController {
 	private FileController fileController;
 
 	@FXML
-	private TextArea taConsole;
+	private ConsoleArea taConsole;
 
 	@FXML
 	private MenuItem newFile;

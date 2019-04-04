@@ -20,6 +20,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import zenit.console.ConsoleArea?>
 
 
 <VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
@@ -105,7 +106,7 @@
                                              <content>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true">
                                                    <content>
-                                                      <TextArea fx:id="taConsole" editable="false" prefHeight="269.0" prefWidth="667.0" />
+                                                      <ConsoleArea fx:id="taConsole" prefHeight="269.0" prefWidth="667.0" />
                                                    </content>
                                                 </ScrollPane>
                                              </content>
