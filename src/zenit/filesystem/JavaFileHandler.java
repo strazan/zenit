@@ -15,27 +15,12 @@ import zenit.filesystem.helpers.FileNameHelpers;
 
 /**
  * Methods for creating, reading, writing, renaming and deleting .java files in file system.
- * Text encoding is by default "UTF-8" but can be changed with {@link #setTextEncoding(String)
- * setTextEncoding}.
- * Use constant {@link #UTF UTF} for UTF-8.
  * Only to be accessed using {@link FileController FileController} methods.
  * 
  * @author Alexander Libot
  *
  */
-public class JavaFileHandler {
-	
-	public final static String UTF = "UTF-8";
-	
-	private static String textEncoding = UTF; //Text-encoding
-	
-	/**
-	 * Changes text encoding. Use {@link JavaFileHandler ClassHandler} constants.
-	 * @param encoding The new text encoding.
-	 */
-	public static void setTextEncoding(String encoding) {
-		textEncoding = encoding;
-	}
+public class JavaFileHandler extends FileHandler {
 	
 	/**
 	 * Tries to create a new .java file in file system. Adds .java to file name if not already 

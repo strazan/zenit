@@ -32,8 +32,14 @@ public class FolderHandler {
 	 * @param file The folder to rename
 	 * @param newFolderName The new folder name
 	 * @return The renamed file
+	 * @throws IOException Throws an IOException if folder already exist, name is not allowed
+	 * or if {@link java.io.File#renameTo(File) renameTo} throws an exception
 	 */
 	protected static File renameFolder(File file, String newFolderName) throws IOException {
+		
+		if (newFolderName.equals("package")) {
+			throw new IOException("Can't rename package to: " + newFolderName);
+		}
 		
 		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(file); //Removes file name
 		

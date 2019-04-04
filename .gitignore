@@ -6,6 +6,6 @@ bin/*
 *.log
 
 #Workspace file
-*/workspace.dat
+res/workspace/workspace.dat
 /bin/
 .classpath

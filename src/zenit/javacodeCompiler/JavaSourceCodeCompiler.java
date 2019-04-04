@@ -31,8 +31,11 @@ public class JavaSourceCodeCompiler {
 	 * @param file to be compiled and executed
 	 * @param targetDirectoryPath
 	 */
-	public void compileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
-		new CompileAndRunJavaFileInPackage(file, targetDirectoryPathIn);
+//	public void compileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
+//		new CompileAndRunJavaFileInPackage(file, targetDirectoryPathIn);
+//	}
+	public void compileAndRunJavaFileInPackage(File file, File metadata) {
+		new CompileAndRunJavaFileInPackage(file, metadata).start();
 	}
 
 	/** 
@@ -62,36 +65,80 @@ public class JavaSourceCodeCompiler {
 	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
 	 * @param dependenciesPath are the paths to dependent libraries.
 	 */
+//	public class CompileAndRunJavaFileInPackage extends Thread {
+//		private File file;
+//		private String targetDirectoryPathIn;
+//
+//		public CompileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
+//			this.file = file;
+//			this.targetDirectoryPathIn = targetDirectoryPathIn;
+//		}
+//
+//		public void run() {
+//			String absolutePath = file.getAbsolutePath();
+//			String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
+//			String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
+//			CommandLine clCompileJavaFile = CommandLine.parse(
+//					"javac -cp src \"" + absolutePath + "\" -d \"" + targetDirectoryPath + "\""
+//					);
+//			CommandLine clRunJavaByteCodeFile = CommandLine.parse(
+//					"java -classpath \"" + System.getProperty(
+//							"java.home") + "\" \"" + targetDirectoryPath + fileName + "\""
+//					);	
+//			try {
+//				executor.execute(clCompileJavaFile);
+//				executor.execute(clRunJavaByteCodeFile);
+//			} catch (ExecuteException e) {
+//				System.err.println("Compile and run file failed. The file was: " + absolutePath);
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				System.err.println("Something went wrong.");
+//				e.printStackTrace();
+//			}
+//		}
+//	}
+	
+	/**
+	 * Compiles and runs a java file using the .metadata file in project folder.
+	 * 
+	 * @param runFile The file to run, must contain main-method
+	 * @param projectFile The folder of the project. Must contain a .metadata file
+	 * with directory and sourcepath flags and directories and a bin folder.
+	 */
 	public class CompileAndRunJavaFileInPackage extends Thread {
-		private File file;
-		private String targetDirectoryPathIn;
+		private File runFile;
+		private File projectFile;
 
-		public CompileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
-			this.file = file;
-			this.targetDirectoryPathIn = targetDirectoryPathIn;
+		public CompileAndRunJavaFileInPackage(File runFile, File projectFile) {
+			this.runFile = runFile;
+			this.projectFile = projectFile;
 		}
 
 		public void run() {
-			String absolutePath = file.getAbsolutePath();
-			String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
-			String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
-			CommandLine clCompileJavaFile = CommandLine.parse(
-					"javac -cp src \"" + absolutePath + "\" -d \"" + targetDirectoryPath + "\""
-					);
-			CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-					"java -classpath \"" + System.getProperty(
-							"java.home") + "\" \"" + targetDirectoryPath + fileName + "\""
-					);	
-			try {
-				executor.execute(clCompileJavaFile);
-				executor.execute(clRunJavaByteCodeFile);
-			} catch (ExecuteException e) {
-				System.err.println("Compile and run file failed. The file was: " + absolutePath);
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.err.println("Something went wrong.");
-				e.printStackTrace();
-			}
+			//Creates runPath within project folder
+			String runPath = runFile.getPath();
+			String projectPath = projectFile.getPath();
+			runPath = runPath.replaceAll(projectPath+"/", "");
+
+			//Creates command for compiling
+			String command = "javac " + runPath + " @.metadata";
+
+			//Runs command
+			TerminalHelpers.runCommand(command, projectFile);
+			
+			//Creates runPath without extension from package
+			runPath = runPath.replaceAll("src/", "");
+			runPath = runPath.replaceAll(".java", "");
+			
+			//Creates command for running
+			command = "java " + runPath;
+			
+			//Creates new directory folder, bin-folder
+			File binFile = new File(projectFile.getPath() + "/bin");
+
+			//Runs command
+			TerminalHelpers.runCommand(command, binFile);
+			
 		}
 	}
 
