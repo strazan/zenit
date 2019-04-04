@@ -19,12 +19,12 @@ public class ConsoleRedirect {
 	public ConsoleRedirect(ConsoleArea ta) {
 		try {
 			ConsoleAreaOutputStream tacos = new ConsoleAreaOutputStream(ta);
-			ConsoleAreaErrorStream socat = new ConsoleAreaErrorStream(ta);
+			//ConsoleAreaErrorStream socat = new ConsoleAreaErrorStream(ta);
 			PrintStream ps = new PrintStream(tacos);
-			PrintStream err = new PrintStream(socat);
+		//	PrintStream err = new PrintStream(socat);
 			
 			System.setOut(ps);
-			System.setErr(err);
+			System.setErr(ps);
 			
 			/* 
 			 * TODO

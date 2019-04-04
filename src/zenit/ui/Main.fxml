@@ -111,7 +111,7 @@
                                              <content>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true">
                                                    <content>
-                                                      <ConsoleArea fx:id="taConsole" prefHeight="269.0" prefWidth="667.0" />
+                                                      <ConsoleArea fx:id="caConsole" prefHeight="469.0" prefWidth="667.0" />
                                                    </content>
                                                 </ScrollPane>
                                              </content>

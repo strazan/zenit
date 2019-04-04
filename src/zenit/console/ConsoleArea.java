@@ -1,13 +1,10 @@
 package zenit.console;
 
-import java.net.URL;
-import java.util.ResourceBundle;
-
+import org.fxmisc.richtext.CodeArea;
 import org.fxmisc.richtext.InlineCssTextArea;
 
-import javafx.fxml.Initializable;
 
-public class ConsoleArea extends InlineCssTextArea {
+public class ConsoleArea extends CodeArea {
 	
 	private final String ID;
 	
@@ -22,5 +19,10 @@ public class ConsoleArea extends InlineCssTextArea {
 	public String getID() {
 		// TODO Auto-generated method stub
 		return ID;
+	}
+	
+	
+	public void outPrint(String s) {
+		super.appendText(s);
 	}
 }

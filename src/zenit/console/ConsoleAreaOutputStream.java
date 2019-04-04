@@ -10,12 +10,13 @@ public class ConsoleAreaOutputStream extends OutputStream {
 	private StringBuilder sb = new StringBuilder();
 
 	public ConsoleAreaOutputStream(ConsoleArea ca) {
+		
 		this.ca = ca;
 	}
 
 	@Override
 	public void flush() {
-		ca.appendText(sb.toString());
+		ca.outPrint(sb.toString());
 		sb.setLength(0);
 	}
 
@@ -30,12 +31,12 @@ public class ConsoleAreaOutputStream extends OutputStream {
 	}
 
 	@Override
-	public void write(int b) throws IOException {
+	public void write(int b) {
 		
 		
 
 		if (b == '\n') {
-			ca.appendText(sb.toString() + "\n");
+			ca.outPrint(sb.toString() + "\n");
 			sb.setLength(0);
 			return;
 		}
@@ -45,11 +46,12 @@ public class ConsoleAreaOutputStream extends OutputStream {
 		
 		sb.append((char)b);
 		
-		ca.replaceText(Character.toString((char)b));
+		ca.outPrint(Character.toString((char)b));
 	}
 
 	@Override
-	public void write(byte b[], int off, int len) throws IOException {
-		ca.replaceText(new String(b, off, len));
+	public void write(byte b[], int off, int len) {
+		
+		ca.outPrint(new String(b, off, len));
 	}
 }

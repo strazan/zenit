@@ -46,7 +46,7 @@ public class MainController {
 	private FileController fileController;
 
 	@FXML
-	private ConsoleArea taConsole;
+	private ConsoleArea caConsole;
 
 	@FXML
 	private MenuItem newFile;
@@ -96,7 +96,8 @@ public class MainController {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
 
-		new ConsoleRedirect(taConsole);
+		new ConsoleRedirect(caConsole);
+		
 		initTree();
 	}
 	
@@ -320,7 +321,7 @@ public class MainController {
 	 */
 	public void compileAndRun() {
 		File file = currentlySelectedFiles.get(getSelectedTab());
-		saveFile(null);
+		//saveFile(null);
 		try {
 			if (file != null) {
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
@@ -328,6 +329,7 @@ public class MainController {
 //				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
+			 System.out.println("print");
 			e.printStackTrace();
 			
 			// TODO: handle exception
@@ -435,7 +437,7 @@ public class MainController {
 	 */
 	@FXML
 	private void clearConsole() {
-		taConsole.clear();
+		caConsole.clear();
 	}
 	
 	
