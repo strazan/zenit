@@ -20,5 +20,11 @@
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-sources.jar"/>
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-tests.jar"/>
 	<classpathentry kind="lib" path="lib/commons/lib/commons.exec.jar"/>
+	<classpathentry kind="lib" path="lib/jface/org.eclipse.jface-3.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/RichTextFX/richtextfx-fat-0.9.3.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr-4.7.2-complete.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-core-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-fontawesome-pack-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-javafx-11.1.0.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

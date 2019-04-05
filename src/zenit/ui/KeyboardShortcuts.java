@@ -1,5 +1,6 @@
 package zenit.ui;
 
+import javafx.event.Event;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
@@ -38,11 +39,11 @@ public final class KeyboardShortcuts {
 		});
 		
 		add(scene, KeyCode.O, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.openFile(null);
+			controller.openFile((Event) null);
 		});
 		
 		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
-		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, controller::closeTab); 		
+		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
 	}
 }

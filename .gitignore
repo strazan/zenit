@@ -1,1 +1,11 @@
+#Class files
+bin/*
+*.class
+
+#Log files
+*.log
+
+#Workspace file
+*/workspace.dat
 /bin/
+.classpath
