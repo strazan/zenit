@@ -101,13 +101,13 @@ public class MainController {
 	}
 	
 	/**
-	 * Initializes the treeview. Creates a root node from the workspace-file in the fileController
-	 * class. Calls FileTree-method to add all files in the workspace folder to the tree. Creates a
-	 * TreeContextMenu for displaying when right clicking nodes in the tree and an event handler
-	 * for clicking nodes in the tree.
+	 * Initializes the {@link javafx.scene.control.TreeView TreeView}. Creates a root node from the
+	 * workspace-file in the fileController class. Calls FileTree-method to add all files in the
+	 * workspace folder to the tree. Creates a TreeContextMenu for displaying when right clicking 
+	 * nodes in the tree and an event handler for clicking nodes in the tree.
 	 */
 	private void initTree() {
-		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "Workspace");
+		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace", FileTreeItem.WORKSPACE);
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			zenit.ui.tree.FileTree.createNodes(rootItem, workspace);
@@ -159,7 +159,7 @@ public class MainController {
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
 		
 		if (didWrite) {
-			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName());
+			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
 			
 			if (!treeView.getRoot().getChildren().stream().anyMatch(n -> 
 					n.getValue().equals(newNode.getFile().getName())
@@ -310,19 +310,37 @@ public class MainController {
 	 */
 	public void compileAndRun() {
 		File file = getSelectedTab().getFile();
+		File projectFile = getMetadataFile(file);
 		saveFile(null);
-
+		
 		try {
-			if (file != null) {
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+			if (file != null && projectFile != null) {
+				compiler.compileAndRunJavaFileInPackage(file, projectFile);
+			} else if (file != null) {
 				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
-//				compiler.compileAndRunJavaFileInPackage(file, file.getParent());
 			}
 		} catch (Exception e){
 			e.printStackTrace();
 			
 			// TODO: handle exception
 		}
+	}
+	
+	public static File getMetadataFile(File file) {
+		File[] files = file.listFiles();
+		if (files != null) {
+			for (File entry : files) {
+				if (entry.getName().equals(".metadata")) {
+					return entry.getParentFile();
+				}
+			}
+		}
+		File parent = file.getParentFile();
+		if (parent == null) {
+			return null;
+		}
+		return getMetadataFile(parent);
 	}
 
 	/**

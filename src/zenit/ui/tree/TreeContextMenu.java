@@ -29,6 +29,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private MenuItem createPackage = new MenuItem("New package");
 	private MenuItem renameItem = new MenuItem("Rename");
 	private MenuItem deleteItem = new MenuItem("Delete");
+	private MenuItem typeCode = new MenuItem();
 	
 	/**
 	 * Creates a new {@link TreeContextMenu} that can manipulate a specific {@link
@@ -55,7 +56,8 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		String deleteItemTitle = String.format("Delete \"%s\"", selectedNode);
 		renameItem.setText(renameItemTitle);
 		deleteItem.setText(deleteItemTitle);
-		
+		typeCode.setText(((FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem()).getStringType());
+				
 		if (selectedNode.equals("src") && !createItem.getItems().contains(createPackage)) {
 			createItem.getItems().add(createPackage);
 		} else {
@@ -71,6 +73,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	@Override
 	public void show(Node node, double x, double y) {
 		setContext(treeView.getSelectionModel().getSelectedItem().getValue());
+
 		super.show(node, x, y);
 	}
 	
@@ -82,6 +85,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		createItem.getItems().add(createClass);
 		createItem.getItems().add(createInterface);
 		getItems().addAll(createItem, renameItem, deleteItem);
+		getItems().add(typeCode);
 		createClass.setOnAction(this);
 		createInterface.setOnAction(this);
 		renameItem.setOnAction(this);
@@ -99,7 +103,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				treeView.getSelectionModel().getSelectedItem();
 		File newFile = controller.createFile(parent.getFile(), typeCode);
 		if (newFile != null) {
-			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName());
+			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), 0);
 			parent.getChildren().add(newItem);
 		}
 	}
@@ -130,7 +134,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		} else if (actionEvent.getSource().equals(createPackage)) {
 			File packageFile = controller.newPackage(selectedFile);
 			if (packageFile != null) {
-				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName());
+				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), 0);
 				selectedItem.getChildren().add(packageNode);
 			}
 		}

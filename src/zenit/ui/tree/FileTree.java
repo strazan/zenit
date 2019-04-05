@@ -21,15 +21,18 @@ public class FileTree {
 	 * in FileTreeItem-structure.
 	 */
 	public static void createNodes(FileTreeItem<String> parent, File file) {
+		int type = 0;
 		if (file.listFiles() == null) {
 			return;
 		}
+		
 		File[] files = file.listFiles();
 		String itemName;
 		for (int index = 0; index < files.length; index++) {
 			itemName = files[index].getName();
 			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
-				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName);
+				type = calculateType(parent, itemName);
+				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type);
 				parent.getChildren().add(item);
 				
 				if (files[index].isDirectory()) {
@@ -48,11 +51,13 @@ public class FileTree {
 	 * in FileTreeItem-structure
 	 */
 	public static void createParentNode(FileTreeItem<String> parent, File file) {
+		int type = 0;
+		
 		if (file == null) {
 			return;
 		}
 		
-		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName());
+		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
 		parent.getChildren().add(item);
 		
 		if (file.isDirectory()) {
@@ -82,5 +87,23 @@ public class FileTree {
 				changeFileForNodes(ftItem, ftItem.getFile());
 			}
 		}
+	}
+	
+	private static int calculateType(FileTreeItem<String> parent, String itemName) {
+		int type = 0;
+		
+		if (parent.getType() == FileTreeItem.WORKSPACE) {
+			type = FileTreeItem.PROJECT;
+		} else if (parent.getValue().equals("src")) {
+			type = FileTreeItem.PACKAGE;
+		}
+		
+		if (itemName.endsWith(".java")) {
+			type = FileTreeItem.CLASS;
+		} else if (itemName.equals("src")) {
+			type = FileTreeItem.SRC;
+		}
+		
+		return type;
 	}
 }
