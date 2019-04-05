@@ -1,6 +1,9 @@
 package zenit.filesystem;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 
 import zenit.filesystem.helpers.CodeSnippets;
@@ -88,6 +91,42 @@ public class FileController {
 			} catch (IOException ex) {
 				System.err.println("FileController.readFileContent: " + ex.getMessage());
 			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Reads a file line by line.
+	 * @param file The File to read.
+	 * @return A String containing all the lines of the File content. 
+	 * Null if the file could not be read.
+	 */
+	public static String readFile(File file) {
+		if (file == null) {
+			return "";
+		}
+		
+		try (
+			var fileReader = new FileReader(file);
+			var bufferedReader = new BufferedReader(fileReader);
+		) {
+			StringBuilder builder = new StringBuilder();
+
+			String line;
+			while ((line = bufferedReader.readLine()) != null) {
+				builder.append(line);
+				builder.append(System.lineSeparator());
+			}
+
+			return builder.toString();
+		} catch (FileNotFoundException ex) {
+			ex.printStackTrace();
+
+			// TODO: give the user feedback that the file could not be found
+		} catch (IOException ex) {
+			ex.printStackTrace();
+
+			// TODO: handle IO exception
 		}
 		return null;
 	}

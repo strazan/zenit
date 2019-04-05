@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -37,7 +38,6 @@ public class TestUI extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
 		controller.setFileController(fileController);
-	
 		
 		loader.setController(controller);
 		Parent root = loader.load();
@@ -50,8 +50,17 @@ public class TestUI extends Application {
 		
 		controller.initialize(stage);
 		stage.show();
-		
 		KeyboardShortcuts.setupMain(scene, controller);
+	}
+	
+	/**
+	 * Calls Platform.exit() as well as System.exit().
+	 * @author Pontus Laos
+	 */
+	@Override
+	public void stop() {
+		Platform.exit();
+		System.exit(0);
 	}
 	
 	/**
