@@ -38,3 +38,6 @@
 	-fx-fill: #333333;
 }
 
+.search {
+    -fx-background-color: yellow;
+}

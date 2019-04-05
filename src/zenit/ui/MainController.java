@@ -3,9 +3,12 @@ package zenit.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Optional;
 import java.util.Scanner;
+
+import org.fxmisc.richtext.model.StyledDocument;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -68,6 +71,7 @@ public class MainController {
 	@FXML
 	private TreeView<String> treeView;
 
+	private ZenCodeArea zenCodeArea;
 	/**
 	 * Setter for FileController instance. Used to access the file system.
 	 */
@@ -329,7 +333,7 @@ public class MainController {
 	public Tab addTab() {
 		Tab tab = new Tab("Untitled");
 		AnchorPane anchorPane = new AnchorPane();
-		ZenCodeArea zenCodeArea = new ZenCodeArea();
+		zenCodeArea = new ZenCodeArea();
 
 		anchorPane.getChildren().add(zenCodeArea);
 		tab.setContent(anchorPane);
@@ -431,10 +435,16 @@ public class MainController {
 		dialog.setHeaderText("What are you looking for?");
 //		dialog.setContentText("Search in file");
 
+		
+		StyledDocument sd;
+		
 		String word = "";
 		int numberOfTimes = 0;
 
 		Tab tab = getSelectedTab();
+		//sd = 
+		
+		
 		File file = currentlySelectedFiles.get(tab);
 		Scanner txtscan = null;
 		try {
@@ -459,6 +469,12 @@ public class MainController {
 
 		if (numberOfTimes > 0) {
 			System.out.println("Exsist " + numberOfTimes + " times");
+			//zenCodeArea.replace(start, end, replacement);
+			//zenCodeArea.setStyle(0, 100, Collections.singleton("-fx-background-color: yellow"));
+//			zenCodeArea.setStyle(0, 10, Collections.singleton("search"));
+			//zenCodeArea.setStyle("-fx-background-color: yellow");
+//			zenCodeArea.setStyleClass(0, 10, "search");
+			zenCodeArea.highlight(word);
 		} else {
 			// System.out.println("LEARN TO SPELL");
 		}
