@@ -360,7 +360,8 @@ public class MainController {
 	}
 
 	/**
-	 * Gets the currently selected tab, and removes it from the TabPane.
+	 * Gets the currently selected tab, and removes it from the TabPane. If the file has been
+	 * modified, a dialog is shown asking if the user wants to save or not, or abort.
 	 */
 	public void closeTab(Event event) {
 		FileTab selectedTab = getSelectedTab();
@@ -414,21 +415,6 @@ public class MainController {
 			}
 		}
 	}
-
-	/**
-	 * Gets the currently selected tab on the tab pane.
-	 * @return The Tab that is currently selected. Null if none was found.
-	 */
-	public FileTab getSelectedTab() {
-		var tabs = tabPane.getTabs();
-
-		for (Tab tab : tabs) {
-			if (tab.isSelected()) {
-				return (FileTab) tab;
-			}
-		}
-		return null;
-	}
 	
 	/**
 	 * Clears the text from console window.
@@ -472,7 +458,27 @@ public class MainController {
 	private void lightenIconColor(FontIcon icon) {	
 		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
 	}
+
+	/**
+	 * Gets the currently selected tab on the tab pane.
+	 * @return The Tab that is currently selected. Null if none was found.
+	 */
+	public FileTab getSelectedTab() {
+		var tabs = tabPane.getTabs();
+
+		for (Tab tab : tabs) {
+			if (tab.isSelected()) {
+				return (FileTab) tab;
+			}
+		}
+		return null;
+	}
 	
+	/**
+	 * Gets the FileTab in the TabPane that is associated with the specified File.
+	 * @param file The File to search for.
+	 * @return The FileTab instance that holds the File, or null if no tab does.
+	 */
 	private FileTab getTabFromFile(File file) {
 		var tabs = tabPane.getTabs();
 		

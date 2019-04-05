@@ -128,7 +128,7 @@ public class FileTab extends Tab {
 	}
 	
 	/**
-	 * Indicates whether the file has been modified.
+	 * Indicates whether the file has been modified or not.
 	 * @return True if the file has been modified, else false.
 	 */
 	public boolean hasChanged() {
