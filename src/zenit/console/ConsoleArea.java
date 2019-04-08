@@ -60,4 +60,8 @@ public class ConsoleArea extends InlineCssTextArea {
 		    }
 		});
 	}
+	
+	 public void clearConsole() {
+		 replaceText("");
+	 }
 }

@@ -432,7 +432,7 @@ public class MainController {
 	 */
 	@FXML
 	private void clearConsole() {
-//		caConsole.appendText("");
+	 ((ConsoleArea) consolePane.getChildren().get(0)).clearConsole();
 	}
 	
 	
