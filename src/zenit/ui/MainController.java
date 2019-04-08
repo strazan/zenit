@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Optional;
 
+import org.fxmisc.richtext.InlineCssTextArea;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.event.Event;
@@ -46,7 +47,7 @@ public class MainController {
 	private FileController fileController;
 
 	@FXML
-	private ConsoleArea caConsole;
+	private AnchorPane consolePane;
 
 	@FXML
 	private MenuItem newFile;
@@ -96,8 +97,16 @@ public class MainController {
 		this.stage = stage;
 		currentlySelectedFiles = new HashMap<>();
 
+		ConsoleArea caConsole = new ConsoleArea();
+		caConsole.setEditable(false);
 		new ConsoleRedirect(caConsole);
 		
+		AnchorPane.setTopAnchor(caConsole, 0.0);
+		AnchorPane.setRightAnchor(caConsole, 0.0);
+		AnchorPane.setBottomAnchor(caConsole, 0.0);
+		AnchorPane.setLeftAnchor(caConsole, 0.0);
+		consolePane.getChildren().add(caConsole);
+			
 		initTree();
 	}
 	
@@ -458,7 +467,7 @@ public class MainController {
 	 */
 	@FXML
 	private void clearConsole() {
-		caConsole.clear();
+//		caConsole.appendText("");
 	}
 	
 	

@@ -1,3 +1,6 @@
+/*   .TextArea {
+	-fx-background-color: rgba(255,255,255,0); 
+} */
 
 .choice-box .context-menu {
 	
@@ -26,3 +29,7 @@
 /*  Selected item text color on the control itself*/
 .choice-box > .label {
  -fx-text-fill: #bbbbbb; }
+ 
+.paragraph-box:has-caret {
+	 -fx-background-color: rgba(255,255,255,0);
+}

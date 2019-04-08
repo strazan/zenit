@@ -1,12 +1,11 @@
 package zenit;
 
+
 import java.io.PrintStream;
 
-import javafx.scene.control.TextArea;
 import zenit.console.ConsoleArea;
 import zenit.console.ConsoleAreaErrorStream;
 import zenit.console.ConsoleAreaOutputStream;
-import zenit.textFlow.ZenCodeArea;
 
 /**
  * 
@@ -15,24 +14,28 @@ import zenit.textFlow.ZenCodeArea;
  * This class redirects the PrintStream from the console to a TextArea
  */
 public class ConsoleRedirect {
-	
+
 	public ConsoleRedirect(ConsoleArea ta) {
 		try {
-			ConsoleAreaOutputStream tacos = new ConsoleAreaOutputStream(ta);
-			//ConsoleAreaErrorStream socat = new ConsoleAreaErrorStream(ta);
-			PrintStream ps = new PrintStream(tacos);
-		//	PrintStream err = new PrintStream(socat);
-			
-			System.setOut(ps);
-			System.setErr(ps);
-			
+
+			ConsoleAreaOutputStream socat = new ConsoleAreaOutputStream(ta);
+			ConsoleAreaErrorStream tacos = new ConsoleAreaErrorStream(ta);
+
+
+			PrintStream outPrintStream = new PrintStream(socat);
+			PrintStream errPrintStream = new PrintStream(tacos);
+
+			System.setOut(outPrintStream);
+			System.setErr(errPrintStream);
+
+
 			/* 
 			 * TODO
 			 * System.setIn(in);
 			 */
-			
+
 		} catch (Exception e) {
-			e.printStackTrace();
+			//			e.printStackTrace();
 		}
 	}	
 }

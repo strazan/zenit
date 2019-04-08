@@ -9,9 +9,9 @@ public class ConsoleAreaOutputStream extends OutputStream {
 
 	private StringBuilder sb = new StringBuilder();
 
-	public ConsoleAreaOutputStream(ConsoleArea ca) {
+	public ConsoleAreaOutputStream(ConsoleArea coar) {
 		
-		this.ca = ca;
+		this.ca = coar;
 	}
 
 	@Override
@@ -26,15 +26,13 @@ public class ConsoleAreaOutputStream extends OutputStream {
 			super.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
+//			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void write(int b) {
 		
-		
-
 		if (b == '\n') {
 			ca.outPrint(sb.toString() + "\n");
 			sb.setLength(0);
@@ -52,6 +50,6 @@ public class ConsoleAreaOutputStream extends OutputStream {
 	@Override
 	public void write(byte b[], int off, int len) {
 		
-		ca.outPrint(new String(b, off, len));
+		 ca.outPrint(new String(b, off, len));
 	}
 }

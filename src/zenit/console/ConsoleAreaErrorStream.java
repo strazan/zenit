@@ -14,7 +14,7 @@ public class ConsoleAreaErrorStream extends OutputStream {
 
 	@Override
 	public void flush() {
-		ca.appendText(sb.toString());
+		ca.errPrint(sb.toString());
 		sb.setLength(0);
 	}
 
@@ -34,7 +34,7 @@ public class ConsoleAreaErrorStream extends OutputStream {
 		
 
 		if (b == '\n') {
-			ca.appendText(sb.toString() + "\n");
+			ca.errPrint(sb.toString() + "\n");
 			sb.setLength(0);
 			return;
 		}
@@ -44,11 +44,11 @@ public class ConsoleAreaErrorStream extends OutputStream {
 		
 		sb.append((char)b);
 		
-		ca.replaceText(Character.toString((char)b));
+		ca.errPrint(Character.toString((char)b));
 	}
 
 	@Override
 	public void write(byte b[], int off, int len) throws IOException {
-		ca.replaceText(new String(b, off, len));
+		ca.errPrint(new String(b, off, len));
 	}
 }

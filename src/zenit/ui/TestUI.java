@@ -37,7 +37,6 @@ public class TestUI extends Application {
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
 		controller.setFileController(fileController);
-	
 		
 		loader.setController(controller);
 		Parent root = loader.load();

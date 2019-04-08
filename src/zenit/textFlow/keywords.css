@@ -33,8 +33,10 @@
     -fx-fill: pink;
 }
 
+/* line numbers */
 .lineno {
-	-fx-background-color: #BBBBBB;
-	-fx-fill: #333333;
+	-fx-background-color: #cccccc;
+	
+	-fx-fill: #ffffff;
 }
 
