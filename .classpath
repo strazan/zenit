@@ -26,8 +26,6 @@
 	<classpathentry kind="lib" path="lib/icons/ikonli-core-11.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/icons/ikonli-fontawesome-pack-11.1.0.jar"/>
 	<classpathentry kind="lib" path="lib/icons/ikonli-javafx-11.1.0.jar"/>
-	<classpathentry kind="lib" path="lib/terminalfx/terminalfx-1.0.9-sources.jar"/>
-	<classpathentry kind="lib" path="lib/terminalfx/terminalfx-1.0.9.jar"/>
 	<classpathentry kind="lib" path="lib/controlsfx/controlsfx-9.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/controlsfx/controlsfx-samples-9.0.0.jar"/>
 	<classpathentry kind="lib" path="lib/controlsfx/fxsampler-1.0.10.jar"/>
