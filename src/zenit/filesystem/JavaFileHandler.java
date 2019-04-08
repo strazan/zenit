@@ -60,10 +60,11 @@ public class JavaFileHandler extends FileHandler {
 					ex.printStackTrace();
 				}
 			}
-			BufferedWriter br = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), textEncoding));
-			br.write(content);
-			br.flush();
-			br.close();
+			
+			try (BufferedWriter br = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(file), textEncoding))) {
+				br.write(content);
+				br.flush();
+			}
 
 			return file;
 		} catch (IOException e) {

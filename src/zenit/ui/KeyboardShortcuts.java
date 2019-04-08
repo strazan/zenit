@@ -42,16 +42,8 @@ public final class KeyboardShortcuts {
 			controller.openFile((Event) null);
 		});
 		
-		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.addTab();
-		});
-		
-		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.defaultCloseTabOperation();
-		}); 
-		
-		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.compileAndRun();
-		});
+		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
+		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
+		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
 	}
 }

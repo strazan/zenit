@@ -2,12 +2,14 @@ package zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Optional;
+import java.util.List;
 
 import org.fxmisc.richtext.InlineCssTextArea;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
@@ -43,7 +45,6 @@ import zenit.ui.tree.TreeContextMenu;
  */
 public class MainController {
 	private Stage stage;
-	private HashMap<Tab, File> currentlySelectedFiles;
 	private FileController fileController;
 
 	@FXML
@@ -95,7 +96,6 @@ public class MainController {
 	 */
 	public void initialize(Stage stage) {
 		this.stage = stage;
-		currentlySelectedFiles = new HashMap<>();
 
 		ConsoleArea caConsole = new ConsoleArea();
 		caConsole.setEditable(false);
@@ -158,29 +158,33 @@ public class MainController {
 	 * @param event
 	 */
 	@FXML
-	public void saveFile(Event event) {
-		try {
-			Tab selectedTab = getSelectedTab();
-			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			ZenCodeArea zenCodeArea = (ZenCodeArea) anchorPane.getChildren().get(0);
-			String content = zenCodeArea.getText();
-			
-			if (currentlySelectedFiles.containsKey(selectedTab)) {
-				fileController.writeFile(currentlySelectedFiles.get(selectedTab).getAbsoluteFile(), content);
-			} else {
-				File newFile = chooseFile();
-				newFile = fileController.createFile(newFile, content);
-				currentlySelectedFiles.put(selectedTab, newFile);
-				FileTreeItem<String> newNode = new FileTreeItem<String>(newFile, newFile.getName(), 0);
-				treeView.getRoot().getChildren().add(newNode);
-				Tab tab = getSelectedTab();
-				tab.setText(newFile.getName());
-			}
-		} catch (NullPointerException ex) {
-			ex.printStackTrace();
+	public boolean saveFile(Event event) {
+		FileTab tab = getSelectedTab();
+		File file = tab.getFile();
+		
+		if (file == null) {
+			file = chooseFile();
 		}
+		
+		boolean didWrite = fileController.writeFile(file, tab.getFileText());
+		
+		if (didWrite) {
+			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
+			
+			if (!treeView.getRoot().getChildren().stream().anyMatch(n -> 
+					n.getValue().equals(newNode.getFile().getName())
+			)) {
+				treeView.getRoot().getChildren().add(newNode);
+			}
+			
+			tab.update(file);
+		} else {
+			System.out.println("Did not write.");
+		}
+		
+		return didWrite;
 	}
-	
+		
 	/**
 	 * Opens a file chooser and returns the selected file.
 	 */
@@ -232,28 +236,13 @@ public class MainController {
 	 * @param file The file which content to be opened.
 	 */
 	public void openFile(File file) {
-		if (file != null && !currentlySelectedFiles.containsValue(file)) {
-			
-			Tab selectedTab = addTab();
-			AnchorPane anchorPane = (AnchorPane) selectedTab.getContent();
-			ZenCodeArea zenCodeArea = (ZenCodeArea) anchorPane.getChildren().get(0);
-
-			currentlySelectedFiles.put(selectedTab, file);
-
-			String fileContent = fileController.readFileContent(file);
+		if (file != null && getTabFromFile(file) == null) {
+			FileTab selectedTab = addTab();
+			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
-			zenCodeArea.replaceText(fileContent);
-		} else if (file != null && currentlySelectedFiles.containsValue(file)) { //Tab already open
-			var tabs = tabPane.getTabs();
-			File tempFile;
-			for (Tab tab : tabs) {
-				 tempFile = currentlySelectedFiles.get(tab);
-				if (file.equals(tempFile)) {
-					tabPane.getSelectionModel().select(tab);
-					break;
-				}
-			}
+		} else if (file != null && getTabFromFile(file) != null) { //Tab already open
+			tabPane.getSelectionModel().select(getTabFromFile(file));
 		}
 	}
 	
@@ -270,9 +259,10 @@ public class MainController {
 			newFile = fileController.renameFile(file, newName);
 			var tabs = tabPane.getTabs();
 			for (Tab tab : tabs) {
-				if (tab.getText().equals(file.getName())) {
-					tab.setText(newName);
-					currentlySelectedFiles.put(tab, newFile);
+				FileTab fileTab = (FileTab) tab;
+				if (fileTab.getText().equals(file.getName())) {
+					fileTab.setText(newName);
+					fileTab.setFile(newFile, false);
 					break;
 				}
 			}
@@ -329,12 +319,10 @@ public class MainController {
 	 * folder/directory, and the executed with only java standard lib.
 	 */
 	public void compileAndRun() {
-		File file = currentlySelectedFiles.get(getSelectedTab());
+		File file = getSelectedTab().getFile();
 		File projectFile = getMetadataFile(file);
-
-
+		saveFile(null);
 		
-//		saveFile(null);
 		try {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
 			if (file != null && projectFile != null) {
@@ -371,58 +359,50 @@ public class MainController {
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
 	 */
-	public Tab addTab() {
-		Tab tab = new Tab("Untitled");
-		AnchorPane anchorPane = new AnchorPane();
-		ZenCodeArea zenCodeArea = new ZenCodeArea();
-
-		anchorPane.getChildren().add(zenCodeArea);
-		tab.setContent(anchorPane);
-//		zenCodeArea.setStyle("-fx-font-family: monospace");
-
-		AnchorPane.setTopAnchor(zenCodeArea, 0.0);
-		AnchorPane.setRightAnchor(zenCodeArea, 0.0);
-		AnchorPane.setBottomAnchor(zenCodeArea, 0.0);
-		AnchorPane.setLeftAnchor(zenCodeArea, 0.0);
-
-		tab.setOnCloseRequest(event -> defaultCloseTabOperation());
-
+	public FileTab addTab() {
+		FileTab tab = new FileTab();
+		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 
 		var selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(tab);
-
+		
 		return tab;
 	}
 
 	/**
-	 * From https://code.makery.ch/blog/javafx-dialogs-official/
+	 * Gets the currently selected tab, and removes it from the TabPane. If the file has been
+	 * modified, a dialog is shown asking if the user wants to save or not, or abort.
 	 */
-	public void defaultCloseTabOperation() {
-		Alert alert = new Alert(AlertType.CONFIRMATION);
-
-		alert.setTitle("Close this tab?");
-		alert.setHeaderText("Look, a Confirmation Dialog");
-		alert.setContentText("Are you ok with this?");
-
-		Optional<ButtonType> result = alert.showAndWait();
-
-		if (result.get() == ButtonType.OK) {
-			closeTab();
+	public void closeTab(Event event) {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab.getFile() != null && selectedTab.hasChanged()) {
+			int response = selectedTab.showConfirmDialog();
+			
+			switch (response) {
+				case 1: 
+					tabPane.getTabs().remove(selectedTab); 
+					break;
+				case 2: 
+					saveFile(null); 
+					tabPane.getTabs().remove(selectedTab); 
+					break;
+				default:
+					if (event != null) {
+						event.consume();
+					}
+					return;
+			}
+		} else if (selectedTab.hasChanged()) {
+			boolean didSave = saveFile(null);
+			
+			if (didSave) {
+				Platform.runLater(() -> tabPane.getTabs().remove(selectedTab));
+			}
 		} else {
-			System.out.println("Canceling");
-		}
-	}
-
-	/**
-	 * Gets the currently selected tab, and removes it from the TabPane.
-	 */
-	public void closeTab() {
-		Tab selectedTab = getSelectedTab();
-		var tabs = tabPane.getTabs();
-
-		if (tabs.indexOf(selectedTab) >= 0) {
-			tabs.remove(selectedTab);
+			System.out.println("File: " +  selectedTab.getFile() + "\nhasChanged: " + selectedTab.hasChanged());
+			tabPane.getTabs().remove(selectedTab);
 		}
 	}
 	
@@ -446,21 +426,6 @@ public class MainController {
 			}
 		}
 	}
-
-	/**
-	 * Gets the currently selected tab on the tab pane.
-	 * @return The Tab that is currently selected. Null if none was found.
-	 */
-	private Tab getSelectedTab() {
-		var tabs = tabPane.getTabs();
-
-		for (Tab tab : tabs) {
-			if (tab.isSelected()) {
-				return tab;
-			}
-		}
-		return null;
-	}
 	
 	/**
 	 * Clears the text from console window.
@@ -479,22 +444,18 @@ public class MainController {
 	
 	@FXML
 	private void onMouseEvent(MouseEvent e) {
-	
 		Button sourceButton = (Button) e.getSource();
 		
-		if(e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-			if(sourceButton.equals(btnRun)) {
+		if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+			if (sourceButton.equals(btnRun)) {
 				lightenIconColor(iconRun);
-			}
-			else if(sourceButton.equals(btnStop)) {
+			} else if (sourceButton.equals(btnStop)) {
 				lightenIconColor(iconStop);
 			}
-		}
-		else if(e.getEventType() == MouseEvent.MOUSE_EXITED) {
-			if(sourceButton.equals(btnRun)) {
+		} else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+			if (sourceButton.equals(btnRun)) {
 				iconRun.setIconColor(Color.GREEN);
-			}
-			else if(sourceButton.equals(btnStop)) {
+			} else if (sourceButton.equals(btnStop)) {
 				iconStop.setIconColor( Color.DARKRED);
 			}
 		}
@@ -507,5 +468,40 @@ public class MainController {
 	 */
 	private void lightenIconColor(FontIcon icon) {	
 		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
+	}
+
+	/**
+	 * Gets the currently selected tab on the tab pane.
+	 * @return The Tab that is currently selected. Null if none was found.
+	 */
+	public FileTab getSelectedTab() {
+		var tabs = tabPane.getTabs();
+
+		for (Tab tab : tabs) {
+			if (tab.isSelected()) {
+				return (FileTab) tab;
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * Gets the FileTab in the TabPane that is associated with the specified File.
+	 * @param file The File to search for.
+	 * @return The FileTab instance that holds the File, or null if no tab does.
+	 */
+	private FileTab getTabFromFile(File file) {
+		var tabs = tabPane.getTabs();
+		
+		for (Tab tab : tabs) {
+			FileTab fileTab = (FileTab) tab;
+			File tabFile = fileTab.getFile();
+			
+			if (tabFile != null && file.equals(tabFile)) {
+				return fileTab;
+			}
+		}
+		
+		return null;
 	}
 }
