@@ -151,20 +151,24 @@ public class MainController {
 	public boolean saveFile(Event event) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
+		boolean isNewFile = false;
 		
 		if (file == null) {
 			file = chooseFile();
+			isNewFile = true;
 		}
 		
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
 		
 		if (didWrite) {
-			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
-			
-			if (!treeView.getRoot().getChildren().stream().anyMatch(n -> 
-					n.getValue().equals(newNode.getFile().getName())
-			)) {
-				treeView.getRoot().getChildren().add(newNode);
+			if (isNewFile) {
+				FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
+				
+				if (!treeView.getRoot().getChildren().stream().anyMatch(n -> 
+						n.getValue().equals(newNode.getFile().getName())
+				)) {
+					treeView.getRoot().getChildren().add(newNode);
+				}
 			}
 			
 			tab.update(file);

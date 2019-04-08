@@ -60,7 +60,9 @@ public class FileTab extends Tab {
 			hasChanged = !initialFileContent.equals(newText);
 			updateUI();
 		});
-				
+		setStyle("-fx-background-color: #444;");
+		setStyle("-fx-stroke: #fff;");
+		
 		Platform.runLater(zenCodeArea::requestFocus);
 	}
 	

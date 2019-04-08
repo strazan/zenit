@@ -21,14 +21,14 @@
 <?import javafx.scene.text.Font?>
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<VBox prefHeight="640.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
         <Menu mnemonicParsing="false" text="File">
           <items>
             <MenuItem fx:id="newFile" mnemonicParsing="false" onAction="#newFile" text="New" />
-                  <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProject" text="New Project..." />
+            <MenuItem fx:id="newProject" mnemonicParsing="false" onAction="#newProject" text="New Project..." />
             <MenuItem fx:id="openFile" mnemonicParsing="false" onAction="#openFile" text="Open…" />
             <Menu mnemonicParsing="false" text="Open Recent" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -64,7 +64,7 @@
         </Menu>
       </menus>
     </MenuBar>
-    <SplitPane dividerPositions="0.2506" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS">
+    <SplitPane dividerPositions="0.2506" focusTraversable="true" prefHeight="-1.0" prefWidth="-1.0" VBox.vgrow="ALWAYS" fx:id="splitPane">
       <items>
         <AnchorPane SplitPane.resizableWithParent="false">
                <children>
@@ -73,7 +73,7 @@
         </AnchorPane>
             <AnchorPane prefHeight="530.0" prefWidth="670.0">
                <children>
-              <ScrollPane fitToHeight="true" fitToWidth="true" prefHeight="550.0" prefWidth="670.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+              <ScrollPane fx:id="textEditorScrollPane" fitToHeight="true" fitToWidth="true" prefHeight="550.0" prefWidth="670.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                 <content>
                   <AnchorPane id="Content" minHeight="-1.0" minWidth="-1.0">
                            <children>
@@ -106,7 +106,16 @@
                                     </AnchorPane>
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0">
                                        <children>
-                                          <TitledPane alignment="TOP_RIGHT" animated="false" collapsible="false" contentDisplay="RIGHT" text="Console" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                          <TitledPane alignment="TOP_RIGHT" 
+                                          			  animated="false" 
+                                          			  fx:id="consolePane"
+                                          			  collapsible="false" 
+                                          			  contentDisplay="RIGHT" 
+                                          			  text="Console" 
+                                          			  AnchorPane.bottomAnchor="0.0" 
+                                          			  AnchorPane.leftAnchor="0.0" 
+                                          			  AnchorPane.rightAnchor="0.0" 
+                                          			  AnchorPane.topAnchor="0.0">
                                              <content>
                                                 <ScrollPane fitToHeight="true" fitToWidth="true">
                                                    <content>
@@ -134,7 +143,7 @@
             </AnchorPane>
       </items>
     </SplitPane>
-    <HBox id="HBox" alignment="CENTER_LEFT" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER">
+    <HBox id="HBox" alignment="CENTER_LEFT" prefHeight="-1.0" prefWidth="900.0" spacing="5.0" VBox.vgrow="NEVER" fx:id="statusBar">
       <children>
         <Label maxHeight="1.7976931348623157E308" maxWidth="-1.0" text="Left status" HBox.hgrow="ALWAYS">
           <font>
