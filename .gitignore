@@ -9,3 +9,4 @@ bin/*
 res/workspace/workspace.dat
 /bin/
 .classpath
+/target/
