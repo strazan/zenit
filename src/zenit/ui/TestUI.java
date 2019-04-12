@@ -42,9 +42,10 @@ public class TestUI extends Application {
 		loader.setController(controller);
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
+		
 		scene.getStylesheets().add(getClass().getResource("mainStyle.css").toString());
-
 		scene.getStylesheets().add(ZenCodeArea.class.getResource("keywords.css").toExternalForm());
+
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 		

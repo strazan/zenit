@@ -34,16 +34,11 @@ public final class KeyboardShortcuts {
 	 * @param controller The controller to call methods from.
 	 */
 	public static final void setupMain(Scene scene, MainController controller) {
-		add(scene, KeyCode.S, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.saveFile(null);
-		});
-		
-		add(scene, KeyCode.O, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.openFile((Event) null);
-		});
-		
+		add(scene, KeyCode.S, KeyCombination.SHORTCUT_DOWN, () -> controller.saveFile(null));
+		add(scene, KeyCode.O, KeyCombination.SHORTCUT_DOWN, () -> controller.openFile((Event) null));
 		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
+		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::sysout);
 	}
 }

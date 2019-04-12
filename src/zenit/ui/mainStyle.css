@@ -13,6 +13,19 @@
 	-fx-background-color:transparent;
 }
 
+#btnClearConsole {
+	-fx-background-color: transparent;
+}
+
+#btnClearConsole > *:hover {
+	-fx-fill: #666;
+	-fx-cursor: hand;
+}
+
+.tree-cell:hover {
+	-fx-background-color: #555 !important;
+}
+
 #menuBar {
 	-fx-border-color: #000;
 	-fx-border-width: 0 0 1px 0;
@@ -25,8 +38,32 @@
 	-fx-text-fill: #fff;
 }
 
+#menuBar .arrow {
+	-fx-background-color: #fff;
+}
+
+.menu-item:hover, .menu-item:hover .label {
+	-fx-background-color: #555 !important;
+}
+
+.arrow-button {
+	-fx-background-color: green !important;
+}
+
 .menu {
 	-fx-fill: #fff;
+}
+
+.menu:hover, .menu:hover > .label {
+	-fx-background-color: #555 !important;
+}
+
+#cmiDarkMode:focused:checked > .left-container > .check {
+    -fx-background-color: #fff;
+}
+
+#cmiDarkMode:hover > .left-container {
+	-fx-background-color: #555 !important;
 }
 
 #splitPane {
@@ -54,11 +91,11 @@
 
 #treeView * {
 	-fx-background-color: #444;
-	-fx-fill: #fff;
+	-fx-fill: #fffa;
 }
 
 #treeView .arrow  {
-	-fx-background-color: #fff;
+	-fx-background-color: #fffb;
 }
 
 .split-pane:horizontal > .split-pane-divider {
@@ -97,13 +134,18 @@
  }
  
  #treeView .increment-button, #treeView .decrement-button {
- 	-fx-background-color:transparent;
+ 	-fx-background-color: transparent;
 	-fx-background-radius: 0em;
 	-fx-padding:0 0 10 0;
  }
  
  .scroll-bar:vertical .increment-arrow, .decrement-arrow {
- 	-fx-shape: " ";
+ 	-fx-shape: "";
+ 	-fx-padding: 0;
+ }
+ 
+ .scroll-bar:horizontal .increment-arrow, .decrement-arrow {
+ 	-fx-shape: "";
  	-fx-padding: 0;
  }
  
@@ -157,7 +199,7 @@
 #consolePane .content {
 	-fx-background-color: #444;
 	-fx-border-width: 0;
-	-fx-border-color: transparent;
+	-fx-border-color: #444;
 }
 
 #consolePane .content * {
@@ -165,7 +207,32 @@
 	-fx-fill: #fff;
 	-fx-border-width: 0;
 	-fx-padding: 0;
+	-fx-background-color: #444;
 }
+
+#consolePane .content .thumb {
+	-fx-background-color: #EEEEEEAA;
+}
+
+#consolePane .content .scroll-bar:vertical, #consolePane .content .corner {
+	-fx-background-color: #444;
+	-fx-pref-width: 14;
+    -fx-padding: 3;
+    -fx-border-width: 0;
+    -fx-border-color: #444;
+}
+
+#consolePane .content .scroll-bar:horizontal {
+	-fx-background-color: #444;
+	-fx-pref-height: 14;
+	-fx-padding: 3;
+	-fx-border-width: 0;
+	-fx-border-color: #444;
+}
+
+ #consolePane .content .thumb:hover, #consolePane .content .thumb:pressed {
+ 	-fx-background-color: #EEE;
+ }
 
 #HBox, #HBox * {
 	-fx-background-color: #222;

@@ -15,6 +15,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
@@ -63,6 +64,9 @@ public class MainController {
 	
 	@FXML
 	private MenuItem changeWorkspace;
+	
+	@FXML
+	private CheckMenuItem cmiDarkMode;
 
 	@FXML
 	private TabPane tabPane;
@@ -140,6 +144,17 @@ public class MainController {
 			openFile(file);
 		}
 		return file;
+	}
+	
+	/**
+	 * If a tab is open, attempt to call its sysout-method.
+	 */
+	public void sysout() {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.sysout();
+		}
 	}
 
 	/**
@@ -306,6 +321,38 @@ public class MainController {
 		}
 		
 		return null;
+	}
+	
+	/**
+	 * Switches between dark- and light mode depending on what is selected in the application's
+	 * 'Dark Mode'-checkbox.
+	 * @param event
+	 * @author Pontus Laos
+	 */
+	@FXML
+	private void darkModeChanged(Event event) {
+		boolean isDarkMode = cmiDarkMode.isSelected();
+		var stylesheets = stage.getScene().getStylesheets();
+		var darkMode = getClass().getResource("mainStyle.css").toExternalForm();
+		var darkModeKeywords = ZenCodeArea.class.getResource("keywords.css").toExternalForm();
+		var lightModeKeywords = ZenCodeArea.class.getResource("keywords-lm.css").toExternalForm();
+		
+		if (isDarkMode) {
+			stylesheets.add(darkMode);
+			
+			if (stylesheets.contains(lightModeKeywords)) {
+				stylesheets.remove(lightModeKeywords);
+			}
+			stylesheets.add(darkModeKeywords);
+		} else {
+			// Currently the Light Mode is the default CSS.
+			stylesheets.remove(darkMode);
+			
+			if (stylesheets.contains(darkModeKeywords)) {
+				stylesheets.remove(darkModeKeywords);
+			}
+			stylesheets.add(lightModeKeywords);
+		}
 	}
 	
 	/**
