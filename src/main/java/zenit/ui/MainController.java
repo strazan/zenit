@@ -3,24 +3,24 @@ package main.java.zenit.ui;
 import java.io.File;
 import java.io.IOException;
 
-import org.kordamp.ikonli.javafx.FontIcon;
-
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.paint.Color;
+import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
@@ -29,10 +29,11 @@ import main.java.zenit.ui.tree.TreeContextMenu;
 
 /**
  * The controller part of the main GUI.
+ * 
  * @author Pontus Laos, Oskar Molander, Alexander Libot
  *
  */
-public class MainController {
+public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
 
@@ -41,7 +42,7 @@ public class MainController {
 
 	@FXML
 	private MenuItem newFile;
-	
+
 	@FXML
 	private MenuItem newProject;
 
@@ -50,7 +51,7 @@ public class MainController {
 
 	@FXML
 	private MenuItem saveFile;
-	
+
 	@FXML
 	private MenuItem changeWorkspace;
 
@@ -59,18 +60,49 @@ public class MainController {
 
 	@FXML
 	private TreeView<String> treeView;
-	
-	@FXML 
-	private FontIcon iconRun;
 
-	@FXML 
-	private FontIcon iconStop;
-	
 	@FXML
 	private Button btnRun;
-	
-	@FXML 
+
+	@FXML
 	private Button btnStop;
+
+	/**
+	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
+	 */
+	public MainController(Stage s) {
+		this.stage = s;
+		try {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
+
+			/*
+			 * TODO Test if you like this idea. Saves and opens a local File-instance of your 
+			 * selected workspace. Only prompts when unset and can be changed from within gui
+			 * Alex
+			 */
+			File workspace = WorkspaceHandler.readWorkspace();
+			FileController fileController = new FileController(workspace);
+
+			setFileController(fileController);
+			loader.setRoot(this);
+			loader.setController(this);
+			loader.load();
+
+			Scene scene = new Scene(this);
+			scene.getStylesheets().add(getClass().getResource("/zenit/ui/mainStyle.css").toString());
+
+			scene.getStylesheets().add(getClass().getResource("/zenit/ui/keywords.css").toExternalForm());
+			stage.setScene(scene);
+			stage.setTitle("Zenit");
+
+			initialize();
+			stage.show();
+			KeyboardShortcuts.setupMain(scene, this);
+
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
 
 	/**
 	 * Setter for FileController instance. Used to access the file system.
@@ -78,26 +110,26 @@ public class MainController {
 	public void setFileController(FileController fileController) {
 		this.fileController = fileController;
 	}
-	
+
 	/**
 	 * Performs initialization steps when the controller is set.
-	 * @param stage The stage to run the initialization on.
 	 */
-	public void initialize(Stage stage) {
-		this.stage = stage;
-
-		new ConsoleRedirect(taConsole);
+	public void initialize() {
+		new ConsoleRedirect(taConsole);		
+		btnRun.setPickOnBounds(true);
 		initTree();
 	}
-	
+
 	/**
-	 * Initializes the {@link javafx.scene.control.TreeView TreeView}. Creates a root node from the
-	 * workspace-file in the fileController class. Calls FileTree-method to add all files in the
-	 * workspace folder to the tree. Creates a TreeContextMenu for displaying when right clicking 
-	 * nodes in the tree and an event handler for clicking nodes in the tree.
+	 * Initializes the {@link javafx.scene.control.TreeView TreeView}. Creates a
+	 * root node from the workspace-file in the fileController class. Calls
+	 * FileTree-method to add all files in the workspace folder to the tree. Creates
+	 * a TreeContextMenu for displaying when right clicking nodes in the tree and an
+	 * event handler for clicking nodes in the tree.
 	 */
 	private void initTree() {
-		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace", FileTreeItem.WORKSPACE);
+		FileTreeItem<String> rootItem = new FileTreeItem<String>(fileController.getWorkspace(), "workspace",
+				FileTreeItem.WORKSPACE);
 		File workspace = fileController.getWorkspace();
 		if (workspace != null) {
 			FileTree.createNodes(rootItem, workspace);
@@ -109,62 +141,66 @@ public class MainController {
 		treeView.setContextMenu(tcm);
 		treeView.setOnMouseClicked(tcl);
 	}
-	
+
 	/**
 	 * Input name from dialog box and creates a new file in specified parent folder.
-	 * @param parent The parent folder of the file to be created.
-	 * @param typeCode The type of code snippet that should be implemented in the file.
-	 * Use constants from {@link main.java.zenit.filesystem.helpers.CodeSnippets CodeSnippets} class.
+	 * 
+	 * @param parent   The parent folder of the file to be created.
+	 * @param typeCode The type of code snippet that should be implemented in the
+	 *                 file. Use constants from
+	 *                 {@link main.java.zenit.filesystem.helpers.CodeSnippets
+	 *                 CodeSnippets} class.
 	 * @return The File if created, otherwise null.
 	 */
 	public File createFile(File parent, int typeCode) {
 		File file = null;
-		String className = DialogBoxes.inputDialog(null, "New file", "Create new file", 
-				"Enter new file name", "File name");
+		String className = DialogBoxes.inputDialog(null, "New file", "Create new file", "Enter new file name",
+				"File name");
 		if (className != null) {
 			String filepath = parent.getPath() + "/" + className;
 			file = new File(filepath);
-			
+
 			file = fileController.createFile(file, typeCode);
-			
+
 			openFile(file);
 		}
 		return file;
 	}
 
 	/**
-	 * Grabs the text from the currently selected Tab and writes it to the currently selected file.
-	 * If no file selected, opens a file chooser for selection of file to overwrite.
+	 * Grabs the text from the currently selected Tab and writes it to the currently
+	 * selected file. If no file selected, opens a file chooser for selection of
+	 * file to overwrite.
+	 * 
 	 * @param event
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
-		
+
 		if (file == null) {
 			file = chooseFile();
 		}
-		
+
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
-		
+
 		if (didWrite) {
 			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
-			
-			if (!treeView.getRoot().getChildren().stream().anyMatch(n -> 
-					n.getValue().equals(newNode.getFile().getName())
-			)) {
+
+			if (!treeView.getRoot().getChildren().stream()
+					.anyMatch(n -> n.getValue().equals(newNode.getFile().getName()))) {
 				treeView.getRoot().getChildren().add(newNode);
 			}
-			
+
 			tab.update(file);
 		} else {
 			System.out.println("Did not write.");
 		}
-		
+
 		return didWrite;
 	}
-		
+
 	/**
 	 * Opens a file chooser and returns the selected file.
 	 */
@@ -179,6 +215,7 @@ public class MainController {
 
 	/**
 	 * Adds a new tab to the TabPane.
+	 * 
 	 * @param event
 	 */
 	@FXML
@@ -187,8 +224,9 @@ public class MainController {
 	}
 
 	/**
-	 * Opens a file chooser and tries to read the file's 
-	 * name and content to the currently selected tab.
+	 * Opens a file chooser and tries to read the file's name and content to the
+	 * currently selected tab.
+	 * 
 	 * @param event
 	 */
 	@FXML
@@ -200,7 +238,7 @@ public class MainController {
 				fileChooser.setInitialDirectory(fileController.getWorkspace());
 			}
 			File file = fileChooser.showOpenDialog(stage);
-			
+
 			if (file != null) {
 				openFile(file);
 			}
@@ -209,10 +247,12 @@ public class MainController {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	/**
-	 * Tries to open the content of a file into a new tab using the FileController instance.
-	 * If tab containing file-content is already open, switches to that tab.
+	 * Tries to open the content of a file into a new tab using the FileController
+	 * instance. If tab containing file-content is already open, switches to that
+	 * tab.
+	 * 
 	 * @param file The file which content to be opened.
 	 */
 	public void openFile(File file) {
@@ -221,14 +261,15 @@ public class MainController {
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
-		} else if (file != null && getTabFromFile(file) != null) { //Tab already open
+		} else if (file != null && getTabFromFile(file) != null) { // Tab already open
 			tabPane.getSelectionModel().select(getTabFromFile(file));
 		}
 	}
-	
+
 	/**
-	 * Method for renaming a file or folder. Opens a new input dialog for input of new name.
-	 * Renames the tab text if file is in an open tab.
+	 * Method for renaming a file or folder. Opens a new input dialog for input of
+	 * new name. Renames the tab text if file is in an open tab.
+	 * 
 	 * @param file The file to rename.
 	 * @return
 	 */
@@ -249,24 +290,26 @@ public class MainController {
 		}
 		return newFile;
 	}
-	
+
 	/**
 	 * Tries to delete a file or folder.
+	 * 
 	 * @param file The file to be deleted.
 	 */
 	public void deleteFile(File file) {
 		fileController.deleteFile(file);
-		//TODO Remove open tab aswell
+		// TODO Remove open tab aswell
 	}
-	
+
 	/**
-	 * Opens a input dialog to choose project name and then creates a new project with that name
-	 * in the selected workspace folder
+	 * Opens a input dialog to choose project name and then creates a new project
+	 * with that name in the selected workspace folder
+	 * 
 	 * @param event
 	 */
 	@FXML
 	public void newProject(Event event) {
-		String projectName = DialogBoxes.inputDialog(null, "New project", "Create new project", 
+		String projectName = DialogBoxes.inputDialog(null, "New project", "Create new project",
 				"Enter a new projectname", "Project name");
 		if (projectName != null) {
 			File newProject = fileController.createProject(projectName);
@@ -275,34 +318,34 @@ public class MainController {
 			}
 		}
 	}
-	
+
 	public File newPackage(File parent) {
-		
-		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package", 
+
+		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package",
 				"Enter new package name", "Package name");
 		if (packageName != null) {
 			String filepath = parent.getPath() + "/" + packageName;
 			File packageFile = new File(filepath);
-			
+
 			boolean success = fileController.createPackage(packageFile);
-			
+
 			if (success) {
 				return packageFile;
 			}
 		}
-		
+
 		return null;
 	}
-	
+
 	/**
-	 * If the file of the current tab is a .java file if will be compiled, into the same
-	 * folder/directory, and the executed with only java standard lib.
+	 * If the file of the current tab is a .java file if will be compiled, into the
+	 * same folder/directory, and the executed with only java standard lib.
 	 */
 	public void compileAndRun() {
 		File file = getSelectedTab().getFile();
 		File projectFile = getMetadataFile(file);
 		saveFile(null);
-		
+
 		try {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
 			if (file != null && projectFile != null) {
@@ -310,13 +353,13 @@ public class MainController {
 			} else if (file != null) {
 				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			// TODO: handle exception
 		}
 	}
-	
+
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
 		if (files != null) {
@@ -334,7 +377,9 @@ public class MainController {
 	}
 
 	/**
-	 * Creates a new tab with a {@link main.java.zenit.zencodearea.ZenCodeArea ZenCodeArea}  filling it, adds it to the TabPane, and focuses on it.
+	 * Creates a new tab with a {@link main.java.zenit.zencodearea.ZenCodeArea
+	 * ZenCodeArea} filling it, adds it to the TabPane, and focuses on it.
+	 * 
 	 * @param onClick The Runnable to run when the tab should be closed.
 	 * @return The new Tab.
 	 */
@@ -345,46 +390,47 @@ public class MainController {
 
 		var selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(tab);
-		
+
 		return tab;
 	}
 
 	/**
-	 * Gets the currently selected tab, and removes it from the TabPane. If the file has been
-	 * modified, a dialog is shown asking if the user wants to save or not, or abort.
+	 * Gets the currently selected tab, and removes it from the TabPane. If the file
+	 * has been modified, a dialog is shown asking if the user wants to save or not,
+	 * or abort.
 	 */
 	public void closeTab(Event event) {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab.getFile() != null && selectedTab.hasChanged()) {
 			int response = selectedTab.showConfirmDialog();
-			
+
 			switch (response) {
-				case 1: 
-					tabPane.getTabs().remove(selectedTab); 
-					break;
-				case 2: 
-					saveFile(null); 
-					tabPane.getTabs().remove(selectedTab); 
-					break;
-				default:
-					if (event != null) {
-						event.consume();
-					}
-					return;
+			case 1:
+				tabPane.getTabs().remove(selectedTab);
+				break;
+			case 2:
+				saveFile(null);
+				tabPane.getTabs().remove(selectedTab);
+				break;
+			default:
+				if (event != null) {
+					event.consume();
+				}
+				return;
 			}
 		} else if (selectedTab.hasChanged()) {
 			boolean didSave = saveFile(null);
-			
+
 			if (didSave) {
 				Platform.runLater(() -> tabPane.getTabs().remove(selectedTab));
 			}
 		} else {
-			System.out.println("File: " +  selectedTab.getFile() + "\nhasChanged: " + selectedTab.hasChanged());
+			System.out.println("File: " + selectedTab.getFile() + "\nhasChanged: " + selectedTab.hasChanged());
 			tabPane.getTabs().remove(selectedTab);
 		}
 	}
-	
+
 	/**
 	 * Changes the workspace to another folder and restarts the program.
 	 */
@@ -405,7 +451,7 @@ public class MainController {
 			}
 		}
 	}
-	
+
 	/**
 	 * Clears the text from console window.
 	 */
@@ -413,44 +459,46 @@ public class MainController {
 	private void clearConsole() {
 		taConsole.clear();
 	}
-	
-	
+
 	/**
-	 * Fire this on mouse events (Mouse exit, enter, click etc) for buttons and other components.
-	 * Call this function on for example btnRun. ( btnRun onMouseExit="#onMouseEvent" )
-	 * @param MouseEvent 
+	 * Fire this on mouse events (Mouse exit, enter, click etc) for buttons and
+	 * other components. Call this function on for example btnRun. ( btnRun
+	 * onMouseExit="#onMouseEvent" )
+	 * 
+	 * @param MouseEvent
 	 */
-	
-	@FXML
-	private void onMouseEvent(MouseEvent e) {
-		Button sourceButton = (Button) e.getSource();
-		
-		if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-			if (sourceButton.equals(btnRun)) {
-				lightenIconColor(iconRun);
-			} else if (sourceButton.equals(btnStop)) {
-				lightenIconColor(iconStop);
-			}
-		} else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
-			if (sourceButton.equals(btnRun)) {
-				iconRun.setIconColor(Color.GREEN);
-			} else if (sourceButton.equals(btnStop)) {
-				iconStop.setIconColor( Color.DARKRED);
-			}
-		}
-	}
-	
-	
+//	
+//	@FXML
+//	private void onMouseEvent(MouseEvent e) {
+//		Button sourceButton = (Button) e.getSource();
+//		
+//		if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
+//			if (sourceButton.equals(btnRun)) {
+//				lightenIconColor(iconRun);
+//			} else if (sourceButton.equals(btnStop)) {
+//				lightenIconColor(iconStop);
+//			}
+//		} else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
+//			if (sourceButton.equals(btnRun)) {
+//				iconRun.setIconColor(Color.GREEN);
+//			} else if (sourceButton.equals(btnStop)) {
+//				iconStop.setIconColor( Color.DARKRED);
+//			}
+//		}
+//	}
+
 	/*
 	 * Takes a fontIcon and sets the iconColor to a brighter colour
+	 * 
 	 * @param FontIcon
 	 */
-	private void lightenIconColor(FontIcon icon) {	
-		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
-	}
+//	private void lightenIconColor(FontIcon icon) {	
+//		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
+//	}
 
 	/**
 	 * Gets the currently selected tab on the tab pane.
+	 * 
 	 * @return The Tab that is currently selected. Null if none was found.
 	 */
 	public FileTab getSelectedTab() {
@@ -463,24 +511,25 @@ public class MainController {
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Gets the FileTab in the TabPane that is associated with the specified File.
+	 * 
 	 * @param file The File to search for.
 	 * @return The FileTab instance that holds the File, or null if no tab does.
 	 */
 	private FileTab getTabFromFile(File file) {
 		var tabs = tabPane.getTabs();
-		
+
 		for (Tab tab : tabs) {
 			FileTab fileTab = (FileTab) tab;
 			File tabFile = fileTab.getFile();
-			
+
 			if (tabFile != null && file.equals(tabFile)) {
 				return fileTab;
 			}
 		}
-		
+
 		return null;
 	}
 }

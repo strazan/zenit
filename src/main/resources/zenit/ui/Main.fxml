@@ -16,12 +16,13 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
-<?import org.kordamp.ikonli.javafx.FontIcon?>
 
-<VBox prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="600.0" prefWidth="900.0" stylesheets="@mainStyle.css" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"> 
+
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -82,23 +83,30 @@
                                   <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="100.0" prefWidth="160.0" SplitPane.resizableWithParent="false">
                                        <children>
                                     	  <TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                                          <HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="22.0" prefWidth="112.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="0.0">
-                                             <children>
-                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER" contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false" onAction="#compileAndRun" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent" prefHeight="0.0" prefWidth="15.0">
-                                                   <graphic>
-                                                      <FontIcon fx:id="iconRun" iconColor="green" iconLiteral="fa-play-circle" iconSize="24" />
-                                                   </graphic>
+                                          <HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="25.0" prefWidth="63.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="10.0">
+                                          <children>
+                                                <Region fx:id="runRegion" minHeight="20" minWidth="20" opacity="1" prefHeight="24.0" prefWidth="35.0" style="-fx-scale-shape: true;" styleClass="btn-run" stylesheets="@actionButtons.css">
+                                                   <HBox.margin>
+                                                      <Insets right="10.0" />
+                                                   </HBox.margin>
+                                                </Region>
+                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER"> <!--  contentDisplay="CENTER" ellipsisString="Run" mnemonicParsing="false"  onAction="#compileAndRun" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent" prefHeight="0.0" prefWidth="15.0">  -->
+                                               
                                                    <padding>
                                                       <Insets top="1.0" />
                                                    </padding>
                                                 </Button>
-                                                <Button id="btnStop" fx:id="btnStop" mnemonicParsing="false" prefHeight="0.0" prefWidth="15.0" onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent">
-                                                   <graphic>
-                                                      <FontIcon fx:id="iconStop" iconColor="darkred" iconLiteral="fa-stop-circle" iconSize="24" />
-                                                   </graphic>
+                                                <Button id="btnStop" fx:id="btnStop" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0"> <!--  onMouseEntered="#onMouseEvent" onMouseExited="#onMouseEvent" prefHeight="0.0" prefWidth="15.0"> -->
+                                                  
                                                    <padding>
                                                       <Insets top="1.0" />
                                                    </padding>
+                                                   <graphic>
+                                                      <Region minHeight="-Infinity" minWidth="-Infinity" prefHeight="20.0" prefWidth="20.0" styleClass="btn-stop" stylesheets="@actionButtons.css">
+                                                         <opaqueInsets>
+                                                            <Insets />
+                                                         </opaqueInsets></Region>
+                                                   </graphic>
                                                 </Button>
                                              </children>
                                           </HBox>
@@ -152,4 +160,4 @@
       </padding>
     </HBox>
   </children>
-</VBox>
+    </fx:root>
