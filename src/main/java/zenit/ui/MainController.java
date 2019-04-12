@@ -461,42 +461,6 @@ public class MainController extends VBox {
 	}
 
 	/**
-	 * Fire this on mouse events (Mouse exit, enter, click etc) for buttons and
-	 * other components. Call this function on for example btnRun. ( btnRun
-	 * onMouseExit="#onMouseEvent" )
-	 * 
-	 * @param MouseEvent
-	 */
-//	
-//	@FXML
-//	private void onMouseEvent(MouseEvent e) {
-//		Button sourceButton = (Button) e.getSource();
-//		
-//		if (e.getEventType() == MouseEvent.MOUSE_ENTERED) {
-//			if (sourceButton.equals(btnRun)) {
-//				lightenIconColor(iconRun);
-//			} else if (sourceButton.equals(btnStop)) {
-//				lightenIconColor(iconStop);
-//			}
-//		} else if (e.getEventType() == MouseEvent.MOUSE_EXITED) {
-//			if (sourceButton.equals(btnRun)) {
-//				iconRun.setIconColor(Color.GREEN);
-//			} else if (sourceButton.equals(btnStop)) {
-//				iconStop.setIconColor( Color.DARKRED);
-//			}
-//		}
-//	}
-
-	/*
-	 * Takes a fontIcon and sets the iconColor to a brighter colour
-	 * 
-	 * @param FontIcon
-	 */
-//	private void lightenIconColor(FontIcon icon) {	
-//		icon.setIconColor( ((Color) icon.getIconColor()).brighter());
-//	}
-
-	/**
 	 * Gets the currently selected tab on the tab pane.
 	 * 
 	 * @return The Tab that is currently selected. Null if none was found.
