@@ -58,8 +58,29 @@ public class FileTab extends Tab {
 			hasChanged = !initialFileContent.equals(newText);
 			updateUI();
 		});
-				
+		setStyle("-fx-background-color: #444;");
+		setStyle("-fx-stroke: #fff;");
+		
 		Platform.runLater(zenCodeArea::requestFocus);
+	}
+	
+	/**
+	 * Checks if the caret is after "sysout", in which case it is replaced by 
+	 * "System.out.println();", and the caret is moved to between the parenthesis.
+	 * @author Pontus Laos
+	 */
+	public void sysout() {
+		if (file == null) {
+			return;
+		}
+		
+		String text = zenCodeArea.getText();
+		int caretPosition = zenCodeArea.getCaretPosition();
+		
+		if (caretPosition >= 6 && text.substring(caretPosition - 6, caretPosition).equals("sysout")) {
+			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.out.println();");
+			zenCodeArea.moveTo(caretPosition + 13);
+		}
 	}
 	
 	/**
