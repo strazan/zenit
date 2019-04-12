@@ -18,3 +18,4 @@ target/zenit-1.0.0-SNAPSHOT.jar
 target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
 target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
 target/classes/zenit/ui/mainStyle.css
+/target/
