@@ -20,12 +20,9 @@ public class runTerminal extends Application {
 		loader.setController(controller);
 		Parent root = loader.load();
 		Scene scene = new Scene(root);
-//		scene.getStylesheets().add(getClass().getResource("/zenit/ui/mainStyle.css").toString());
-//		scene.getStylesheets().add(getClass().getResource("/zenit/ui/keywords.css").toExternalForm());
 		stage.setScene(scene);
 		stage.setTitle("Zenit");
 
-//		controller.foo();
 		stage.show();
 		} catch (Exception e ) {
 			e.printStackTrace();
