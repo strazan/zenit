@@ -1,40 +1,67 @@
-.keyword {
-    -fx-fill: purple;
+.styled-text-area .text { 
+	-fx-fill: #FFF;
+}
+
+.styled-text-area .keyword {
+    /*-fx-fill: purple;*/
+    -fx-fill: #569cc3;
     -fx-font-weight: bold;
 }
-.semicolon {
+
+.styled-text-area .semicolon {
     -fx-font-weight: bold;
 }
-.paren {
-    -fx-fill: firebrick;
+
+.styled-text-area .paren {
+    /*-fx-fill: firebrick;*/
+    -fx-fill: #d4c28f;
     -fx-font-weight: bold;
 }
-.bracket {
-    -fx-fill: darkgreen;
+
+.styled-text-area .bracket {
+    /*-fx-fill: darkgreen;*/
+    -fx-fill: lightgreen;
     -fx-font-weight: bold;
 }
-.brace {
+
+.styled-text-area .brace {
     -fx-fill: teal;
     -fx-font-weight: bold;
 }
-.string {
-    -fx-fill: blue;
+
+.styled-text-area .string {
+    /*-fx-fill: blue;*/
+	-fx-fill: #c36537;
 }
 
-.comment {
-	-fx-fill: cadetblue;
+.styled-text-area .comment {
+	/*-fx-fill: cadetblue;*/
+	-fx-fill: #00EE00;
 }
 
 .paragraph-box:has-caret {
-    -fx-background-color: #f2f9fc;
+    -fx-border-width: 1px;
+    -fx-border-color: #ffffff1f;
+    -fx-border-style: solid inside;
+}
+
+.paragraph-box {
+	-fx-background-color: #444;
+	-fx-border-width: 1px;
+	-fx-border-color: transparent;
+    -fx-border-style: solid inside;
 }
 
 .styled-text-area .selection {
-    -fx-fill: pink;
+    -fx-fill: #666 !important;
 }
 
-.lineno {
-	-fx-background-color: #BBBBBB;
-	-fx-fill: #333333;
+.styled-text-area .lineno {
+	-fx-background-color: #333;
+	-fx-fill: #FFF;
+	-fx-pref-width: 30px;
 }
 
+.caret {
+    -fx-stroke: #fff;
+}

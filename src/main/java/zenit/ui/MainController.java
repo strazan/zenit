@@ -9,6 +9,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -26,6 +27,8 @@ import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
+import main.java.zenit.ui.FileTab;
+import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
  * The controller part of the main GUI.
@@ -54,6 +57,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private MenuItem changeWorkspace;
+	
+	@FXML
+	private CheckMenuItem cmiDarkMode;
 
 	@FXML
 	private TabPane tabPane;
@@ -165,6 +171,17 @@ public class MainController extends VBox {
 			openFile(file);
 		}
 		return file;
+	}
+	
+	/**
+	 * If a tab is open, attempt to call its sysout-method.
+	 */
+	public void sysout() {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.sysout();
+		}
 	}
 
 	/**
@@ -359,6 +376,38 @@ public class MainController extends VBox {
 			// TODO: handle exception
 		}
 	}
+	
+	/**
+	 * Switches between dark- and light mode depending on what is selected in the application's
+	 * 'Dark Mode'-checkbox.
+	 * @param event
+	 * @author Pontus Laos
+	 */
+	@FXML
+	private void darkModeChanged(Event event) {
+		boolean isDarkMode = cmiDarkMode.isSelected();
+		var stylesheets = stage.getScene().getStylesheets();
+		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
+		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
+		
+		if (isDarkMode) {
+			stylesheets.add(darkMode);
+			
+			if (stylesheets.contains(lightModeKeywords)) {
+				stylesheets.remove(lightModeKeywords);
+			}
+			stylesheets.add(darkModeKeywords);
+		} else {
+			// Currently the Light Mode is the default CSS.
+			stylesheets.remove(darkMode);
+			
+			if (stylesheets.contains(darkModeKeywords)) {
+				stylesheets.remove(darkModeKeywords);
+			}
+			stylesheets.add(lightModeKeywords);
+		}
+	}
 
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
@@ -426,7 +475,6 @@ public class MainController extends VBox {
 				Platform.runLater(() -> tabPane.getTabs().remove(selectedTab));
 			}
 		} else {
-			System.out.println("File: " + selectedTab.getFile() + "\nhasChanged: " + selectedTab.hasChanged());
 			tabPane.getTabs().remove(selectedTab);
 		}
 	}
