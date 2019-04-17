@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.fxmisc.wellbehaved</groupId>
+  <artifactId>wellbehavedfx</artifactId>
+  <version>0.3.3</version>
+  <name>WellBehavedFX</name>
+  <description>Composable event handlers and skin skeletons for JavaFX controls.</description>
+  <url>http://www.fxmisc.org/wellbehaved/</url>
+  <licenses>
+    <license>
+      <name>The BSD 2-Clause License</name>
+      <url>http://opensource.org/licenses/BSD-2-Clause</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Tomas Mikula</name>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git@github.com:FXMisc/WellBehavedFX.git</connection>
+    <developerConnection>scm:git@github.com:FXMisc/WellBehavedFX.git</developerConnection>
+    <url>scm:git@github.com:FXMisc/WellBehavedFX.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>[4.0,)</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.hamcrest</groupId>
+      <artifactId>hamcrest-junit</artifactId>
+      <version>2.0.0.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>testfx-junit</artifactId>
+      <version>4.0.8-alpha</version>
+      <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <artifactId>junit</artifactId>
+          <groupId>junit</groupId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.testfx</groupId>
+      <artifactId>openjfx-monocle</artifactId>
+      <version>8u76-b04</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>
