@@ -3,16 +3,21 @@ package zenit.ui;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import org.fxmisc.richtext.Caret;
+import org.fxmisc.richtext.CaretNode;
 import org.fxmisc.richtext.model.StyledDocument;
 
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -21,6 +26,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
@@ -72,6 +78,7 @@ public class MainController {
 	private TreeView<String> treeView;
 
 	private ZenCodeArea zenCodeArea;
+
 	/**
 	 * Setter for FileController instance. Used to access the file system.
 	 */
@@ -421,64 +428,156 @@ public class MainController {
 		return null;
 	}
 
-	/**
-	 * @author Fredrik EKlundh
-	 * 
-	 * Searches after a specific String in the currently selected tab 
-	 * and prints how many times it exist in the console.
-	 * @throws FileNotFoundException
-	 */
 	
-	public void searchInFile() {
-		TextInputDialog dialog = new TextInputDialog("search");
-		dialog.setTitle("Search");
-		dialog.setHeaderText("What are you looking for?");
-//		dialog.setContentText("Search in file");
+	public class Search extends Thread{
+		private Thread thread;
+		
+		private Scanner txtscan = null;
+		
+		private List<Integer> line;
+		private List<Integer> wordPos; 
+		private List<Integer> absolutePos;
+		
+		private int numberOfTimes;
+		private int numberOfLines;
+		private int lineLenght;
+		private int i = 0;
+		
+		private String word;
+		
+		/**
+		 * @author Fredrik EKlundh
+		 * @throws FileNotFoundException
+		 */
+		public void searchInFile() {
 
-		
-		StyledDocument sd;
-		
-		String word = "";
-		int numberOfTimes = 0;
+			TextInputDialog dialog = new TextInputDialog("search");
+			dialog.setTitle("Search");
+			dialog.setHeaderText("What are you looking for?");
 
-		Tab tab = getSelectedTab();
-		//sd = 
+			line = new ArrayList<>();
+			wordPos = new ArrayList<>();
+			absolutePos = new ArrayList<>();
+
+			word = "";
+
+			numberOfTimes = 0;
+			numberOfLines = -1;
+			lineLenght = 0;
+
+			Tab tab = getSelectedTab();
+
+			File file = currentlySelectedFiles.get(tab);
 		
+			try {
+				txtscan = new Scanner(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent()) {
+				word = result.get();
+				notCaseSensetive();
+				//caseSensetive();
+
+			}
+
+			if (numberOfTimes > 0) {
+				System.out.println("Exsist " + numberOfTimes + " times");
+
+				for (int i = 0; i < numberOfTimes; i++) {
+
+					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search"));
+					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+
+				}
+				zenCodeArea.moveTo(absolutePos.get(0));
+				zenCodeArea.requestFollowCaret();
+				
+				//replaceWord(word, "hehe", absolutePos);
+			} else {
+				// System.out.println("LEARN TO SPELL");
+			}
+			
+			thread = new Thread(this);
+			thread.start();
+		}
 		
-		File file = currentlySelectedFiles.get(tab);
-		Scanner txtscan = null;
-		try {
-			txtscan = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
+		public void run() {
+			System.out.println("run method");
+			
+			
 		}
 
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			word = result.get();
-
+		private void clearZen() {
+			zenCodeArea.appendText(" ");
+			zenCodeArea.deletePreviousChar();
+		}
+		
+		private void replaceWord(String wordBefore, String wordAfter, List<Integer> absolutePos) {
+			for (int i = absolutePos.size() -1; i >= 0; i--) {
+				zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + wordBefore.length(), wordAfter);
+			}
+		}
+		
+		public void jumpDown() {
+			if (i < absolutePos.size()) {
+				i++;
+			}
+			
+			zenCodeArea.moveTo(absolutePos.get(i));
+			zenCodeArea.requestFollowCaret();
+		}
+		
+		public void jumpUp() {
+			if(i > 0) {
+				i--;
+			}
+			
+			zenCodeArea.moveTo(absolutePos.get(i));
+			zenCodeArea.requestFollowCaret();	
+		}
+		
+		private void notCaseSensetive() {
+			
 			while (txtscan.hasNextLine()) {
-				String str = txtscan.nextLine();
+				String str = txtscan.nextLine().toLowerCase();
+				numberOfLines++;
+				lineLenght = 0;
 				while (str.indexOf(word) != -1) {
 					numberOfTimes++;
-					str = str.substring(str.indexOf(word) + word.length());
 
+					line.add(numberOfLines);
+
+					wordPos.add(str.indexOf(word) + lineLenght);
+
+					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+
+					str = str.substring(str.indexOf(word) + word.length());
 				}
 			}
 		}
+		
+		private void caseSensetive() {
+			
+			while (txtscan.hasNextLine()) {
+				String str = txtscan.nextLine();
+				numberOfLines++;
+				lineLenght = 0;
+				while (str.indexOf(word) != -1) {
+					numberOfTimes++;
 
-		if (numberOfTimes > 0) {
-			System.out.println("Exsist " + numberOfTimes + " times");
-			//zenCodeArea.replace(start, end, replacement);
-			//zenCodeArea.setStyle(0, 100, Collections.singleton("-fx-background-color: yellow"));
-//			zenCodeArea.setStyle(0, 10, Collections.singleton("search"));
-			//zenCodeArea.setStyle("-fx-background-color: yellow");
-//			zenCodeArea.setStyleClass(0, 10, "search");
-			zenCodeArea.highlight(word);
-		} else {
-			// System.out.println("LEARN TO SPELL");
+					line.add(numberOfLines);
+
+					wordPos.add(str.indexOf(word) + lineLenght);
+
+					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+
+					str = str.substring(str.indexOf(word) + word.length());
+				}
+			}
 		}
-
 	}
 	
 	/**

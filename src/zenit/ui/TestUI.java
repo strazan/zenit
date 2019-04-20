@@ -12,6 +12,7 @@ import zenit.filesystem.FileController;
 import zenit.filesystem.WorkspaceHandler;
 
 import zenit.textFlow.ZenCodeArea;
+import zenit.ui.MainController.Search;
 
 /**
  * Class for testing the UI.
@@ -36,6 +37,7 @@ public class TestUI extends Application {
 		
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("Main.fxml"));
 		MainController controller = new MainController();
+		Search search = controller.new Search();
 		controller.setFileController(fileController);
 	
 		
@@ -51,7 +53,7 @@ public class TestUI extends Application {
 		controller.initialize(stage);
 		stage.show();
 		
-		KeyboardShortcuts.setupMain(scene, controller);
+		KeyboardShortcuts.setupMain(scene, controller, search);
 	}
 	
 	/**

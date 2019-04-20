@@ -3,13 +3,9 @@ package zenit.textFlow;
 import javafx.concurrent.Task;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.paint.Color;
 
 import org.fxmisc.richtext.CodeArea;
-import org.fxmisc.richtext.InlineCssTextArea;
 import org.fxmisc.richtext.LineNumberFactory;
-import org.fxmisc.richtext.Selection;
-import org.fxmisc.richtext.SelectionImpl;
 import org.fxmisc.richtext.model.StyleSpans;
 import org.fxmisc.richtext.model.StyleSpansBuilder;
 import org.fxmisc.wellbehaved.event.EventPattern;
@@ -20,7 +16,6 @@ import java.time.Duration;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
-import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
@@ -42,7 +37,6 @@ public class ZenCodeArea extends CodeArea implements AutoCloseable {
 		"switch", "synchronized", "this", "throw", "throws",
 		"transient", "true", "try", "void", "volatile", "while"
 	};
-//	private static String[] SEARCHWORD = {""};
 	private static final String KEYWORD_PATTERN = "\\b(" + String.join("|", KEYWORDS) + ")\\b";
 	private static final String PAREN_PATTERN = "\\(|\\)";
 	private static final String BRACE_PATTERN = "\\{|\\}";
@@ -50,7 +44,6 @@ public class ZenCodeArea extends CodeArea implements AutoCloseable {
 	private static final String SEMICOLON_PATTERN = "\\;";
 	private static final String STRING_PATTERN = "\"([^\"\\\\]|\\\\.)*\"";
 	private static final String COMMENT_PATTERN = "//[^\n]*" + "|" + "/\\*(.|\\R)*?\\*/";
-	private static String SEARCH_PATTERN = "";
 	
 	private static Pattern PATTERN = Pattern.compile(
 		"(?<KEYWORD>" + KEYWORD_PATTERN + ")"
@@ -63,9 +56,6 @@ public class ZenCodeArea extends CodeArea implements AutoCloseable {
 	);
 
 	public ZenCodeArea() {
-		this("");
-	}
-	public ZenCodeArea(String word) {
 	
 		setParagraphGraphicFactory(LineNumberFactory.get(this));
 
@@ -142,44 +132,6 @@ public class ZenCodeArea extends CodeArea implements AutoCloseable {
 		
 		return spansBuilder.create();
 	}
-	
-	public void highlight(String word) {
-		SEARCH_PATTERN = word;
-		System.out.println(SEARCH_PATTERN);
-		
-		PATTERN = Pattern.compile(
-			"(?<KEYWORD>" + KEYWORD_PATTERN + ")"
-			+ "|(?<PAREN>" + PAREN_PATTERN + ")"
-			+ "|(?<BRACE>" + BRACE_PATTERN + ")"
-			+ "|(?<BRACKET>" + BRACKET_PATTERN + ")"
-			+ "|(?<SEMICOLON>" + SEMICOLON_PATTERN + ")"
-			+ "|(?<STRING>" + STRING_PATTERN + ")"
-			+ "|(?<COMMENT>" + COMMENT_PATTERN + ")"
-			+ "|(?<SEARCH>\\b" + SEARCH_PATTERN + "\\b)"
-		);
-		
-		setParagraphGraphicFactory(LineNumberFactory.get(this));
-
-		multiPlainChanges().successionEnds(
-			Duration.ofMillis(100)).subscribe(
-				ignore -> setStyleSpans(0, computeHighlighting(getText(
-			))));
-
-		executor = Executors.newSingleThreadExecutor();
-		setParagraphGraphicFactory(LineNumberFactory.get(this));
-		multiPlainChanges().successionEnds(Duration.ofMillis(500)).supplyTask(
-			this::computeHighlightingAsync).awaitLatest(multiPlainChanges()).filterMap(t -> {
-				if(t.isSuccess()) {
-					return Optional.of(t.get());
-				} else {
-					t.getFailure().printStackTrace();
-					return Optional.empty();
-				}
-		}).subscribe(this::applyHighlighting);
-		computeHighlightingAsync();
-
-	}
-	
 	
 	@Override
 	public void close() throws Exception {

@@ -6,6 +6,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
+import zenit.ui.MainController.Search;
 
 /**
  * Static methods for interacting with a scene's accelerators.
@@ -33,7 +34,7 @@ public final class KeyboardShortcuts {
 	 * @param scene The scene to be used.
 	 * @param controller The controller to call methods from.
 	 */
-	public static final void setupMain(Scene scene, MainController controller) {
+	public static final void setupMain(Scene scene, MainController controller, Search search) {
 		add(scene, KeyCode.S, KeyCombination.SHORTCUT_DOWN, () -> {
 			controller.saveFile(null);
 		});
@@ -55,8 +56,15 @@ public final class KeyboardShortcuts {
 		});
 		
 		add(scene, KeyCode.F, KeyCombination.SHORTCUT_DOWN, () -> {
-			controller.searchInFile();
+			search.searchInFile();
+		});
 
+		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, () -> {
+			search.jumpUp();
+		});
+		
+		add(scene, KeyCode.M, KeyCombination.SHORTCUT_DOWN, () -> {
+			search.jumpDown();
 		});
 	}
 }

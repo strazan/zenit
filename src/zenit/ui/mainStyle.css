@@ -1,4 +1,14 @@
 
 #btnRun{
-		/* TODO: Add styling and icons*/
+        /* TODO: Add styling and icons*/
+}
+
+ .search {
+    -fx-effect: dropshadow(gaussian, yellow, 3, 1, 0, 0);
+    
+}
+
+ .unSearch {
+    -fx-effect: dropshadow(gaussian, green, 3, 1, 0, 0);
+
 }
