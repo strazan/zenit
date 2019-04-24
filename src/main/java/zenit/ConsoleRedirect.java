@@ -2,18 +2,23 @@ package main.java.zenit;
 
 import java.io.PrintStream;
 
-import javafx.scene.control.TextArea;
 import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleAreaErrorStream;
 import main.java.zenit.console.ConsoleAreaOutputStream;
 
-
 /**
-@ -12,21 +15,28 @@ import javafx.scene.control.TextArea;
- * This class redirects the PrintStream from the console to a TextArea
+ * This class redirects the PrintStream to given ConsoleArea.
+ * 
+ * @author siggelabor
+ *
  */
 public class ConsoleRedirect {
 
+	/**
+	 * This method will set the out and error PrintStream to chosen ConsoleArea.
+	 * 
+	 * @param the ConsoleArea prints are to be directed to.
+	 */
 	public ConsoleRedirect(ConsoleArea ta) {
 		try {
 		
@@ -31,10 +36,8 @@ public class ConsoleRedirect {
 			 * System.setIn(in);
 			 */
 			
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			//			e.printStackTrace();
 		}
 	}	
 }

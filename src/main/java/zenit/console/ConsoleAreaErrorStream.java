@@ -30,8 +30,6 @@ public class ConsoleAreaErrorStream extends OutputStream {
 
 	@Override
 	public void write(int b) throws IOException {
-		
-		
 
 		if (b == '\n') {
 			ca.errPrint(sb.toString() + "\n");
