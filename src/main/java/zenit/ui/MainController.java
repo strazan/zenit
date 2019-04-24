@@ -15,11 +15,13 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
@@ -39,9 +41,10 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private ConsoleArea consoleArea;
 
 	@FXML
-	private TextArea taConsole;
+	private AnchorPane consolePane;
 
 	@FXML
 	private MenuItem newFile;
@@ -121,7 +124,9 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
-		new ConsoleRedirect(taConsole);		
+		consoleArea = new ConsoleArea();
+		consolePane.getChildren().add(consoleArea);
+		new ConsoleRedirect(consoleArea);		
 		btnRun.setPickOnBounds(true);
 		initTree();
 	}
@@ -505,7 +510,7 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	private void clearConsole() {
-		taConsole.clear();
+		consoleArea.clear();
 	}
 
 	/**
