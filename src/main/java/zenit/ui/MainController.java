@@ -2,12 +2,6 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.fxmisc.richtext.InlineCssTextArea;
-import org.kordamp.ikonli.javafx.FontIcon;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -47,7 +41,7 @@ public class MainController extends VBox {
 	private FileController fileController;
 
 	@FXML
-	private AnchorPane consolePane;
+	private TextArea taConsole;
 
 	@FXML
 	private MenuItem newFile;
@@ -126,19 +120,6 @@ public class MainController extends VBox {
 	/**
 	 * Performs initialization steps when the controller is set.
 	 */
-	public void initialize(Stage stage) {
-		this.stage = stage;
-
-		ConsoleArea caConsole = new ConsoleArea();
-		caConsole.setEditable(false);
-		new ConsoleRedirect(caConsole);
-		
-		AnchorPane.setTopAnchor(caConsole, 0.0);
-		AnchorPane.setRightAnchor(caConsole, 0.0);
-		AnchorPane.setBottomAnchor(caConsole, 0.0);
-		AnchorPane.setLeftAnchor(caConsole, 0.0);
-		consolePane.getChildren().add(caConsole);
-			
 	public void initialize() {
 		new ConsoleRedirect(taConsole);		
 		btnRun.setPickOnBounds(true);
@@ -524,7 +505,7 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	private void clearConsole() {
-	 ((ConsoleArea) consolePane.getChildren().get(0)).clearConsole();
+		taConsole.clear();
 	}
 
 	/**
