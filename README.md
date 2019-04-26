@@ -23,6 +23,6 @@ javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED
 
 (If TestUI class doesn't show up in Java Application list, try running the class first. You'll get an error but the class will show up in the Java Application list.)
 
-• Uncheck "Use the -XstartOnFirstThread argument when launching with SWT"
+• (macOS) Uncheck "Use the -XstartOnFirstThread argument when launching with SWT"
 
 • Run src/zenit/ui/TestUI.java 

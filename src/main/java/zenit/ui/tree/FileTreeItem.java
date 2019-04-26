@@ -2,7 +2,10 @@ package main.java.zenit.ui.tree;
 
 import java.io.File;
 
+import javafx.scene.Node;
 import javafx.scene.control.TreeItem;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 
 /**
  * Extension of the TreeItem class with the ability to save a corresponding File-object
@@ -20,6 +23,10 @@ public class FileTreeItem<T> extends TreeItem<T> {
 	public static final int PACKAGE = 102;
 	public static final int CLASS = 103;
 	public static final int SRC = 104;
+
+
+    private ImageView icon;
+    
 	
 	/**
 	 * @param file Corresponding file
@@ -29,6 +36,26 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		super(name);
 		this.file = file;
 		this.type = type;
+		
+		setIcon(type);
+	}
+	
+	private void setIcon(int type) {
+		String url = null;
+		switch(type) {
+		case PROJECT: url = "/zenit/ui/tree/project.png"; break;
+		case PACKAGE: url = "/zenit/ui/tree/package.png"; break;
+		case CLASS: url = "/zenit/ui/tree/class.png"; break;
+		case SRC: url = "/zenit/ui/tree/src.png"; break;
+		}
+		
+		if (url != null) {
+			icon = new ImageView(new Image(getClass().getResource(url).toExternalForm()));
+			icon.setFitHeight(16);
+			icon.setFitWidth(16);
+			icon.setSmooth(true);
+			this.setGraphic(icon);
+		}
 	}
 	
 	/**
