@@ -1,28 +1,31 @@
 package main.java.zenit.console;
 
-import java.io.IOException;
 import java.net.URL;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
-import javafx.application.Application;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
-import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
 
-public class ConsoleController extends Application implements Initializable {
+/**
+ * The controller class for ConsoleArea
+ * 
+ * @author siggelabor
+ *
+ */
+public class ConsoleController implements Initializable {
 
+	/*
+	 * These HashMaps are ugly.
+	 */
 	private HashMap<String, AnchorPane> consoleList = new HashMap<String, AnchorPane>(); 
 	private HashMap<String, AnchorPane> terminalList = new HashMap<String, AnchorPane>(); 
 	
@@ -36,7 +39,7 @@ public class ConsoleController extends Application implements Initializable {
 	private Label lblConsole;
 
 	@FXML
-	private ChoiceBox<String> consoleChoiceBox; //= new ChoiceBox<String>();
+	private ChoiceBox<String> consoleChoiceBox; 
 
 	@FXML
 	private ChoiceBox<String> terminalChoiceBox;
@@ -50,9 +53,10 @@ public class ConsoleController extends Application implements Initializable {
 	@FXML
 	private Button buttonNewConsole;
 	
-	
-	
-
+	/**
+	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
+	 * visible. Also sets text color of the labels.
+	 */
 	public void showConsoleTabs() {
 		lblConsole.setTextFill(Color.DARKGREY);
 		lblTerminal.setTextFill(Color.BLACK);
@@ -63,7 +67,10 @@ public class ConsoleController extends Application implements Initializable {
 		buttonNewTerminal.setVisible(false);
 		buttonNewConsole.setVisible(true);
 	}
-
+	/**
+	 * Shows the choiceBox with terminal panes, and sets the choiceBox with console tabs to not 
+	 * visible. Also sets text color of the labels.
+	 */
 	public void showTerminalTabs() {
 		lblTerminal.setTextFill(Color.DARKGREY);
 		lblConsole.setTextFill(Color.BLACK);
@@ -75,12 +82,21 @@ public class ConsoleController extends Application implements Initializable {
 		buttonNewConsole.setVisible(false);
 	}
 
+	/**
+	 * Creates a new ConsoleArea, adds it to the console AnchorPane and puts it as an option in the
+	 * choiceBox.
+	 */
 	public void startNewConsole() {
 		ConsoleArea console = new ConsoleArea("console (" + consoleList.size() + ")");
 		AnchorPane anchorPane = new AnchorPane();
 		
 		fillAnchor(console);
 		fillAnchor(anchorPane);
+		
+		/*
+		 * TODO 
+		 * this should probably be reworked, so that 'ID' isn't used. 
+		 */
 		
 		anchorPane.getChildren().add(console);
 		consoleAnchor.getChildren().add(anchorPane);
@@ -91,6 +107,10 @@ public class ConsoleController extends Application implements Initializable {
 		new ConsoleRedirect(console);	
 	}
 
+	/**
+	 * updates the choiceBox the consoleAreas. 
+	 * @param id
+	 */
 	public void updateConsoleList(String id) {
 		boolean didExist = false;
 		for(int i = 0; i < consoleChoiceBox.getItems().size(); i++ ) {
@@ -107,38 +127,29 @@ public class ConsoleController extends Application implements Initializable {
 	}
 	
 	public void newTerminal() {
-		terminalChoiceBox.getItems().add("bash " + terminalChoiceBox.getItems().size());
-		terminalChoiceBox.setValue("bash " + terminalChoiceBox.getItems().size());
+	
 	}
-	 
+	
+	// TODO maybe add to (create) package 'helpers' 
+	/**
+	 * sets the anchor of a node to fill parent 
+	 * 
+	 * @param node to fill to parent anchor
+	 */
 	public void fillAnchor(Node node) {
 		AnchorPane.setTopAnchor(node, 0.0);
 		AnchorPane.setRightAnchor(node, 0.0);
 		AnchorPane.setBottomAnchor(node, 0.0);
 		AnchorPane.setLeftAnchor(node, 0.0);
 	}
-
-	@Override
-	public void start(Stage stage) throws IOException {
-
-		FXMLLoader loader = new FXMLLoader(getClass().getResource("ConsolePane.fxml"));
-		ConsoleController consoleController = new ConsoleController();
-		loader.setController(consoleController);
-		Parent root = loader.load();
-
-		Scene scene = new Scene(root);
-		scene.getStylesheets().add(getClass().getResource("consoleStyle.css").toString());
-		stage.setScene(scene);
-		stage.setTitle("console");
-
-		stage.show();
-
-	}
 	
 	public void clearConsole() {
-		
+		// TODO
 	}
 
+	/**
+	 * Performs initialization steps.
+	 */
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
@@ -147,8 +158,6 @@ public class ConsoleController extends Application implements Initializable {
 		});
 
 		showConsoleTabs();
-		terminalChoiceBox.getItems().add("bash");
-		terminalChoiceBox.setValue("bash");
 		
 		
 	}
