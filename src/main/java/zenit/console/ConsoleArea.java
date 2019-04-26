@@ -46,7 +46,7 @@ public class ConsoleArea extends InlineCssTextArea {
 		    public void run() {
 		    	for( int i = 0; i < s.length(); i++) {
 			    	appendText(String.valueOf(s.charAt(i)));
-			    	//setStyle(getText().length() - 1, getText().length(), "-fx-fill: black");	
+			    	setStyle(getText().length() - 1, getText().length(), "-fx-fill: white");	
 			    	}
 		    }
 		});

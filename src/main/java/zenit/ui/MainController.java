@@ -22,6 +22,7 @@ import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.console.ConsoleArea;
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
@@ -75,6 +76,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
+	
+	@FXML
+	private ConsoleController consoleController;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -124,9 +128,7 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
-		consoleArea = new ConsoleArea();
-		consolePane.getChildren().add(consoleArea);
-		new ConsoleRedirect(consoleArea);		
+
 		btnRun.setPickOnBounds(true);
 		initTree();
 	}
@@ -367,7 +369,9 @@ public class MainController extends VBox {
 		File file = getSelectedTab().getFile();
 		File projectFile = getMetadataFile(file);
 		saveFile(null);
-
+		
+		consoleController.startNewConsole(); //TODO: Maybe but in a better place ?
+		
 		try {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
 			if (file != null && projectFile != null) {
@@ -380,6 +384,7 @@ public class MainController extends VBox {
 
 			// TODO: handle exception
 		}
+		
 	}
 	
 	/**

@@ -6,7 +6,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="300.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<AnchorPane  fx:controller="main.java.zenit.console.ConsoleController" prefHeight="300.0" prefWidth="700.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <AnchorPane fx:id="consoleAnchor" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
       <AnchorPane minHeight="20.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ddd;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -23,7 +23,7 @@
             </Label>
             <ChoiceBox fx:id="consoleChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" style="-fx-background-color: rgba(255,255,255,0);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" />
             <ChoiceBox fx:id="terminalChoiceBox" layoutX="10.0" layoutY="10.0" nodeOrientation="LEFT_TO_RIGHT" prefWidth="150.0" style="-fx-background-color: rgba(255,255,255,0);" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="550.0" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="0.0" />
-            <Button fx:id="buttonNewConsole" mnemonicParsing="false" onMouseClicked="#startNewConsole" style="-fx-background-color: rgba(255,255,255,0);" text="newConsoel" AnchorPane.leftAnchor="180.0" />
+            <Button fx:id="buttonNewConsole" mnemonicParsing="false" onMouseClicked="#startNewConsole" style="-fx-background-color: rgba(255,255,255,0);" text="newConsole" AnchorPane.leftAnchor="180.0" />
             <Label fx:id="buttonNewTerminal" layoutX="293.0" layoutY="5.0" onMouseClicked="#newTerminal" text="new" />
          </children>
       </AnchorPane>

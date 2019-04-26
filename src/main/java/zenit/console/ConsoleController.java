@@ -19,6 +19,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import main.java.zenit.ConsoleRedirect;
 
 public class ConsoleController extends Application implements Initializable {
 
@@ -48,6 +49,9 @@ public class ConsoleController extends Application implements Initializable {
 	
 	@FXML
 	private Button buttonNewConsole;
+	
+	
+	
 
 	public void showConsoleTabs() {
 		lblConsole.setTextFill(Color.DARKGREY);
@@ -83,6 +87,8 @@ public class ConsoleController extends Application implements Initializable {
 		
 		consoleList.put(console.getID(), anchorPane);
 		updateConsoleList(console.getID());
+		
+		new ConsoleRedirect(console);	
 	}
 
 	public void updateConsoleList(String id) {
@@ -143,5 +149,7 @@ public class ConsoleController extends Application implements Initializable {
 		showConsoleTabs();
 		terminalChoiceBox.getItems().add("bash");
 		terminalChoiceBox.setValue("bash");
+		
+		
 	}
 }
