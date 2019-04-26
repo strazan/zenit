@@ -39,6 +39,6 @@ public final class KeyboardShortcuts {
 		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
-		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::sysout);
+		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::shortcutsTrigger);
 	}
 }
