@@ -51,6 +51,13 @@
 			<artifactId>antlr4</artifactId>
 			<version>4.7.2</version>
 		</dependency>
+		
+		<dependency>
+		    <groupId>com.kodedu.terminalfx</groupId>
+		    <artifactId>terminalfx</artifactId>
+		    <version>1.0.9</version>
+		</dependency>
+		
 	</dependencies>
 
 	<repositories>
@@ -59,6 +66,12 @@
 			<name>jcenter</name>
 			<url>http://jcenter.bintray.com</url>
 		</repository>
+		
+		<repository>
+		    <id>terminalfx-repo</id>
+		    <url>https://github.com/javaterminal/terminalfx/raw/master/releases</url>
+    	</repository>
+    	
 	</repositories>
 
 	<build>
