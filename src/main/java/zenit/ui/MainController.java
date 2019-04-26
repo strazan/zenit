@@ -15,11 +15,14 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.ConsoleArea;
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
@@ -39,9 +42,10 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private ConsoleArea consoleArea;
 
 	@FXML
-	private TextArea taConsole;
+	private AnchorPane consolePane;
 
 	@FXML
 	private MenuItem newFile;
@@ -72,6 +76,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
+	
+	@FXML
+	private ConsoleController consoleController;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -121,7 +128,7 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
-		new ConsoleRedirect(taConsole);		
+
 		btnRun.setPickOnBounds(true);
 		initTree();
 	}
@@ -362,7 +369,9 @@ public class MainController extends VBox {
 		File file = getSelectedTab().getFile();
 		File projectFile = getMetadataFile(file);
 		saveFile(null);
-
+		
+		consoleController.startNewConsole(); //TODO: Maybe but in a better place ?
+		
 		try {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
 			if (file != null && projectFile != null) {
@@ -375,6 +384,7 @@ public class MainController extends VBox {
 
 			// TODO: handle exception
 		}
+		
 	}
 	
 	/**
@@ -505,7 +515,7 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	private void clearConsole() {
-		taConsole.clear();
+		consoleArea.clear();
 	}
 
 	/**
