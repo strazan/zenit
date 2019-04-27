@@ -174,7 +174,7 @@ public class MainController extends VBox {
 	}
 	
 	/**
-	 * If a tab is open, attempt to call its sysout-method.
+	 * If a tab is open, attempt to call its shortcutsTrigger-method.
 	 */
 	public void shortcutsTrigger() {
 		FileTab selectedTab = getSelectedTab();

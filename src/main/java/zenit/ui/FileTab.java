@@ -77,15 +77,23 @@ public class FileTab extends Tab {
 		String text = zenCodeArea.getText();
 		int caretPosition = zenCodeArea.getCaretPosition();
 		
-		if (caretPosition >= 6 && text.substring(caretPosition - 6, caretPosition).equals("sysout")) {
+		if (caretPosition >= 6 && text.substring(
+			caretPosition - 6, caretPosition).equals("sysout")) 
+		{
 			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.out.println();");
 			zenCodeArea.moveTo(caretPosition + 13);
 		}
-		else if (caretPosition >= 4 && text.substring(caretPosition - 4, caretPosition).equals("main")) {
-			zenCodeArea.replaceText(caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}");
+		else if (caretPosition >= 4 && text.substring(
+			caretPosition - 4, caretPosition).equals("main")) 
+		{
+			zenCodeArea.replaceText(
+				caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}"
+			);
 			zenCodeArea.moveTo(caretPosition + 37);
 		}
-		else if (caretPosition >= 2 && text.substring(caretPosition - 2, caretPosition).equals("pv")) {
+		else if (caretPosition >= 2 && text.substring(
+			caretPosition - 2, caretPosition).equals("pv")) 
+		{
 			zenCodeArea.replaceText(caretPosition - 2, caretPosition, "public void ");
 			zenCodeArea.moveTo(caretPosition + 10);
 		}
