@@ -100,8 +100,8 @@ public class FileTab extends Tab {
 	}
 	
 	/**
-	 * Checks if the caret is after any given shortcut string, in which case it is replaced by 
-	 * the 'full' string, and the caret is moved to a suitable position.
+	 * Checks if the caret is after any given shortcut string (start of a comment in which case it
+	 * is replaced by the 'full' multi-line comment, and the caret is moved to a suitable position.
 	 * @author Pontus Laos, Sigge Labor 
 	 */
 	public void commentsShortcutsTrigger() {
