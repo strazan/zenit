@@ -1,21 +1,32 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry including="**/*.java" kind="src" output="target/classes" path="src">
-		<attributes>
-			<attribute name="optional" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-11">
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER">
+
 		<attributes>
 			<attribute name="module" value="true"/>
-			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="con" path="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER">
-		<attributes>
-			<attribute name="maven.pomderived" value="true"/>
-		</attributes>
-	</classpathentry>
-	<classpathentry kind="output" path="target/classes"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx-swt.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.base.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.controls.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.fxml.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.graphics.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.media.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.swing.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/javafx.web.jar"/>
+	<classpathentry kind="lib" path="lib/javafx-sdk-11.0.2/lib/src.zip"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons-exec-test-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-javadoc.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-sources.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec-tests.jar"/>
+	<classpathentry kind="lib" path="lib/commons/lib/commons.exec.jar"/>
+
+	<classpathentry kind="lib" path="lib/jface/org.eclipse.jface-3.6.0.jar"/>
+	<classpathentry kind="lib" path="lib/RichTextFX/richtextfx-fat-0.9.3.jar"/>
+	<classpathentry kind="lib" path="lib/antlr/antlr-4.7.2-complete.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-core-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-fontawesome-pack-11.1.0.jar"/>
+	<classpathentry kind="lib" path="lib/icons/ikonli-javafx-11.1.0.jar"/>
+	<classpathentry kind="output" path="bin"/>
 </classpath>

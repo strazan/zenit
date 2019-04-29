@@ -6,16 +6,6 @@ bin/*
 *.log
 
 #Workspace file
-res/workspace/workspace.dat
+*/workspace.dat
 /bin/
 .classpath
-target/classes/zenit/ui/actionButtons.css
-target/classes/zenit/ui/Foo.java
-target/classes/zenit/ui/Main.fxml
-target/classes/zenit/ui/keywords.css
-target/maven-archiver/pom.properties
-target/zenit-1.0.0-SNAPSHOT.jar
-target/maven-status/maven-compiler-plugin/compile/default-compile/inputFiles.lst
-target/maven-status/maven-compiler-plugin/compile/default-compile/createdFiles.lst
-target/classes/zenit/ui/mainStyle.css
-/target/
