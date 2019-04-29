@@ -183,6 +183,14 @@ public class MainController extends VBox {
 			selectedTab.shortcutsTrigger();
 		}
 	}
+	
+	public void commentsShortcutsTrigger() {
+	FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.commentsShortcutsTrigger();
+		}	
+	}
 
 	/**
 	 * Grabs the text from the currently selected Tab and writes it to the currently

@@ -100,6 +100,37 @@ public class FileTab extends Tab {
 	}
 	
 	/**
+	 * Checks if the caret is after any given shortcut string, in which case it is replaced by 
+	 * the 'full' string, and the caret is moved to a suitable position.
+	 * @author Pontus Laos, Sigge Labor 
+	 */
+	public void commentsShortcutsTrigger() {
+		if (file == null) {
+			return;
+		}
+		
+		String text = zenCodeArea.getText();
+		int caretPosition = zenCodeArea.getCaretPosition();
+		
+		if (caretPosition >= 2 && text.substring(
+			caretPosition - 2, caretPosition).equals("/*")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 2, caretPosition, "/*\n* \n*/");
+			zenCodeArea.moveTo(caretPosition + 3);
+		}
+		else if (caretPosition >= 3 && text.substring(
+			caretPosition - 3, caretPosition).equals("/**")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 3, caretPosition, "/**\n* \n* @author \n*/");
+			zenCodeArea.moveTo(caretPosition + 3);
+			
+		}
+		else {
+			zenCodeArea.replaceText(caretPosition, caretPosition, "\n");
+		}
+	}
+	
+	/**
 	 * Updates the title of the tab.
 	 */
 	private void updateUI() {
