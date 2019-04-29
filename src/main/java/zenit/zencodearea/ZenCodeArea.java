@@ -78,6 +78,13 @@ public class ZenCodeArea extends CodeArea {
 		}).subscribe(this::applyHighlighting);
 		computeHighlightingAsync();
 	}
+	
+	public int getFontSize() {
+		
+
+		return 0;
+		
+	}
 
 	private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
 		String text = getText();

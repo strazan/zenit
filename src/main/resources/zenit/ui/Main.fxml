@@ -22,7 +22,7 @@
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
 
-<fx:root type="VBox" prefHeight="640.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root prefHeight="640.0" prefWidth="900.0" type="VBox" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
   <children>
     <MenuBar fx:id="menuBar" VBox.vgrow="NEVER">
       <menus>
@@ -58,6 +58,8 @@
             <MenuItem mnemonicParsing="false" text="Paste" />
             <MenuItem mnemonicParsing="false" text="Delete" />
             <SeparatorMenuItem mnemonicParsing="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#setTextSize" text="Text size" />
+                  <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Select All" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />
           </items>
