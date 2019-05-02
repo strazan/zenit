@@ -50,6 +50,10 @@ public class TextSizeController extends AnchorPane {
 		stage.show();
 
 	}
+	
+	public void setNewFontSize() {
+		
+	}
 
 	@SuppressWarnings("unchecked")
 	private void initialize() {

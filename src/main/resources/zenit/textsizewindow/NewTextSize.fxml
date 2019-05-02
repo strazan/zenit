@@ -6,14 +6,13 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-
-<fx:root type="AnchorPane" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="149.0" prefWidth="304.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="149.0" prefWidth="304.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <Label layoutX="38.0" layoutY="23.0" text="Text size:" />
       <Label fx:id="lblOldValue" layoutX="250.0" layoutY="23.0" text="00" />
       <Slider fx:id="sldrNewSize" layoutX="38.0" layoutY="103.0" min="6.0" />
       <Label layoutX="38.0" layoutY="75.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
-      <Button layoutX="205.0" layoutY="90.0" mnemonicParsing="false" text="Accept" />
+      <Button layoutX="205.0" layoutY="90.0" mnemonicParsing="false" onMouseClicked="#setNewFontSize" text="Accept" />
       <TextField fx:id="fldNewSize" layoutX="121.0" layoutY="70.0" prefHeight="27.0" prefWidth="45.0" />
    </children>
 </fx:root>
