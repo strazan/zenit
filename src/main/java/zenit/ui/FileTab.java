@@ -65,11 +65,11 @@ public class FileTab extends Tab {
 	}
 	
 	/**
-	 * Checks if the caret is after "sysout", in which case it is replaced by 
-	 * "System.out.println();", and the caret is moved to between the parenthesis.
-	 * @author Pontus Laos
+	 * Checks if the caret is after any given shortcut string, in which case it is replaced by 
+	 * the 'full' string, and the caret is moved to a suitable position.
+	 * @author Pontus Laos, Sigge Labor 
 	 */
-	public void sysout() {
+	public void shortcutsTrigger() {
 		if (file == null) {
 			return;
 		}
@@ -77,9 +77,56 @@ public class FileTab extends Tab {
 		String text = zenCodeArea.getText();
 		int caretPosition = zenCodeArea.getCaretPosition();
 		
-		if (caretPosition >= 6 && text.substring(caretPosition - 6, caretPosition).equals("sysout")) {
+		if (caretPosition >= 6 && text.substring(
+			caretPosition - 6, caretPosition).equals("sysout")) 
+		{
 			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.out.println();");
 			zenCodeArea.moveTo(caretPosition + 13);
+		}
+		else if (caretPosition >= 4 && text.substring(
+			caretPosition - 4, caretPosition).equals("main")) 
+		{
+			zenCodeArea.replaceText(
+				caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}"
+			);
+			zenCodeArea.moveTo(caretPosition + 37);
+		}
+		else if (caretPosition >= 2 && text.substring(
+			caretPosition - 2, caretPosition).equals("pv")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 2, caretPosition, "public void ");
+			zenCodeArea.moveTo(caretPosition + 10);
+		}
+	}
+	
+	/**
+	 * Checks if the caret is after any given shortcut string (start of a comment in which case it
+	 * is replaced by the 'full' multi-line comment, and the caret is moved to a suitable position.
+	 * @author Pontus Laos, Sigge Labor 
+	 */
+	public void commentsShortcutsTrigger() {
+		if (file == null) {
+			return;
+		}
+		
+		String text = zenCodeArea.getText();
+		int caretPosition = zenCodeArea.getCaretPosition();
+		
+		if (caretPosition >= 2 && text.substring(
+			caretPosition - 2, caretPosition).equals("/*")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 2, caretPosition, "/*\n* \n*/");
+			zenCodeArea.moveTo(caretPosition + 3);
+		}
+		else if (caretPosition >= 3 && text.substring(
+			caretPosition - 3, caretPosition).equals("/**")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 3, caretPosition, "/**\n* \n* @author \n*/");
+			zenCodeArea.moveTo(caretPosition + 3);
+			
+		}
+		else {
+			zenCodeArea.replaceText(caretPosition, caretPosition, "\n");
 		}
 	}
 	

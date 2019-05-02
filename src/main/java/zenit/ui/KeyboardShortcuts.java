@@ -1,11 +1,13 @@
 package main.java.zenit.ui;
 
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
+import javafx.scene.input.KeyEvent;
 
 /**
  * Static methods for interacting with a scene's accelerators.
@@ -39,6 +41,15 @@ public final class KeyboardShortcuts {
 		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
-		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::sysout);
+		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::shortcutsTrigger);
+		
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
+		    public void handle(KeyEvent ke) {
+		        if (ke.getCode() == KeyCode.ENTER) {
+		        	controller.commentsShortcutsTrigger();
+		            ke.consume(); // <-- stops passing the event to next node
+		        }
+		    }
+		});
 	}
 }
