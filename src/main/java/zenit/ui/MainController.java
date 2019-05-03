@@ -396,23 +396,31 @@ public class MainController extends VBox {
 		boolean isDarkMode = cmiDarkMode.isSelected();
 		var stylesheets = stage.getScene().getStylesheets();
 		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+		var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
 		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
 		
 		if (isDarkMode) {
-			stylesheets.add(darkMode);
+			if (stylesheets.contains(lightMode)) {
+				stylesheets.remove(lightMode);
+			}
 			
 			if (stylesheets.contains(lightModeKeywords)) {
 				stylesheets.remove(lightModeKeywords);
 			}
+			
+			stylesheets.add(darkMode);
 			stylesheets.add(darkModeKeywords);
 		} else {
-			// Currently the Light Mode is the default CSS.
-			stylesheets.remove(darkMode);
+			if (stylesheets.contains(darkMode)) {
+				stylesheets.remove(darkMode);
+			}
 			
 			if (stylesheets.contains(darkModeKeywords)) {
 				stylesheets.remove(darkModeKeywords);
 			}
+			
+			stylesheets.add(lightMode);
 			stylesheets.add(lightModeKeywords);
 		}
 	}

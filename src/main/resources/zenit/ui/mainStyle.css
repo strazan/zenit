@@ -22,10 +22,6 @@
 	-fx-cursor: hand;
 }
 
-.tree-cell:hover, .tree-cell:hover > * {
-	-fx-background-color: #555 !important;
-}
-
 #menuBar {
 	-fx-border-color: #000;
 	-fx-border-width: 0 0 1px 0;
@@ -118,7 +114,7 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #44444488;
+	-fx-background-color: #ff0000;
  }
  
  #treeView .thumb {
