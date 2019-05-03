@@ -65,3 +65,11 @@
 .caret {
     -fx-stroke: #fff;
 }
+
+.search-dark-mode {
+	-fx-effect: dropshadow(gaussian, grey, 3, 1, 0, 0);
+}
+
+.search-light-mode {
+	-fx-effect: dropshadow(gaussian, yellow, 3, 1, 0, 0);
+}

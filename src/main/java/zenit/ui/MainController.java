@@ -45,7 +45,6 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
-	private ZenCodeArea zenCodeArea;
 	private Search search = new Search();
 
 	@FXML
@@ -562,6 +561,8 @@ public class MainController extends VBox {
 	}
 	
 	public class Search extends Thread{
+		private ZenCodeArea zenCodeArea;
+		
 		private Thread thread;
 		
 		private Scanner txtscan = null;
@@ -590,6 +591,8 @@ public class MainController extends VBox {
 			line = new ArrayList<>();
 			wordPos = new ArrayList<>();
 			absolutePos = new ArrayList<>();
+			
+			zenCodeArea = getSelectedTab().getZenCodeArea();
 
 			word = "";
 
@@ -618,10 +621,10 @@ public class MainController extends VBox {
 
 			if (numberOfTimes > 0) {
 				System.out.println("Exsist " + numberOfTimes + " times");
-
+				
 				for (int i = 0; i < numberOfTimes; i++) {
 
-					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search"));
+					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search-dark-mode"));
 					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
 
 				}

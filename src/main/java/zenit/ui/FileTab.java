@@ -233,4 +233,8 @@ public class FileTab extends Tab {
 		
 		return wrapper.response;
 	}
+	
+	public ZenCodeArea getZenCodeArea() {
+		return zenCodeArea;
+	}
 }
