@@ -6,6 +6,11 @@
 #btnRun{
 	/* TODO: Add styling and icons*/
 	-fx-background-color:transparent;
+	-fx-icon-size: 32px;
+}
+
+#btnRun:hover {
+	-fx-cursor: pointer;
 }
 
 
