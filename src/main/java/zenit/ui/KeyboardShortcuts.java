@@ -8,6 +8,7 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
 import javafx.scene.input.KeyEvent;
+import main.java.zenit.ui.MainController.Search;
 
 /**
  * Static methods for interacting with a scene's accelerators.
@@ -35,12 +36,13 @@ public final class KeyboardShortcuts {
 	 * @param scene The scene to be used.
 	 * @param controller The controller to call methods from.
 	 */
-	public static final void setupMain(Scene scene, MainController controller) {
+	public static final void setupMain(Scene scene, MainController controller, Search search) {
 		add(scene, KeyCode.S, KeyCombination.SHORTCUT_DOWN, () -> controller.saveFile(null));
 		add(scene, KeyCode.O, KeyCombination.SHORTCUT_DOWN, () -> controller.openFile((Event) null));
 		add(scene, KeyCode.N, KeyCombination.SHORTCUT_DOWN, controller::addTab);
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
+		add(scene, KeyCode.F, KeyCombination.SHORTCUT_DOWN, search::searchInFile);
 		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::shortcutsTrigger);
 		
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {

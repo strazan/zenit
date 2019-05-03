@@ -1,7 +1,12 @@
 package main.java.zenit.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -14,6 +19,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -39,6 +45,8 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private ZenCodeArea zenCodeArea;
+	private Search search = new Search();
 
 	@FXML
 	private TextArea taConsole;
@@ -103,7 +111,7 @@ public class MainController extends VBox {
 
 			initialize();
 			stage.show();
-			KeyboardShortcuts.setupMain(scene, this);
+			KeyboardShortcuts.setupMain(scene, this, search);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -551,5 +559,155 @@ public class MainController extends VBox {
 		}
 
 		return null;
+	}
+	
+	public class Search extends Thread{
+		private Thread thread;
+		
+		private Scanner txtscan = null;
+		
+		private List<Integer> line;
+		private List<Integer> wordPos; 
+		private List<Integer> absolutePos;
+		
+		private int numberOfTimes;
+		private int numberOfLines;
+		private int lineLenght;
+		private int i = 0;
+		
+		private String word;
+		
+		/**
+		 * @author Fredrik EKlundh
+		 * @throws FileNotFoundException
+		 */
+		public void searchInFile() {
+
+			TextInputDialog dialog = new TextInputDialog("search");
+			dialog.setTitle("Search");
+			dialog.setHeaderText("What are you looking for?");
+
+			line = new ArrayList<>();
+			wordPos = new ArrayList<>();
+			absolutePos = new ArrayList<>();
+
+			word = "";
+
+			numberOfTimes = 0;
+			numberOfLines = -1;
+			lineLenght = 0;
+			
+			//Tab tab = getSelectedTab();
+
+			File file = getSelectedTab().getFile();
+				//	currentlySelectedFiles.get(tab);
+		
+			try {
+				txtscan = new Scanner(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}
+
+			Optional<String> result = dialog.showAndWait();
+			if (result.isPresent()) {
+				word = result.get();
+				notCaseSensetive();
+				//caseSensetive();
+
+			}
+
+			if (numberOfTimes > 0) {
+				System.out.println("Exsist " + numberOfTimes + " times");
+
+				for (int i = 0; i < numberOfTimes; i++) {
+
+					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search"));
+					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+
+				}
+				zenCodeArea.moveTo(absolutePos.get(0));
+				zenCodeArea.requestFollowCaret();
+				
+				//replaceWord(word, "hehe", absolutePos);
+			} else {
+				// System.out.println("LEARN TO SPELL");
+			}
+			
+			thread = new Thread(this);
+			thread.start();
+		}
+		
+//		public void run() {
+//			System.out.println("run method");
+//		}
+
+		private void clearZen() {
+			zenCodeArea.appendText(" ");
+			zenCodeArea.deletePreviousChar();
+		}
+		
+		private void replaceWord(String wordBefore, String wordAfter, List<Integer> absolutePos) {
+			for (int i = absolutePos.size() -1; i >= 0; i--) {
+				zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + wordBefore.length(), wordAfter);
+			}
+		}
+		
+		public void jumpDown() {
+			if (i < absolutePos.size()) {
+				i++;
+			}
+			
+			zenCodeArea.moveTo(absolutePos.get(i));
+			zenCodeArea.requestFollowCaret();
+		}
+		
+		public void jumpUp() {
+			if(i > 0) {
+				i--;
+			}
+			
+			zenCodeArea.moveTo(absolutePos.get(i));
+			zenCodeArea.requestFollowCaret();	
+		}
+		
+		private void notCaseSensetive() {
+			
+			while (txtscan.hasNextLine()) {
+				String str = txtscan.nextLine().toLowerCase();
+				numberOfLines++;
+				lineLenght = 0;
+				while (str.indexOf(word) != -1) {
+					numberOfTimes++;
+
+					line.add(numberOfLines);
+
+					wordPos.add(str.indexOf(word) + lineLenght);
+
+					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+
+					str = str.substring(str.indexOf(word) + word.length());
+				}
+			}
+		}
+		
+		private void caseSensetive() {
+			
+			while (txtscan.hasNextLine()) {
+				String str = txtscan.nextLine();
+				numberOfLines++;
+				lineLenght = 0;
+				while (str.indexOf(word) != -1) {
+					numberOfTimes++;
+
+					line.add(numberOfLines);
+
+					wordPos.add(str.indexOf(word) + lineLenght);
+
+					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+
+					str = str.substring(str.indexOf(word) + word.length());
+				}
+			}
+		}
 	}
 }
