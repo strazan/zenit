@@ -86,10 +86,25 @@ public class MainController extends VBox {
 			 * selected workspace. Only prompts when unset and can be changed from within gui
 			 * Alex
 			 */
-			File workspace = WorkspaceHandler.readWorkspace();
+			
+			File workspace = null;
+			
+			try {
+				workspace = WorkspaceHandler.readWorkspace();
+			} catch (IOException ex) {
+				DirectoryChooser directoryChooser = new DirectoryChooser();
+				directoryChooser.setTitle("Select new workspace folder");
+				workspace = directoryChooser.showDialog(stage);
+			}
+			
 			FileController fileController = new FileController(workspace);
-
 			setFileController(fileController);
+			
+			if (workspace != null) {
+				// TODO: Log this
+				boolean success = fileController.changeWorkspace(workspace);
+			}
+
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();

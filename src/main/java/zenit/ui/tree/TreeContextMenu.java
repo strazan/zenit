@@ -8,6 +8,7 @@ import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
@@ -73,8 +74,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	 */
 	@Override
 	public void show(Node node, double x, double y) {
-		setContext(treeView.getSelectionModel().getSelectedItem().getValue());
-
+		TreeItem<String> selectedItem = treeView.getSelectionModel().getSelectedItem();
+		
+		if (selectedItem != null) {
+			setContext(selectedItem.getValue());
+		}
+		
 		super.show(node, x, y);
 	}
 	
