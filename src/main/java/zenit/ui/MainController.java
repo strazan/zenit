@@ -127,9 +127,14 @@ public class MainController extends VBox {
 		initTree();
 	}
 	
+	/**
+	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 */
 	public void setTextSize() {
 		FileTab selectedTab = getSelectedTab();
-		new TextSizeController(selectedTab.getZenCodeArea());
+		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
+			new TextSizeController(selectedTab.getZenCodeArea());
+		}
 	}
 
 	/**
@@ -190,6 +195,9 @@ public class MainController extends VBox {
 		}
 	}
 	
+	/**
+	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
+	 */
 	public void commentsShortcutsTrigger() {
 	FileTab selectedTab = getSelectedTab();
 		
