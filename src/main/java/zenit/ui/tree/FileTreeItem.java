@@ -37,10 +37,10 @@ public class FileTreeItem<T> extends TreeItem<T> {
 		this.file = file;
 		this.type = type;
 		
-		setIcon(type);
+		setIcon();
 	}
 	
-	private void setIcon(int type) {
+	public void setIcon() {
 		String url = null;
 		switch(type) {
 		case PROJECT: url = "/zenit/ui/tree/project.png"; break;

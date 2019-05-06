@@ -58,7 +58,6 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		String deleteItemTitle = String.format("Delete \"%s\"", selectedNode);
 		renameItem.setText(renameItemTitle);
 		deleteItem.setText(deleteItemTitle);
-		typeCode.setText(((FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem()).getStringType());
 				
 		if (selectedNode.equals("src") && !createItem.getItems().contains(createPackage)) {
 			createItem.getItems().add(createPackage);
@@ -109,7 +108,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				treeView.getSelectionModel().getSelectedItem();
 		File newFile = controller.createFile(parent.getFile(), typeCode);
 		if (newFile != null) {
-			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), 0);
+			FileTreeItem<String> newItem = new FileTreeItem<String>(newFile, newFile.getName(), FileTreeItem.CLASS);
 			parent.getChildren().add(newItem);
 		}
 	}
@@ -140,7 +139,7 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		} else if (actionEvent.getSource().equals(createPackage)) {
 			File packageFile = controller.newPackage(selectedFile);
 			if (packageFile != null) {
-				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), 0);
+				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), FileTreeItem.PACKAGE);
 				selectedItem.getChildren().add(packageNode);
 			}
 		}

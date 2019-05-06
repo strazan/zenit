@@ -14,6 +14,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -200,7 +201,7 @@ public class MainController extends VBox {
 	}
 	
 	public void commentsShortcutsTrigger() {
-	FileTab selectedTab = getSelectedTab();
+		FileTab selectedTab = getSelectedTab();
 		
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
@@ -226,13 +227,6 @@ public class MainController extends VBox {
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
 
 		if (didWrite) {
-			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
-
-			if (!treeView.getRoot().getChildren().stream()
-					.anyMatch(n -> n.getValue().equals(newNode.getFile().getName()))) {
-				treeView.getRoot().getChildren().add(newNode);
-			}
-
 			tab.update(file);
 		} else {
 			System.out.println("Did not write.");
