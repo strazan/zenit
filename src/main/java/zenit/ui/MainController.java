@@ -23,6 +23,7 @@ import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -127,6 +128,11 @@ public class MainController extends VBox {
 		new ConsoleRedirect(taConsole);		
 		btnRun.setPickOnBounds(true);
 		initTree();
+	}
+	
+	public void setTextSize() {
+		FileTab selectedTab = getSelectedTab();
+		new TextSizeController(selectedTab.getZenCodeArea());
 	}
 
 	/**
