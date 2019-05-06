@@ -51,11 +51,11 @@ public class FileTree {
 	 * in FileTreeItem-structure
 	 */
 	public static void createParentNode(FileTreeItem<String> parent, File file) {
-		int type = 0;
-		
 		if (file == null) {
 			return;
 		}
+		
+		int type = calculateType(parent, file.getName());
 		
 		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
 		parent.getChildren().add(item);
@@ -89,6 +89,12 @@ public class FileTree {
 		}
 	}
 	
+	/**
+	 * Calculates the type of the tree node; workspace, package, class or source-folder.
+	 * @param parent Nodes parent node
+	 * @param itemName Name of the node
+	 * @return An integer representing the node type.
+	 */
 	private static int calculateType(FileTreeItem<String> parent, String itemName) {
 		int type = 0;
 		

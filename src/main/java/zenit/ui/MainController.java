@@ -54,6 +54,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private MenuItem saveFile;
+	
+	@FXML
+	private MenuItem importProject;
 
 	@FXML
 	private MenuItem changeWorkspace;
@@ -551,5 +554,29 @@ public class MainController extends VBox {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Tries to import a folder.
+	 * Displays a directory chooser and copies the selected folder into the current workspace
+	 * using {@link main.java.zenit.filesystem.FileController#importProject(File) importProject(File)}
+	 * Displays an error or information dialog to display the result.
+	 */
+	@FXML
+	public void importProject() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Select project to import");
+		File source = directoryChooser.showDialog(stage);
+		
+		if (source != null) {
+			File target = fileController.importProject(source);
+			if (target == null) {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
+						"An error occured while trying to import project");
+			} else {
+				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
+				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
+			}
+		}
 	}
 }
