@@ -128,7 +128,8 @@ public class MainController extends VBox {
 	}
 	
 	public void setTextSize() {
-		new TextSizeController(14);
+		FileTab selectedTab = getSelectedTab();
+		new TextSizeController(selectedTab.getZenCodeArea());
 	}
 
 	/**
