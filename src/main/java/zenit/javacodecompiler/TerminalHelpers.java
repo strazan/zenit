@@ -35,16 +35,14 @@ public class TerminalHelpers {
 			builder.directory(directory);
 
 			Process process = builder.start();
+			
+			process.waitFor();
+			
 			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
-            
-//			int exitCode = process.waitFor();
-//			assert exitCode == 0;
 
-		} catch (IOException ex) {
+		} catch (IOException | InterruptedException ex) {
 			ex.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
 		}
 	}
 	

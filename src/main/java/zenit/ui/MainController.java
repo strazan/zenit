@@ -371,21 +371,23 @@ public class MainController extends VBox {
 	 * same folder/directory, and the executed with only java standard lib.
 	 */
 	public void compileAndRun() {
-		File file = getSelectedTab().getFile();
-		File projectFile = getMetadataFile(file);
-		saveFile(null);
+		if (getSelectedTab() != null) {
+			File file = getSelectedTab().getFile();
+			File projectFile = getMetadataFile(file);
+			saveFile(null);
 
-		try {
-			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-			if (file != null && projectFile != null) {
-				compiler.compileAndRunJavaFileInPackage(file, projectFile);
-			} else if (file != null) {
-				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
+			try {
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+				if (file != null && projectFile != null) {
+					compiler.compileAndRunJavaFileInPackage(file, projectFile);
+				} else if (file != null) {
+					compiler.compileAndRunJavaFileWithoutPackage(file);
+				}
+			} catch (Exception e) {
+				e.printStackTrace();
+
+				// TODO: handle exception
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
-
-			// TODO: handle exception
 		}
 	}
 	
