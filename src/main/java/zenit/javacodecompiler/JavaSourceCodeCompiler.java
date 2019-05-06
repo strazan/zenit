@@ -74,8 +74,7 @@ public class JavaSourceCodeCompiler {
 			String runPath = runFile.getPath();
 			String projectPath = projectFile.getPath();
 			
-			String matcher = Matcher.quoteReplacement(projectPath + File.separator);
-			runPath = runPath.replaceAll(matcher, "");
+			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
 
 			//Creates command for compiling
 			String command = "javac " + directory + " " + sourcepath + " " + runPath;
@@ -85,10 +84,9 @@ public class JavaSourceCodeCompiler {
 			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
-				matcher = Matcher.quoteReplacement("src" + File.separator);
-				runPath = runPath.replaceAll(matcher, "");
-				matcher = Matcher.quoteReplacement(".java");
-				runPath = runPath.replaceAll(matcher, "");
+				
+				runPath = runPath.replaceAll(Matcher.quoteReplacement("src" + File.separator), "");
+				runPath = runPath.replaceAll(".java", "");
 
 				// Creates command for running
 				command = "java " + runPath;
@@ -121,8 +119,7 @@ public class JavaSourceCodeCompiler {
 			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
-				String matcher = Matcher.quoteReplacement(".java");
-				className = className.replaceAll(matcher, "");
+				className = className.replaceAll(".java", "");
 
 				// Creates command for running
 				command = "java " + className;
