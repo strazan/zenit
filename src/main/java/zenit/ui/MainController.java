@@ -285,6 +285,7 @@ public class MainController extends VBox {
 	 */
 	public void openFile(File file) {
 		if (file != null && getTabFromFile(file) == null) {
+			
 			FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 

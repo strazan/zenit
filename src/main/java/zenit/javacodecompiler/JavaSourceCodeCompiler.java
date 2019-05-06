@@ -56,47 +56,6 @@ public class JavaSourceCodeCompiler {
 	public void compileJavaFile(File file, String targetDirectoryPathIn) {
 		new CompileJavaFile(file, targetDirectoryPathIn).start();
 	}
-
-	/**
-	 * Compiles and runs a [Foo.java] file, placed in a package.
-	 * 
-	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
-	 * method is. 
-	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
-	 * @param dependenciesPath are the paths to dependent libraries.
-	 */
-//	public class CompileAndRunJavaFileInPackage extends Thread {
-//		private File file;
-//		private String targetDirectoryPathIn;
-//
-//		public CompileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
-//			this.file = file;
-//			this.targetDirectoryPathIn = targetDirectoryPathIn;
-//		}
-//
-//		public void run() {
-//			String absolutePath = file.getAbsolutePath();
-//			String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
-//			String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
-//			CommandLine clCompileJavaFile = CommandLine.parse(
-//					"javac -cp src \"" + absolutePath + "\" -d \"" + targetDirectoryPath + "\""
-//					);
-//			CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-//					"java -classpath \"" + System.getProperty(
-//							"java.home") + "\" \"" + targetDirectoryPath + fileName + "\""
-//					);	
-//			try {
-//				executor.execute(clCompileJavaFile);
-//				executor.execute(clRunJavaByteCodeFile);
-//			} catch (ExecuteException e) {
-//				System.err.println("Compile and run file failed. The file was: " + absolutePath);
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				System.err.println("Something went wrong.");
-//				e.printStackTrace();
-//			}
-//		}
-//	}
 	
 	/**
 	 * Compiles and runs a java file using the .metadata file in project folder.
@@ -118,7 +77,7 @@ public class JavaSourceCodeCompiler {
 			//Creates runPath within project folder
 			String runPath = runFile.getPath();
 			String projectPath = projectFile.getPath();
-			runPath = runPath.replaceAll(projectPath+"/", "");
+			runPath = runPath.replaceAll(projectPath+File.separator, "");
 
 			//Creates command for compiling
 			String command = "javac " + runPath + " @.metadata";
@@ -127,18 +86,17 @@ public class JavaSourceCodeCompiler {
 			TerminalHelpers.runCommand(command, projectFile);
 			
 			//Creates runPath without extension from package
-			runPath = runPath.replaceAll("src/", "");
+			runPath = runPath.replaceAll("src" + File.separator, "");
 			runPath = runPath.replaceAll(".java", "");
 			
 			//Creates command for running
 			command = "java " + runPath;
 			
 			//Creates new directory folder, bin-folder
-			File binFile = new File(projectFile.getPath() + "/bin");
+			File binFile = new File(projectFile.getPath() + File.separator + "bin");
 
 			//Runs command
 			TerminalHelpers.runCommand(command, binFile);
-			
 		}
 	}
 
