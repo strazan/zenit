@@ -25,7 +25,6 @@ public class TerminalHelpers {
 	 * @param directory The directory to run the command in
 	 */
 	protected static int runCommand(String command, File directory) {
-		runBackgroundCommand(command, directory);
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
 			if (System.getProperty("os.name").startsWith("Windows")) {
@@ -38,10 +37,10 @@ public class TerminalHelpers {
 
 			Process process = builder.start();
 			
+			process.waitFor();
+			
 			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
 			Executors.newSingleThreadExecutor().submit(streamGobbler);
-			
-			process.waitFor();
 			
 			return process.exitValue();
 			

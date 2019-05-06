@@ -96,4 +96,32 @@ public class ProjectHandler extends FolderHandler {
             Files.copy(sourceFolder.toPath(), destinationFolder.toPath());
         }
     }
+	
+	protected static boolean libFolderExists(File projectFolder) {
+		File libFolder = new File(projectFolder+File.separator+"lib");
+		return libFolder.exists();
+	}
+	
+	protected static File createLibFolder(File projectFolder) {
+		File libFolder = new File(projectFolder+File.separator+"lib");
+		boolean success = libFolder.mkdir();
+		
+		if (success) {
+			return libFolder;
+		} else {
+			return null;
+		}
+		
+	}
+	
+	protected static void importJar(File sourceFile, File destinationFolder) throws IOException {
+		destinationFolder = new File(destinationFolder + File.separator + sourceFile.getName());
+		File destinationFile = null;
+		
+		destinationFile = Files.copy(sourceFile.toPath(), destinationFolder.toPath()).toFile();
+		
+		if (destinationFile == null) {
+			throw new IOException(sourceFile.getName() + " couldn't be imported");
+		}
+	}
 }

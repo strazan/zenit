@@ -2,6 +2,7 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -18,6 +19,7 @@ import javafx.scene.control.TreeView;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
+import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
@@ -222,7 +224,7 @@ public class MainController extends VBox {
 			}
 
 			tab.update(file);
-			backgroundCompiling(file);
+//			backgroundCompiling(file);
 		} else {
 			System.out.println("Did not write.");
 		}
@@ -595,5 +597,25 @@ public class MainController extends VBox {
 				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
 			}
 		}
+	}
+	
+	public void importJar(File projectFile) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Select jar file to import");
+		
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
+		fileChooser.getExtensionFilters().add(filter);
+
+		List<File> jarFiles = fileChooser.showOpenMultipleDialog(stage);
+		
+		if (jarFiles != null) {
+			boolean success = fileController.importJar(jarFiles, projectFile);
+			if (success) {
+				DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
+			} else {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
+			}
+		}
+		
 	}
 }
