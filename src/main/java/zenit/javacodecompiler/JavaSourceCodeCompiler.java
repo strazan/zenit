@@ -40,6 +40,10 @@ public class JavaSourceCodeCompiler {
 		new CompileAndRunJavaFileWithoutPackage(file).start();
 	}
 	
+	public void compileJavaFile(File file, File metadata) {
+		new CompileJavaFile(file, metadata).start();
+	}
+	
 	/**
 	 * Compiles and runs a java file using the .metadata file in project folder.
 	 * 
@@ -81,6 +85,7 @@ public class JavaSourceCodeCompiler {
 
 			//Runs command
 			int exitValue = TerminalHelpers.runCommand(command, projectFile);
+			
 			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
@@ -128,6 +133,45 @@ public class JavaSourceCodeCompiler {
 				TerminalHelpers.runCommand(command, runFile.getParentFile());
 			}
 		}
+	}
+	
+	public class CompileJavaFile extends Thread {
+		
+		private File runFile;
+		private File metadata;
+		private String sourcepath;
+		private String directory;
+		
+		public CompileJavaFile(File runFile, File metadata) {
+			this.runFile = runFile;
+			this.metadata = metadata;
+			metadataDecoder(metadata);
+		}
+		
+		private void metadataDecoder(File metadata) {
+			try (BufferedReader br = new BufferedReader(new FileReader(metadata))) {
+				directory = br.readLine();
+				sourcepath = br.readLine();
+			} catch (IOException ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
+		
+		public void run() {
+			File projectFile = metadata.getParentFile();
+			String runPath = runFile.getPath();
+			String projectPath = projectFile.getPath();
+			
+			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
+
+			//Creates command for compiling
+			String command = "javac " + directory + " " + sourcepath + " " + runPath;
+
+			//Runs command
+			TerminalHelpers.runBackgroundCommand(command, projectFile);
+		}
+		
+		
 	}
 
 	/**

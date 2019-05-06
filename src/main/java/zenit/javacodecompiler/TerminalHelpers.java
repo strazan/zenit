@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
@@ -24,6 +25,7 @@ public class TerminalHelpers {
 	 * @param directory The directory to run the command in
 	 */
 	protected static int runCommand(String command, File directory) {
+		runBackgroundCommand(command, directory);
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
 			if (System.getProperty("os.name").startsWith("Windows")) {
@@ -48,6 +50,70 @@ public class TerminalHelpers {
 			ex.printStackTrace();
 			return 1;
 		}
+	}
+	
+	protected static void runBackgroundCommand(String command, File directory) {
+		try {
+			ProcessBuilder builder = new ProcessBuilder();
+			if (System.getProperty("os.name").startsWith("Windows")) {
+				builder.command("cmd.exe", "/c", command);
+			} else {
+				builder.command("sh", "-c", command);
+			}
+	
+			builder.directory(directory);
+	
+			Process process = builder.start();
+			
+			process.waitFor();
+			
+			BufferedReader reader =
+	                    new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			String line;
+			String place;
+			String problemType;
+			String problem;
+			int row;
+			int column;
+			
+			ArrayList<DebugError> errors = new ArrayList<>();
+			DebugError error;
+			
+
+			while ((line = reader.readLine()) != null) {
+				try {
+				
+				int colon1Index = line.indexOf(':');
+				int colon2Index = line.indexOf(':', colon1Index+1);
+				int colon3Index = line.indexOf(':', colon2Index+1);
+				
+				place = line.substring(0, colon1Index);
+				row = Integer.parseInt(line.substring(colon1Index+1, colon2Index));
+				problemType = line.substring(colon2Index+1, colon3Index);
+				problem = line.substring(colon3Index+2);
+					
+				line = reader.readLine();
+				line = reader.readLine();
+				column = line.indexOf('^');
+				
+				error = new DebugError(place, problemType, problem, row, column);
+				errors.add(error);	
+				} catch (StringIndexOutOfBoundsException ex) {
+					
+				}
+			}
+			//TODO Update textarea instead of printouts
+			if (errors.size() > 0) {
+				for (DebugError de : errors) {
+					System.out.println(de);
+				}
+			} else {
+				System.out.println("No problems");
+			}
+		} catch (IOException | InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		
 	}
 	
 	/**

@@ -222,11 +222,25 @@ public class MainController extends VBox {
 			}
 
 			tab.update(file);
+			backgroundCompiling(file);
 		} else {
 			System.out.println("Did not write.");
 		}
 
 		return didWrite;
+	}
+	
+	private void backgroundCompiling(File file) {
+		File projectFile = getMetadataFile(file);
+
+		try {
+			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
+			if (file != null && projectFile != null) {
+				compiler.compileJavaFile(file, projectFile);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**
