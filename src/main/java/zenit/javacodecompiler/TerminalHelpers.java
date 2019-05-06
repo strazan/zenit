@@ -23,7 +23,7 @@ public class TerminalHelpers {
 	 * @param command The command to be run in terminal
 	 * @param directory The directory to run the command in
 	 */
-	protected static void runCommand(String command, File directory) {
+	protected static int runCommand(String command, File directory) {
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
 			if (System.getProperty("os.name").startsWith("Windows")) {
@@ -36,13 +36,17 @@ public class TerminalHelpers {
 
 			Process process = builder.start();
 			
+			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), process.getErrorStream(), System.out::println);
+			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			
 			process.waitFor();
 			
-			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
-			Executors.newSingleThreadExecutor().submit(streamGobbler);
+			return process.exitValue();
+			
 
 		} catch (IOException | InterruptedException ex) {
 			ex.printStackTrace();
+			return 1;
 		}
 	}
 	
@@ -53,6 +57,7 @@ public class TerminalHelpers {
 	 */
 	protected static class StreamGobbler implements Runnable {
 		private InputStream inputStream;
+		private InputStream errorStream;
 		private Consumer<String> consumer;
 		
 		/**
@@ -60,14 +65,15 @@ public class TerminalHelpers {
 		 * @param inputStream inputstream to print
 		 * @param consumer Consumers to print inputStream messages to
 		 */
-		public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
+		public StreamGobbler(InputStream inputStream, InputStream errorStream, Consumer<String> consumer) {
 			this.inputStream = inputStream;
+			this.errorStream = errorStream;
 			this.consumer = consumer;
 		}
 		
 		public void run() {
 			new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
+			new BufferedReader(new InputStreamReader(errorStream)).lines().forEach(consumer);
 		}
 	}
-
 }

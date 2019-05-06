@@ -428,7 +428,7 @@ public class MainController extends VBox {
 		if (files != null) {
 			for (File entry : files) {
 				if (entry.getName().equals(".metadata")) {
-					return entry.getParentFile();
+					return entry;
 				}
 			}
 		}

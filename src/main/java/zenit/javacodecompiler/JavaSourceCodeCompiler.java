@@ -1,6 +1,9 @@
 package main.java.zenit.javacodecompiler;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 
 /**
  * 
@@ -45,37 +48,52 @@ public class JavaSourceCodeCompiler {
 	 */
 	public class CompileAndRunJavaFileInPackage extends Thread {
 		private File runFile;
-		private File projectFile;
+		private File metadata;
+		private String sourcepath;
+		private String directory;
 
-		public CompileAndRunJavaFileInPackage(File runFile, File projectFile) {
+		public CompileAndRunJavaFileInPackage(File runFile, File metadata) {
 			this.runFile = runFile;
-			this.projectFile = projectFile;
+			this.metadata = metadata;
+			metadataDecoder(metadata);
+		}
+		
+		private void metadataDecoder(File metadata) {
+			try (BufferedReader br = new BufferedReader(new FileReader(metadata))) {
+				directory = br.readLine();
+				sourcepath = br.readLine();
+			} catch (IOException ex) {
+				System.err.println(ex.getMessage());
+			}
 		}
 
 		public void run() {
 			//Creates runPath within project folder
+			File projectFile = metadata.getParentFile();
 			String runPath = runFile.getPath();
 			String projectPath = projectFile.getPath();
-			runPath = runPath.replaceAll(projectPath+File.separator, "");
+			runPath = runPath.replaceAll(projectPath + File.separator, "");
 
 			//Creates command for compiling
-			String command = "javac " + runPath + " @.metadata";
+			String command = "javac " + directory + " " + sourcepath + " " + runPath;
 
 			//Runs command
-			TerminalHelpers.runCommand(command, projectFile);
+			int exitValue = TerminalHelpers.runCommand(command, projectFile);
 			
-			//Creates runPath without extension from package
-			runPath = runPath.replaceAll("src" + File.separator, "");
-			runPath = runPath.replaceAll(".java", "");
-			
-			//Creates command for running
-			command = "java " + runPath;
-			
-			//Creates new directory folder, bin-folder
-			File binFile = new File(projectFile.getPath() + File.separator + "bin");
+			if (exitValue == 0) {
+				// Creates runPath without extension from package
+				runPath = runPath.replaceAll("src" + File.separator, "");
+				runPath = runPath.replaceAll(".java", "");
 
-			//Runs command
-			TerminalHelpers.runCommand(command, binFile);
+				// Creates command for running
+				command = "java " + runPath;
+
+				// Creates new directory folder, bin-folder
+				File binFile = new File(projectFile.getPath() + File.separator + "bin");
+
+				// Runs command
+				TerminalHelpers.runCommand(command, binFile);
+			}
 		}
 	}
 	
@@ -94,16 +112,18 @@ public class JavaSourceCodeCompiler {
 			String command = "javac " + className;
 
 			//Runs command
-			TerminalHelpers.runCommand(command, runFile.getParentFile());
+			int exitValue = TerminalHelpers.runCommand(command, runFile.getParentFile());
 			
-			//Creates runPath without extension from package
-			className = className.replaceAll(".java", "");
-			
-			//Creates command for running
-			command = "java " + className;
+			if (exitValue == 0) {
+				// Creates runPath without extension from package
+				className = className.replaceAll(".java", "");
 
-			//Runs command
-			TerminalHelpers.runCommand(command, runFile.getParentFile());
+				// Creates command for running
+				command = "java " + className;
+
+				// Runs command
+				TerminalHelpers.runCommand(command, runFile.getParentFile());
+			}
 		}
 	}
 
