@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 /**
  * 
@@ -72,7 +73,9 @@ public class JavaSourceCodeCompiler {
 			File projectFile = metadata.getParentFile();
 			String runPath = runFile.getPath();
 			String projectPath = projectFile.getPath();
-			runPath = runPath.replaceAll(projectPath + File.separator, "");
+			
+			String matcher = Matcher.quoteReplacement(projectPath + File.separator);
+			runPath = runPath.replaceAll(matcher, "");
 
 			//Creates command for compiling
 			String command = "javac " + directory + " " + sourcepath + " " + runPath;
@@ -82,8 +85,10 @@ public class JavaSourceCodeCompiler {
 			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
-				runPath = runPath.replaceAll("src" + File.separator, "");
-				runPath = runPath.replaceAll(".java", "");
+				matcher = Matcher.quoteReplacement("src" + File.separator);
+				runPath = runPath.replaceAll(matcher, "");
+				matcher = Matcher.quoteReplacement(".java");
+				runPath = runPath.replaceAll(matcher, "");
 
 				// Creates command for running
 				command = "java " + runPath;
@@ -116,7 +121,8 @@ public class JavaSourceCodeCompiler {
 			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
-				className = className.replaceAll(".java", "");
+				String matcher = Matcher.quoteReplacement(".java");
+				className = className.replaceAll(matcher, "");
 
 				// Creates command for running
 				command = "java " + className;
