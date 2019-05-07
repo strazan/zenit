@@ -53,10 +53,12 @@ public class ConsoleArea extends InlineCssTextArea {
 		Platform.runLater(new Runnable() {
 		    @Override
 		    public void run() {    	
-		    	appendText(stringToPrint);
-		    	setStyle(
-		    		getText().length() - stringToPrint.length(), getText().length(), "-fx-fill: red;"
-		    	);
+		    	try {
+					appendText(stringToPrint);
+					setStyle(getText().length() - stringToPrint.length(), getText().length(), "-fx-fill: red;");
+				} catch (IndexOutOfBoundsException e) {
+					// Windows bug, dont do anything with the exception.
+				}
 		    }
 		});
 	}
@@ -70,18 +72,14 @@ public class ConsoleArea extends InlineCssTextArea {
 		Platform.runLater(new Runnable() {
 		    @Override
 		    public void run() {	 
-			    	appendText(stringToPrint);
-			    	setStyle(
-			    		getText().length() - stringToPrint.length(), getText().length(), "-fx-fill: black"
-			    	);	   	
+			    	try {
+						appendText(stringToPrint);
+						setStyle(getText().length() - stringToPrint.length(), getText().length(),
+								"-fx-fill: black");
+					} catch (IndexOutOfBoundsException e) {
+						// Windows bug, dont do anything with the exception.
+					}	   	
 		    }
 		});
 	}
-	
-	/**
-	 * clears the console of all text.
-	 */
-	 public void clearConsole() {
-		 replaceText("");
-	 }
 }

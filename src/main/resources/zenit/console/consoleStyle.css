@@ -4,7 +4,7 @@
 
 .choice-box .context-menu {
 	
-	-fx-background-color: #dddddd;
+	-fx-background-color: #666;
 }
 /* Focused item background color in the list */
 
@@ -33,3 +33,22 @@
 .paragraph-box:has-caret {
 	 -fx-background-color: rgba(255,255,255,0);
 }
+
+#rootNode {
+	-fx-border-color:black;
+	-fx-border-width:1px;
+}
+
+#btn{
+	 -fx-font-family: "Consolas", 'Courier New', monospace;
+	 -fx-background-color:transparent;
+	 -fx-text-fill:#666;
+}
+
+#btn:hover{
+    -fx-text-fill:white;
+}
+
+
+
+

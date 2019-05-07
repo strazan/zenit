@@ -510,13 +510,6 @@ public class MainController extends VBox {
 		}
 	}
 
-	/**
-	 * Clears the text from console window.
-	 */
-	@FXML
-	private void clearConsole() {
-		consoleArea.clear();
-	}
 
 	/**
 	 * Gets the currently selected tab on the tab pane.

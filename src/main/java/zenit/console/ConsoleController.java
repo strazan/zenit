@@ -10,6 +10,7 @@ import com.kodedu.terminalfx.TerminalBuilder;
 import com.kodedu.terminalfx.TerminalTab;
 import com.kodedu.terminalfx.config.TerminalConfig;
 
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
@@ -25,6 +26,10 @@ import main.java.zenit.ConsoleRedirect;
  * The controller class for ConsoleArea
  * 
  * @author siggelabor
+ *
+ */
+/**
+ * @author Admin
  *
  */
 public class ConsoleController implements Initializable {
@@ -62,7 +67,7 @@ public class ConsoleController implements Initializable {
 	@FXML
 	private Button btnClear;
 	
-	private ConsoleArea console;
+	private ConsoleArea consoleArea;
 	
 	private Terminal terminal;
 	
@@ -70,13 +75,18 @@ public class ConsoleController implements Initializable {
 	
 	private AnchorPane consoleAnchorPane;
 	
+	private ConsoleArea frontNode;
+	
 	/**
 	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
 	 * visible. Also sets text color of the labels.
 	 */
 	public void showConsoleTabs() {
-		btnConsole.setTextFill(Color.DARKGREY);
-		btnTerminal.setTextFill(Color.BLACK);
+		
+		btnTerminal.setStyle("");
+		btnConsole.setStyle("-fx-text-fill:white; -fx-border-color:#666; -fx-border-width: 0 0 2 0;");
+		
+
 		terminalChoiceBox.setVisible(false);
 		terminalChoiceBox.setDisable(true);
 		consoleChoiceBox.setVisible(true);
@@ -84,7 +94,11 @@ public class ConsoleController implements Initializable {
 		btnNewTerminal.setVisible(false);
 		btnNewConsole.setVisible(true);
 		btnClear.setDisable(false);
-		
+		btnClear.setVisible(true);
+			
+		if (consoleAnchorPane != null) {
+				consoleAnchorPane.toFront();
+		}
 		
 	}
 	/**
@@ -92,20 +106,16 @@ public class ConsoleController implements Initializable {
 	 * visible. Also sets text color of the labels.
 	 */
 	public void showTerminalTabs() {
+		btnConsole.setStyle("");
+		btnTerminal.setStyle("-fx-text-fill:white; -fx-border-color:#666; -fx-border-width: 0 0 2 0;");
 		
 		if(terminalList.size() == 0) {
 			newTerminal();
 		}
-//		else if(terminalAnchorPane != null && consoleAnchorPane != null){
-//			consoleAnchorPane.setVisible(false);
-//			terminalAnchorPane.setVisible(true);
-//		}
 		else {
-			terminalAnchorPane.setVisible(true);
-			consoleAnchorPane.setVisible(false);
+			terminalAnchorPane.toFront();
 		}
-		btnTerminal.setTextFill(Color.DARKGREY);
-		btnConsole.setTextFill(Color.BLACK);
+		
 		consoleChoiceBox.setVisible(false);
 		consoleChoiceBox.setDisable(true);
 		terminalChoiceBox.setVisible(true);
@@ -113,6 +123,7 @@ public class ConsoleController implements Initializable {
 		btnNewTerminal.setVisible(true);
 		btnNewConsole.setVisible(false);
 		btnClear.setDisable(true);
+		btnClear.setVisible(false);
 				
 	}
 
@@ -121,10 +132,10 @@ public class ConsoleController implements Initializable {
 	 * choiceBox.
 	 */
 	public void startNewConsole() {
-		console = new ConsoleArea("Console (" + consoleList.size() + ")");
+		consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
-		fillAnchor(console);
+		fillAnchor(consoleArea);
 		fillAnchor(consoleAnchorPane);
 		
 		/*
@@ -132,13 +143,14 @@ public class ConsoleController implements Initializable {
 		 * this should probably be reworked, so that 'ID' isn't used. 
 		 */
 		
-		consoleAnchorPane.getChildren().add(console);
+		consoleAnchorPane.getChildren().add(consoleArea);
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
-		consoleList.put(console.getID(), consoleAnchorPane);
-		updateConsoleList(console.getID());
+		consoleList.put(consoleArea.getID(), consoleAnchorPane);
+		updateConsoleList(consoleArea.getID());
 		
-		new ConsoleRedirect(console);	
+		new ConsoleRedirect(consoleArea);	
+		showConsoleTabs();
 	}
 
 	/**
@@ -213,8 +225,12 @@ public class ConsoleController implements Initializable {
 		AnchorPane.setLeftAnchor(node, 0.0);
 	}
 	
+	
+	/**
+	 * Clears the active consoleArea
+	 */
 	public void clearConsole() {
-		// TODO
+		frontNode.clear();
 	}
 
 	/**
@@ -225,13 +241,15 @@ public class ConsoleController implements Initializable {
 
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			consoleList.get(newValue).toFront();
+			frontNode = (ConsoleArea) consoleList.get(newValue).getChildren().get(0);
 		});
 		
 		terminalChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			terminalList.get(newValue).toFront();
 		});
-
-		showConsoleTabs();
+		
+//		showConsoleTabs();
+		startNewConsole();
 
 	}
 }
