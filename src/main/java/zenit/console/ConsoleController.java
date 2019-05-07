@@ -39,10 +39,10 @@ public class ConsoleController implements Initializable {
 	private TabPane consoleTabPane;
 
 	@FXML
-	private Label lblTerminal;
+	private Button btnTerminal;
 
 	@FXML
-	private Label lblConsole;
+	private Button btnConsole;
 
 	@FXML
 	private ChoiceBox<String> consoleChoiceBox; 
@@ -51,7 +51,7 @@ public class ConsoleController implements Initializable {
 	private ChoiceBox<String> terminalChoiceBox;
 	
 	@FXML
-	private AnchorPane consoleAnchor;
+	private AnchorPane rootAnchor;
 
 	@FXML
 	private Button btnNewTerminal;
@@ -62,13 +62,21 @@ public class ConsoleController implements Initializable {
 	@FXML
 	private Button btnClear;
 	
+	private ConsoleArea console;
+	
+	private Terminal terminal;
+	
+	private AnchorPane terminalAnchorPane;
+	
+	private AnchorPane consoleAnchorPane;
+	
 	/**
 	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
 	 * visible. Also sets text color of the labels.
 	 */
 	public void showConsoleTabs() {
-		lblConsole.setTextFill(Color.DARKGREY);
-		lblTerminal.setTextFill(Color.BLACK);
+		btnConsole.setTextFill(Color.DARKGREY);
+		btnTerminal.setTextFill(Color.BLACK);
 		terminalChoiceBox.setVisible(false);
 		terminalChoiceBox.setDisable(true);
 		consoleChoiceBox.setVisible(true);
@@ -76,14 +84,28 @@ public class ConsoleController implements Initializable {
 		btnNewTerminal.setVisible(false);
 		btnNewConsole.setVisible(true);
 		btnClear.setDisable(false);
+		
+		
 	}
 	/**
 	 * Shows the choiceBox with terminal panes, and sets the choiceBox with console tabs to not 
 	 * visible. Also sets text color of the labels.
 	 */
 	public void showTerminalTabs() {
-		lblTerminal.setTextFill(Color.DARKGREY);
-		lblConsole.setTextFill(Color.BLACK);
+		
+		if(terminalList.size() == 0) {
+			newTerminal();
+		}
+//		else if(terminalAnchorPane != null && consoleAnchorPane != null){
+//			consoleAnchorPane.setVisible(false);
+//			terminalAnchorPane.setVisible(true);
+//		}
+		else {
+			terminalAnchorPane.setVisible(true);
+			consoleAnchorPane.setVisible(false);
+		}
+		btnTerminal.setTextFill(Color.DARKGREY);
+		btnConsole.setTextFill(Color.BLACK);
 		consoleChoiceBox.setVisible(false);
 		consoleChoiceBox.setDisable(true);
 		terminalChoiceBox.setVisible(true);
@@ -91,7 +113,7 @@ public class ConsoleController implements Initializable {
 		btnNewTerminal.setVisible(true);
 		btnNewConsole.setVisible(false);
 		btnClear.setDisable(true);
-		
+				
 	}
 
 	/**
@@ -99,21 +121,21 @@ public class ConsoleController implements Initializable {
 	 * choiceBox.
 	 */
 	public void startNewConsole() {
-		ConsoleArea console = new ConsoleArea("Console (" + consoleList.size() + ")");
-		AnchorPane anchorPane = new AnchorPane();
+		console = new ConsoleArea("Console (" + consoleList.size() + ")");
+		consoleAnchorPane = new AnchorPane();
 		
 		fillAnchor(console);
-		fillAnchor(anchorPane);
+		fillAnchor(consoleAnchorPane);
 		
 		/*
 		 * TODO 
 		 * this should probably be reworked, so that 'ID' isn't used. 
 		 */
 		
-		anchorPane.getChildren().add(console);
-		consoleAnchor.getChildren().add(anchorPane);
+		consoleAnchorPane.getChildren().add(console);
+		rootAnchor.getChildren().add(consoleAnchorPane);
 		
-		consoleList.put(console.getID(), anchorPane);
+		consoleList.put(console.getID(), consoleAnchorPane);
 		updateConsoleList(console.getID());
 		
 		new ConsoleRedirect(console);	
@@ -163,16 +185,16 @@ public class ConsoleController implements Initializable {
 		darkConfig.setFontSize(12);
 		
 		
-		Terminal terminal = new Terminal(darkConfig, Paths.get(System.getProperty("user.home")));
+		terminal = new Terminal(darkConfig, Paths.get(System.getProperty("user.home")));
 		terminal.setId("Terminal ("+terminalList.size()+")");
-		AnchorPane anchorPane = new AnchorPane();
+		terminalAnchorPane = new AnchorPane();
 		
 		fillAnchor(terminal);
-		fillAnchor(anchorPane);
+		fillAnchor(terminalAnchorPane);
 		
-		anchorPane.getChildren().add(terminal);
-		consoleAnchor.getChildren().add(anchorPane);
-		terminalList.put(terminal.getId(), anchorPane);
+		terminalAnchorPane.getChildren().add(terminal);
+		rootAnchor.getChildren().add(terminalAnchorPane);
+		terminalList.put(terminal.getId(), terminalAnchorPane);
 		updateTerminalList(terminal.getId());
 		
 		showTerminalTabs();

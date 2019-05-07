@@ -9,19 +9,19 @@
 
 <AnchorPane prefHeight="300.0" prefWidth="700.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.zenit.console.ConsoleController">
    <children>
-      <AnchorPane fx:id="consoleAnchor" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
+      <AnchorPane fx:id="rootAnchor" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="25.0" />
       <AnchorPane minHeight="20.0" prefHeight="25.0" prefWidth="200.0" style="-fx-background-color: ddd;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label id="lblConsole" fx:id="lblConsole" layoutX="23.0" layoutY="5.0" onMouseClicked="#showConsoleTabs" text="console">
+            <Button id="btnConsole" fx:id="btnConsole" layoutX="23.0" layoutY="5.0" onMouseClicked="#showConsoleTabs" text="console">
                <font>
                   <Font size="12.0" />
                </font>
-            </Label>
-            <Label id="lblTerminal" fx:id="lblTerminal" layoutX="99.0" layoutY="5.0" onMouseClicked="#showTerminalTabs" text="terminal">
+            </Button>
+            <Button id="btnTerminal" fx:id="btnTerminal" layoutX="99.0" layoutY="5.0" onMouseClicked="#showTerminalTabs" text="terminal">
                <font>
                   <Font size="12.0" />
                </font>
-            </Label>
+            </Button>
             <ChoiceBox fx:id="consoleChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="90.0" style="-fx-background-color: rgba(255,255,255,0);" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <ChoiceBox fx:id="terminalChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefWidth="90.0" style="-fx-background-color: rgba(255,255,255,0);" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <!-- <opaqueInsets>
