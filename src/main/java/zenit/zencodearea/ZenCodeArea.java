@@ -26,6 +26,7 @@ import org.fxmisc.wellbehaved.event.InputMap;
 public class ZenCodeArea extends CodeArea {
 	private ExecutorService executor;
 	private int fontSize;
+	private String font;
 
 	private static final String[] KEYWORDS = new String[] {
 		"abstract", "assert", "boolean", "break", "byte",
@@ -59,10 +60,10 @@ public class ZenCodeArea extends CodeArea {
 	);
 
 	public ZenCodeArea() {
-		this(14);
+		this(14, "Times new Roman");
 	}
 	
-	public ZenCodeArea(int textSize) {
+	public ZenCodeArea(int textSize, String font) {
 		setParagraphGraphicFactory(LineNumberFactory.get(this));
 
 		multiPlainChanges().successionEnds(
@@ -84,7 +85,8 @@ public class ZenCodeArea extends CodeArea {
 		computeHighlightingAsync();
 
 		fontSize = textSize;
-		setStyle("-fx-font-size: " + fontSize);
+		this.font = font;
+		setStyle("-fx-font-size: " + fontSize +";-fx-font-family: " + font);
 	}
 	
 	public int getFontSize() {
@@ -94,6 +96,15 @@ public class ZenCodeArea extends CodeArea {
 	public void setFontSize(int newFontSize) {
 		fontSize = newFontSize;
 		setStyle("-fx-font-size: " + fontSize);
+	}
+	
+	public String getFont() {
+		return font;	
+	}
+	
+	public void setFont(String newFont) {
+		font = newFont;
+		setStyle("-fx-font-family: " + font);
 	}
 
 	private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {

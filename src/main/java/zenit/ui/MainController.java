@@ -23,6 +23,7 @@ import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
@@ -135,9 +136,9 @@ public class MainController extends VBox {
 	 */
 	public void setTextSize() {
 		FileTab selectedTab = getSelectedTab();
-		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
-			new TextSizeController(selectedTab.getZenCodeArea());
-		}
+	//	if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
+			new SettingsPanelController(selectedTab.getZenCodeArea());
+//		}
 	}
 
 	/**
