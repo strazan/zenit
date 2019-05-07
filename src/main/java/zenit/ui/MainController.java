@@ -579,4 +579,76 @@ public class MainController extends VBox {
 			}
 		}
 	}
+
+	public void commentAndUncomment() {
+
+		ZenCodeArea zenCodeArea = getSelectedTab().getZenCodeArea();
+		
+		int carretPos = zenCodeArea.getCaretPosition();
+		
+		int carretColumn = zenCodeArea.getCaretColumn();
+		
+		int rowNumber = zenCodeArea.getCurrentParagraph();
+		
+		int whereToReplace = carretPos - carretColumn;
+		
+		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
+		
+		String toReplace = zenCodeArea.getText(whereToReplace, whereToReplace + 2);
+//		
+//		System.out.println("carretPos" + carretPos);
+//		System.out.println("carretCol" + carretColumn);
+//		System.out.println("whereToReplace" + whereToReplace);
+		
+		System.out.println(toReplace);
+		System.out.println("row number " + rowNumber);
+		System.out.println("paragraph length " + paragraphLength);
+		
+		if(paragraphLength == 0) {
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//\n");
+			zenCodeArea.moveTo(carretPos + 2);
+			
+		}else if(paragraphLength == 1) {
+			if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals ("	")) {
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//      ");
+			zenCodeArea.moveTo(carretPos + 6);
+			
+			}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals("}")) {
+				zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//}");
+				zenCodeArea.moveTo(carretPos + 2);
+			}
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("  ")) {
+			System.out.println("yes");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
+			zenCodeArea.moveTo(carretPos);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	p")) {
+			System.out.println("1 tab och p");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      p");
+			zenCodeArea.moveTo(carretPos + 7);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	}")) {
+			System.out.println("1 tab och }");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      }");
+			zenCodeArea.moveTo(carretPos + 7);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	@")) {
+			System.out.println("1 tab och @");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      @");
+			zenCodeArea.moveTo(carretPos + 7);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("		")) {
+			System.out.println("2 tabs 2 platser");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//              ");
+			zenCodeArea.moveTo(carretPos + 14);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+			zenCodeArea.moveTo(carretPos);
+		}
+
+		
+	}
+
 }
