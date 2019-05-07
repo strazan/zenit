@@ -81,7 +81,6 @@ public class TerminalHelpers {
 			
 
 			while ((line = reader.readLine()) != null) {
-				try {
 				
 				int colon1Index = line.indexOf(':');
 				int colon2Index = line.indexOf(':', colon1Index+1);
@@ -99,14 +98,6 @@ public class TerminalHelpers {
 				error = new DebugError(place, problemType, problem, row, column);
 				errors.add(error);
 				
-				int counter = 1;
-				for (DebugError de : errors) {
-					System.out.println("Error " + counter++);
-					System.out.println(de);
-				}
-				} catch (StringIndexOutOfBoundsException ex) {
-					
-				}
 			}
 			//TODO Update textarea instead of printouts
 			if (errors.size() > 0) {
