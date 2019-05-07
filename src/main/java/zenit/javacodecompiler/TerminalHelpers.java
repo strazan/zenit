@@ -97,7 +97,13 @@ public class TerminalHelpers {
 				column = line.indexOf('^');
 				
 				error = new DebugError(place, problemType, problem, row, column);
-				errors.add(error);	
+				errors.add(error);
+				
+				int counter = 1;
+				for (DebugError de : errors) {
+					System.out.println("Error " + counter++);
+					System.out.println(de);
+				}
 				} catch (StringIndexOutOfBoundsException ex) {
 					
 				}

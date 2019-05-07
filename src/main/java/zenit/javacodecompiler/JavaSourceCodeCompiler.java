@@ -86,7 +86,6 @@ public class JavaSourceCodeCompiler {
 			//Runs command
 			int exitValue = TerminalHelpers.runCommand(command, projectFile);
 			
-			
 			if (exitValue == 0) {
 				// Creates runPath without extension from package
 				
@@ -169,9 +168,7 @@ public class JavaSourceCodeCompiler {
 
 			//Runs command
 			TerminalHelpers.runBackgroundCommand(command, projectFile);
-		}
-		
-		
+		}	
 	}
 
 	/**
