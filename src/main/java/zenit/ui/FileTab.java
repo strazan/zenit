@@ -85,6 +85,12 @@ public class FileTab extends Tab {
 			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.out.println();");
 			zenCodeArea.moveTo(caretPosition + 13);
 		}
+		else if (caretPosition >= 6 && text.substring(
+			caretPosition - 6, caretPosition).equals("syserr")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.err.println();");
+			zenCodeArea.moveTo(caretPosition + 13);
+		}
 		else if (caretPosition >= 4 && text.substring(
 			caretPosition - 4, caretPosition).equals("main")) 
 		{
