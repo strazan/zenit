@@ -5,12 +5,14 @@ import java.io.File;
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import main.java.zenit.filesystem.FileController;
-import main.java.zenit.zencodearea.ZenCodeArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+
+import main.java.zenit.filesystem.FileController;
+import main.java.zenit.zencodearea.ZenCodeArea;
+import main.java.zenit.util.StringUtilities;
 
 /**
  * A Tab extension that holds a File.
@@ -127,6 +129,53 @@ public class FileTab extends Tab {
 		}
 		else {
 			zenCodeArea.replaceText(caretPosition, caretPosition, "\n");
+		}
+	}
+	
+	/**
+	 * Checks what tab index the new line should begin at. Also adds a } if needed.
+	 * @author Pontus Laos
+	 */
+	public void navigateToCorrectTabIndex() {
+		int previousLine = zenCodeArea.getCurrentParagraph() - 1;
+		String previousText = zenCodeArea.getParagraph(previousLine).getText();
+		
+		int count = StringUtilities.countLeadingSpaces(previousText);
+		
+		String spaces = "";
+		for (int i = 0; i < count; i++) {
+			spaces += " ";
+		}
+		
+		if (previousText.endsWith("{")) {
+			spaces += "    "; // lol
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), spaces);
+			addMissingCurlyBrace(previousLine + 2, 0, spaces);
+		} else {
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), spaces);
+		}
+	}
+	
+	/**
+	 * Adds a curly brace on the appropriate line if one is missing.
+	 * @param row The row (line number) to add the curly brace to.
+	 * @param column The column to add the curly brace to.
+	 * @param spaces The amount of spaces to add before the curly brace.
+	 * @author Pontus Laos
+	 */
+	private void addMissingCurlyBrace(int row, int column, String spaces) {
+		int[] counts = {
+			StringUtilities.count(zenCodeArea.getText(), '{'),
+			StringUtilities.count(zenCodeArea.getText(), '}'),
+		};
+		
+		if (counts[0] == counts[1] + 1) {
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), "\n");
+			zenCodeArea.insertText(
+				row, column, 
+				spaces.substring(0, spaces.length() - 4) + "}"
+			);
+			zenCodeArea.moveTo(row - 1, spaces.length());
 		}
 	}
 	

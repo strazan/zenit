@@ -16,6 +16,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -207,7 +208,15 @@ public class MainController extends VBox {
 			selectedTab.commentsShortcutsTrigger();
 		}	
 	}
-
+	
+	public void navigateToCorrectTabIndex() {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.navigateToCorrectTabIndex();
+		}
+	}
+	
 	/**
 	 * Grabs the text from the currently selected Tab and writes it to the currently
 	 * selected file. If no file selected, opens a file chooser for selection of
