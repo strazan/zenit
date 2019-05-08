@@ -251,7 +251,13 @@ public class ConsoleController implements Initializable {
 	 * Clears the active Terminal.
 	 */
 	public void clearTerminal(){
-		executeTerminalCommand("cls");
+		if( System.getProperty("os.name").startsWith("Windows") ) {
+			executeTerminalCommand("cls");
+		}
+		else {
+			executeTerminalCommand("reset");
+		}
+				
 		//TODO: Make it work when terminal is inside a "process" (when you need to press q, ex after git branch command).
 	}
 	
