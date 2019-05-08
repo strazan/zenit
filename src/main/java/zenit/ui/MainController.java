@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -590,18 +591,6 @@ public class MainController extends VBox {
 
 		ZenCodeArea zenCodeArea = getSelectedTab().getZenCodeArea();
 		
-		int carretPos = zenCodeArea.getCaretPosition();
-		
-		int carretColumn = zenCodeArea.getCaretColumn();
-		
-		int length = zenCodeArea.getLength();
-		
-		int whereToReplace = carretPos - carretColumn;
-		
-//		int rowNumber = zenCodeArea.getCurrentParagraph();
-//		
-//		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
-//		
 //		String toReplace = zenCodeArea.getText(whereToReplace, whereToReplace + 2);
 //		
 //		System.out.println("carretPos" + carretPos);
@@ -651,11 +640,50 @@ public class MainController extends VBox {
 //			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//              ");
 //			zenCodeArea.moveTo(carretPos + 14);
 //			
-	
-		System.out.println("length " + length);
+
+		
+		int carretPos = zenCodeArea.getCaretPosition();
+		
+		int carretColumn = zenCodeArea.getCaretColumn();
+		
+		int length = zenCodeArea.getLength();
+		
+		int whereToReplace = carretPos - carretColumn;
+		
+		int rowNumber = zenCodeArea.getCurrentParagraph();
+		
+		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
+		
+		int nextRowEnd = whereToReplace -1;
+		
+		int whereToReplace2 = nextRowEnd - zenCodeArea.getParagraphLength(rowNumber -1);
+		
+		int whereToReplace3 = whereToReplace2 - zenCodeArea.getParagraphLength(rowNumber -2);
+		
+		int[] whereToReplaceArray = new int[3];
+		
+		
+		IndexRange zen = zenCodeArea.getSelection();
+		
+		int endOfSelection = zen.getEnd();
+		int startOfSelection = zen.getStart();
+		
+		
 		System.out.println("carretPos " + carretPos);
 		
-		System.out.println("whereToReplace " + whereToReplace);
+		System.out.println("whereToReplace1 " + whereToReplace);
+		
+		System.out.println("whereTo2 " + whereToReplace2);
+		
+		System.out.println("whereTo3 " + whereToReplace3);
+		
+		System.out.println("row number " + rowNumber);
+
+		System.out.println("row lenght " + paragraphLength);
+		
+		System.out.println(zenCodeArea.getSelection());
+
+		
 				
 		if(carretPos > length - 3) {
 			zenCodeArea.insertText(carretPos, "	  ");
@@ -663,14 +691,14 @@ public class MainController extends VBox {
 		}
 		
 		if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
-			System.out.println("replace comment");
+		//	System.out.println("replace comment");
 			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
 			zenCodeArea.moveTo(carretPos);
 			
 		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
 			
 			if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
-				System.out.println("delete comment");
+			//	System.out.println("delete comment");
 				zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
 				if(whereToReplace == carretPos) {
 					zenCodeArea.moveTo(carretPos);
@@ -681,7 +709,7 @@ public class MainController extends VBox {
 				}
 					
 			}else {
-				System.out.println("insert comment");
+		//		System.out.println("insert comment");
 				zenCodeArea.insertText(whereToReplace, "//");
 				zenCodeArea.moveTo(carretPos + 2);
 			}		
