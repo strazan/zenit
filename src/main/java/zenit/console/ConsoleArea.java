@@ -35,7 +35,9 @@ public class ConsoleArea extends InlineCssTextArea {
 		this.ID = identity;
 		
 		// TODO maybe remove this one and add to main.css
-		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
+//		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
+		this.setEditable(false);
+		setStyle("-fx-background-color:#444");
 	}
 	
 	/**
@@ -75,10 +77,10 @@ public class ConsoleArea extends InlineCssTextArea {
 			    	try {
 						appendText(stringToPrint);
 						setStyle(getText().length() - stringToPrint.length(), getText().length(),
-								"-fx-fill: black");
+								"-fx-fill: white");
 					} catch (IndexOutOfBoundsException e) {
 						// Windows bug, dont do anything with the exception.
-					}	   	
+					}	   
 		    }
 		});
 	}

@@ -1,6 +1,11 @@
 package main.java.zenit.console;
 
+import java.awt.AWTException;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.net.URL;
+import java.nio.file.FileSystems;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.ResourceBundle;
@@ -18,6 +23,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import main.java.zenit.ConsoleRedirect;
@@ -65,17 +71,19 @@ public class ConsoleController implements Initializable {
 	private Button btnNewConsole;
 	
 	@FXML
-	private Button btnClear;
+	private Button btnClearConsole;
 	
-	private ConsoleArea consoleArea;
+	@FXML
+	private Button btnClearTerminal;
+		
+	private AnchorPane terminalAnchorPane; //AnchorPane on which a terminal-instance is located. Used to move a terminal-instance to the "front", 
+										   //aka making it visible
 	
-	private Terminal terminal;
+	private AnchorPane consoleAnchorPane;//AnchorPane on which a console-instance is located. Used to move a console-instance to the "front", 
+	   									 //aka making it visible
+	private ConsoleArea activeConsole;
 	
-	private AnchorPane terminalAnchorPane;
-	
-	private AnchorPane consoleAnchorPane;
-	
-	private ConsoleArea frontNode;
+	private Terminal activeTerminal;
 	
 	/**
 	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
@@ -93,12 +101,15 @@ public class ConsoleController implements Initializable {
 		consoleChoiceBox.setDisable(false);
 		btnNewTerminal.setVisible(false);
 		btnNewConsole.setVisible(true);
-		btnClear.setDisable(false);
-		btnClear.setVisible(true);
+		btnClearConsole.setDisable(false);
+		btnClearConsole.setVisible(true);
+		btnClearTerminal.setDisable(true);
+		btnClearTerminal.setVisible(false);
 			
 		if (consoleAnchorPane != null) {
 				consoleAnchorPane.toFront();
 		}
+		
 		
 	}
 	/**
@@ -108,6 +119,7 @@ public class ConsoleController implements Initializable {
 	public void showTerminalTabs() {
 		btnConsole.setStyle("");
 		btnTerminal.setStyle("-fx-text-fill:white; -fx-border-color:#666; -fx-border-width: 0 0 2 0;");
+		
 		
 		if(terminalList.size() == 0) {
 			newTerminal();
@@ -122,8 +134,10 @@ public class ConsoleController implements Initializable {
 		terminalChoiceBox.setDisable(false);
 		btnNewTerminal.setVisible(true);
 		btnNewConsole.setVisible(false);
-		btnClear.setDisable(true);
-		btnClear.setVisible(false);
+		btnClearConsole.setDisable(true);
+		btnClearConsole.setVisible(false);
+		btnClearTerminal.setDisable(false);
+		btnClearTerminal.setVisible(true);
 				
 	}
 
@@ -132,7 +146,7 @@ public class ConsoleController implements Initializable {
 	 * choiceBox.
 	 */
 	public void startNewConsole() {
-		consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
+		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
 		fillAnchor(consoleArea);
@@ -197,7 +211,7 @@ public class ConsoleController implements Initializable {
 		darkConfig.setFontSize(12);
 		
 		
-		terminal = new Terminal(darkConfig, Paths.get(System.getProperty("user.home")));
+		Terminal terminal = new Terminal(darkConfig, FileSystems.getDefault().getPath(".").toAbsolutePath());
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
 		
@@ -230,9 +244,34 @@ public class ConsoleController implements Initializable {
 	 * Clears the active consoleArea
 	 */
 	public void clearConsole() {
-		frontNode.clear();
+		activeConsole.clear();
 	}
+	
+	/**
+	 * Clears the active Terminal.
+	 */
+	public void clearTerminal(){
+		executeTerminalCommand("cls");
+		//TODO: Make it work when terminal is inside a "process" (when you need to press q, ex after git branch command).
+	}
+	
+	/**
+	 * 
+	 * @param command
+	 * Executes a command in the active terminal.
+	 */
+	private void executeTerminalCommand(String command) {
+		try {
+			activeTerminal.command(command);
+			activeTerminal.focusCursor();
+			Robot robot = new Robot();
+			robot.keyPress(KeyEvent.VK_ENTER);
+	        robot.keyRelease(KeyEvent.VK_ENTER);
+		} catch (AWTException e) {
+			e.printStackTrace();
+		}
 
+	}
 	/**
 	 * Performs initialization steps.
 	 */
@@ -241,11 +280,12 @@ public class ConsoleController implements Initializable {
 
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			consoleList.get(newValue).toFront();
-			frontNode = (ConsoleArea) consoleList.get(newValue).getChildren().get(0);
+			activeConsole = (ConsoleArea) consoleList.get(newValue).getChildren().get(0);
 		});
 		
 		terminalChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			terminalList.get(newValue).toFront();
+			activeTerminal = (Terminal) terminalList.get(newValue).getChildren().get(0);
 		});
 		
 //		showConsoleTabs();
