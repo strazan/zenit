@@ -580,6 +580,12 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * If there isn't a comment the method comments and
+	 * if there is a comment the method removes it.
+	 * 
+	 * @author Fredrik Eklundh
+	 */
 	public void commentAndUncomment() {
 
 		ZenCodeArea zenCodeArea = getSelectedTab().getZenCodeArea();
@@ -588,67 +594,97 @@ public class MainController extends VBox {
 		
 		int carretColumn = zenCodeArea.getCaretColumn();
 		
-		int rowNumber = zenCodeArea.getCurrentParagraph();
+		int length = zenCodeArea.getLength();
 		
 		int whereToReplace = carretPos - carretColumn;
 		
-		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
-		
-		String toReplace = zenCodeArea.getText(whereToReplace, whereToReplace + 2);
+//		int rowNumber = zenCodeArea.getCurrentParagraph();
+//		
+//		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
+//		
+//		String toReplace = zenCodeArea.getText(whereToReplace, whereToReplace + 2);
 //		
 //		System.out.println("carretPos" + carretPos);
 //		System.out.println("carretCol" + carretColumn);
 //		System.out.println("whereToReplace" + whereToReplace);
+//		
+//		System.out.println(toReplace);
+//		System.out.println("row number " + rowNumber);
+//		System.out.println("paragraph length " + paragraphLength);
+//		
+//		if(paragraphLength == 0) {
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace, "//");
+//			zenCodeArea.moveTo(carretPos + 2);
+//			
+//		}else if(paragraphLength == 1) {
+//			if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals ("	")) {
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//      ");
+//			zenCodeArea.moveTo(carretPos + 7);
+//			
+//			}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals("}")) {
+//				zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//}");
+//				zenCodeArea.moveTo(carretPos + 2);
+//			}
+//			
+//		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("  ")) {
+//			System.out.println("yes");
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
+//			zenCodeArea.moveTo(carretPos);
+//			
+//		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	p")) {
+//			System.out.println("1 tab och p");
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      p");
+//			zenCodeArea.moveTo(carretPos + 7);
+//			
+//		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	}")) {
+//			System.out.println("1 tab och }");
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      }");
+//			zenCodeArea.moveTo(carretPos + 7);
+//			
+//		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	@")) {
+//			System.out.println("1 tab och @");
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      @");
+//			zenCodeArea.moveTo(carretPos + 7);
+//			
+//		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("		")) {
+//			System.out.println("2 tabs 2 platser");
+//			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//              ");
+//			zenCodeArea.moveTo(carretPos + 14);
+//			
+	
+		System.out.println("length " + length);
+		System.out.println("carretPos " + carretPos);
 		
-		System.out.println(toReplace);
-		System.out.println("row number " + rowNumber);
-		System.out.println("paragraph length " + paragraphLength);
-		
-		if(paragraphLength == 0) {
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//\n");
-			zenCodeArea.moveTo(carretPos + 2);
-			
-		}else if(paragraphLength == 1) {
-			if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals ("	")) {
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//      ");
-			zenCodeArea.moveTo(carretPos + 6);
-			
-			}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 1).equals("}")) {
-				zenCodeArea.replaceText(whereToReplace, whereToReplace + 1, "//}");
-				zenCodeArea.moveTo(carretPos + 2);
-			}
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("  ")) {
-			System.out.println("yes");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
-			zenCodeArea.moveTo(carretPos);
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	p")) {
-			System.out.println("1 tab och p");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      p");
-			zenCodeArea.moveTo(carretPos + 7);
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	}")) {
-			System.out.println("1 tab och }");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      }");
-			zenCodeArea.moveTo(carretPos + 7);
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("	@")) {
-			System.out.println("1 tab och @");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//      @");
-			zenCodeArea.moveTo(carretPos + 7);
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("		")) {
-			System.out.println("2 tabs 2 platser");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//              ");
-			zenCodeArea.moveTo(carretPos + 14);
-			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+		System.out.println("whereToReplace " + whereToReplace);
+				
+		if(carretPos > length - 3) {
+			zenCodeArea.insertText(carretPos, "	  ");
 			zenCodeArea.moveTo(carretPos);
 		}
-
 		
+		if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+			System.out.println("replace comment");
+			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+			zenCodeArea.moveTo(carretPos);
+			
+		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+			
+			if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+				System.out.println("delete comment");
+				zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+				if(whereToReplace == carretPos) {
+					zenCodeArea.moveTo(carretPos);
+				}else if(whereToReplace + 1 == carretPos) {
+					zenCodeArea.moveTo(carretPos - 1);
+				}else {
+					zenCodeArea.moveTo(carretPos - 2);
+				}
+					
+			}else {
+				System.out.println("insert comment");
+				zenCodeArea.insertText(whereToReplace, "//");
+				zenCodeArea.moveTo(carretPos + 2);
+			}		
+		}	
 	}
-
 }
