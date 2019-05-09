@@ -40,7 +40,7 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></ChoiceBox>
-            <Button id="btn" fx:id="btnNewConsole" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#startNewConsole" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
+            <Button id="btn" fx:id="btnNewConsole" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#newConsole" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>

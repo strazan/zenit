@@ -370,7 +370,7 @@ public class MainController extends VBox {
 		File projectFile = getMetadataFile(file);
 		saveFile(null);
 		
-		consoleController.startNewConsole(); //TODO: Maybe but in a better place ?
+		consoleController.newConsole(); //TODO: Maybe but in a better place ?
 		
 		try {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();

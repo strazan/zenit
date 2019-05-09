@@ -129,6 +129,7 @@ public class ConsoleController implements Initializable {
 			terminalAnchorPane.toFront();
 		}
 		
+		
 		consoleChoiceBox.setVisible(false);
 		consoleChoiceBox.setDisable(true);
 		terminalChoiceBox.setVisible(true);
@@ -146,7 +147,7 @@ public class ConsoleController implements Initializable {
 	 * Creates a new ConsoleArea, adds it to the console AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
-	public void startNewConsole() {
+	public void newConsole() {
 		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
@@ -202,6 +203,12 @@ public class ConsoleController implements Initializable {
 		}	
 	}
 	
+	
+	/*
+	 * Creates a new Terminal, adds it to the terminal
+	 *  AnchorPane and puts it as an option in the
+	 * choiceBox.
+	 */
 	public void newTerminal() {
 		TerminalConfig darkConfig = new TerminalConfig();
 		darkConfig.setBackgroundColor(Color.BLACK);
@@ -227,7 +234,9 @@ public class ConsoleController implements Initializable {
 		showTerminalTabs();
 	}
 	
-	// TODO maybe add to (create) package 'helpers' 
+	// TODO maybe add to (create) package 'helpers' //Oskar vad menas??
+	
+	
 	/**
 	 * sets the anchor of a node to fill parent 
 	 * 
@@ -278,7 +287,7 @@ public class ConsoleController implements Initializable {
 			activeTerminal = (Terminal) terminalList.get(newValue).getChildren().get(0);
 		});
 		
-		startNewConsole();
+		newConsole();
 
 	}
 }
