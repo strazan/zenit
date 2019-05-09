@@ -426,7 +426,6 @@ public class MainController extends VBox {
 				compiler.startCompileAndRun();
 				Process process = buffer.get();
 				if (process != null && process.isAlive()) {
-					System.out.println(process.pid() + " ALIVE!");
 					//TODO Create new console tab from here.
 				}
 				
