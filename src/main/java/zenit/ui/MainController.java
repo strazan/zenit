@@ -147,6 +147,7 @@ public class MainController extends VBox {
 	public void initialize() {
 		new ConsoleRedirect(taConsole);		
 		btnRun.setPickOnBounds(true);
+		btnRun.setOnAction(event -> compileAndRun());
 		initTree();
 	}
 
