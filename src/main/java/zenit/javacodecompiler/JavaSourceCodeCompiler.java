@@ -23,7 +23,6 @@ import main.java.zenit.ui.MainController;
  * TODO Change JRE version before compiling/running
  * 
  * @author Sigge Labor, Alexander Libot
- * @param <C>
  *
  */
 public class JavaSourceCodeCompiler {
@@ -77,9 +76,9 @@ public class JavaSourceCodeCompiler {
 	 * Class for creating commands for compiling, and redirecting process-streams.
 	 */
 	private class Compile extends Thread {
-		protected String sourcepath;
-		protected String directory;
-		protected String runPath;
+		protected File sourcepath;
+		protected File directory;
+		protected File runPath;
 		protected File projectFile;
 
 		/**
@@ -118,9 +117,9 @@ public class JavaSourceCodeCompiler {
 				String line = br.readLine();
 				while (line != null) {
 					if (line.equals("DIRECTORY")) {
-						directory = br.readLine();
+						directory = new File(br.readLine());
 					} else if (line.equals("SOURCEPATH")) {
-						sourcepath = br.readLine();
+						sourcepath = new File (br.readLine());
 					}
 					line = br.readLine();
 				}
@@ -136,10 +135,9 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compile() {
-			runPath = file.getPath();
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
-			cb.setRunPath(runPath);
+			cb.setRunPath(file.getPath());
 
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, null);
@@ -154,12 +152,12 @@ public class JavaSourceCodeCompiler {
 		 * @return Executed process.
 		 */
 		protected Process compileInPackage() {
-			runPath = createRunPathInProject();
+			runPath = new File(createRunPathInProject());
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
-			cb.setRunPath(runPath);
-			cb.setDirectory(directory);
-			cb.setSourcepath(sourcepath);
+			cb.setRunPath(runPath.getPath());
+			cb.setDirectory(directory.getPath());
+			cb.setSourcepath(sourcepath.getPath());
 
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
@@ -258,10 +256,10 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFile() {
-			String runPath = createRunPathForRunning(file.getName());
+			runPath = new File(createRunPathForRunning(file.getName()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
-			cb.setRunPath(runPath);
+			cb.setRunPath(runPath.getPath());
 			
 			String command = cb.generateCommand();
 			
@@ -272,10 +270,11 @@ public class JavaSourceCodeCompiler {
 		}
 		
 		private Process runFileInPackage() {
-			String runPath = createRunPathForRunning(super.runPath);
+			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
-			cb.setRunPath(runPath);
+			cb.setRunPath(runPath.getPath());
+			
 			String command = cb.generateCommand();
 
 			// Creates new directory folder, bin-folder
