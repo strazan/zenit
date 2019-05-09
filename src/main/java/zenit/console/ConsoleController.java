@@ -27,6 +27,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.helpers.ConsoleHelpers;
 
 /**
  * The controller class for ConsoleArea
@@ -252,32 +253,15 @@ public class ConsoleController implements Initializable {
 	 */
 	public void clearTerminal(){
 		if( System.getProperty("os.name").startsWith("Windows") ) {
-			executeTerminalCommand("cls");
+			ConsoleHelpers.executeTerminalCommand(activeTerminal, "cls");
 		}
 		else {
-			executeTerminalCommand("reset");
+			ConsoleHelpers.executeTerminalCommand(activeTerminal, "reset");
 		}
 				
 		//TODO: Make it work when terminal is inside a "process" (when you need to press q, ex after git branch command).
 	}
 	
-	/**
-	 * 
-	 * @param command
-	 * Executes a command in the active terminal.
-	 */
-	private void executeTerminalCommand(String command) {
-		try {
-			activeTerminal.command(command);
-			activeTerminal.focusCursor();
-			Robot robot = new Robot();
-			robot.keyPress(KeyEvent.VK_ENTER);
-	        robot.keyRelease(KeyEvent.VK_ENTER);
-		} catch (AWTException e) {
-			e.printStackTrace();
-		}
-
-	}
 	/**
 	 * Performs initialization steps.
 	 */
@@ -294,7 +278,6 @@ public class ConsoleController implements Initializable {
 			activeTerminal = (Terminal) terminalList.get(newValue).getChildren().get(0);
 		});
 		
-//		showConsoleTabs();
 		startNewConsole();
 
 	}
