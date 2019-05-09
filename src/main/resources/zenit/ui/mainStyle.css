@@ -6,16 +6,19 @@
 #btnRun{
 	/* TODO: Add styling and icons*/
 	-fx-background-color:transparent;
-	-fx-icon-size: 32px;
 }
 
-#btnRun:hover {
-	-fx-cursor: pointer;
+#iconRun:hover {
+	-fx-opacity: 0.5;
 }
 
 
 #btnStop{
 	-fx-background-color:transparent;
+}
+
+#iconStop:hover {
+	-fx-opacity: 0.5;
 }
 
 #btnClearConsole {

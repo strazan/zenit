@@ -3,6 +3,7 @@ package main.java.zenit.ui;
 import java.io.File;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Alert;
@@ -60,10 +61,15 @@ public class FileTab extends Tab {
 			hasChanged = !initialFileContent.equals(newText);
 			updateUI();
 		});
+
 		setStyle("-fx-background-color: #444;");
 		setStyle("-fx-stroke: #fff;");
 		
 		Platform.runLater(zenCodeArea::requestFocus);
+	}
+	
+	public void addTextPropertyListener(ChangeListener<? super String> listener) {
+		zenCodeArea.textProperty().addListener(listener);
 	}
 	
 	/**

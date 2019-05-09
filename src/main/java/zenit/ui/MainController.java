@@ -10,6 +10,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -74,6 +75,12 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
+	
+	@FXML
+	private Label statusBarLeftLabel;
+	
+	@FXML
+	private Label statusBarRightLabel;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -401,6 +408,14 @@ public class MainController extends VBox {
 
 			// TODO: handle exception
 		}
+	}
+	
+	public void updateStatusLeft(String text) {
+		statusBarLeftLabel.setText(text);
+	}
+	
+	public void updateStatusRight(String text) {
+		statusBarRightLabel.setText(text);
 	}
 	
 	/**
