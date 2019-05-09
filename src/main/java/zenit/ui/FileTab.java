@@ -71,9 +71,17 @@ public class FileTab extends Tab {
 	
 	public void setStyle(int row, int column, String style) {
 		
-//		zenCodeArea.setStyle(row, column, column, Arrays.asList(style));
-		Platform.runLater(()->
-		zenCodeArea.setStyle(row-1,column-1,column,Arrays.asList(style)));
+		int columnLength = zenCodeArea.getParagraph(row-1).getText().length();
+		
+		if (column >= columnLength) {
+			Platform.runLater(()->
+			zenCodeArea.setStyle(row-1,column-1,column,Arrays.asList(style)));
+		} else {
+			Platform.runLater(()->
+			zenCodeArea.setStyle(row-1,column,column+1,Arrays.asList(style)));
+		}
+		
+		
 	}
 	
 	public void addTextPropertyListener(ChangeListener<? super String> listener) {
