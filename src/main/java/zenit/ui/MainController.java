@@ -22,7 +22,10 @@ import javafx.stage.Stage;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.javacodecompiler.DebugError;
+import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -204,6 +207,10 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
+		return saveFile(true);
+	}
+	
+	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
 
@@ -222,7 +229,10 @@ public class MainController extends VBox {
 			}
 
 			tab.update(file);
-			backgroundCompiling(file);
+			
+			if (backgroundCompile) {
+				backgroundCompiling(file);
+			}
 		} else {
 			System.out.println("Did not write.");
 		}
@@ -230,16 +240,30 @@ public class MainController extends VBox {
 		return didWrite;
 	}
 	
+	/**
+	 * Compiles a file in the background.
+	 * @param file
+	 */
 	private void backgroundCompiling(File file) {
-		File projectFile = getMetadataFile(file);
+		File metadataFile = getMetadataFile(file);
 
 		try {
-			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-			if (file != null && projectFile != null) {
-				compiler.compileJavaFile(file, projectFile);
+			if (file != null) {
+				DebugErrorBuffer buffer = new DebugErrorBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this);
+				compiler.startCompile();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void errorHandler(DebugErrorBuffer buffer) {
+		DebugError error;
+		while (!buffer.isEmpty()) {
+			error = buffer.get();
+			
+			getSelectedTab().setStyle(error.getRow(), error.getColumn(), "underline");
 		}
 	}
 
@@ -345,7 +369,7 @@ public class MainController extends VBox {
 	}
 
 	/**
-	 * Opens a input dialog to choose project name and then creates a new project
+	 * Opens an input dialog to choose project name and then creates a new project
 	 * with that name in the selected workspace folder
 	 * 
 	 * @param event
@@ -362,6 +386,12 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * Opens an input dialog to choose package name and then creates a new package
+	 * with that name in the selected folder (usually src).
+	 * @param parent Folder to create package in.
+	 * @return The created package if created, otherwise null.
+	 */
 	public File newPackage(File parent) {
 
 		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package",
@@ -387,16 +417,19 @@ public class MainController extends VBox {
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
-			File projectFile = getMetadataFile(file);
-			saveFile(null);
+			File metadataFile = getMetadataFile(file);
+			saveFile(false);
 
 			try {
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-				if (file != null && projectFile != null) {
-					compiler.compileAndRunJavaFileInPackage(file, projectFile);
-				} else if (file != null) {
-					compiler.compileAndRunJavaFileWithoutPackage(file);
+				ProcessBuffer buffer = new ProcessBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
+				compiler.startCompileAndRun();
+				Process process = buffer.get();
+				if (process != null && process.isAlive()) {
+					System.out.println(process.pid() + " ALIVE!");
+					//TODO Create new console tab from here.
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 
@@ -437,6 +470,11 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * Finds the metadata file for the project of a file.
+	 * @param file File within project to find metadata file in.
+	 * @return The found metadata file, null if not found.
+	 */
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
 		if (files != null) {

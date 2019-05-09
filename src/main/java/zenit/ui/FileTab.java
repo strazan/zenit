@@ -1,6 +1,7 @@
 package main.java.zenit.ui;
 
 import java.io.File;
+import java.util.Arrays;
 
 import javafx.application.Platform;
 import javafx.scene.control.Tab;
@@ -62,6 +63,13 @@ public class FileTab extends Tab {
 		setStyle("-fx-stroke: #fff;");
 		
 		Platform.runLater(zenCodeArea::requestFocus);
+	}
+	
+	public void setStyle(int row, int column, String style) {
+		
+//		zenCodeArea.setStyle(row, column, column, Arrays.asList(style));
+		Platform.runLater(()->
+		zenCodeArea.setStyle(row-1,column-1,column,Arrays.asList(style)));
 	}
 	
 	/**

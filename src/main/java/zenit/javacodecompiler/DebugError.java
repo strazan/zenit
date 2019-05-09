@@ -21,4 +21,26 @@ public class DebugError {
 				"\n" + row + ":" + column;
 	}
 
+	public String getPlace() {
+		return place;
+	}
+
+	public String getProblemType() {
+		return problemType;
+	}
+
+	public String getProblem() {
+		return problem;
+	}
+
+	public int getRow() {
+		return row;
+	}
+
+	public int getColumn() {
+		return column;
+	}
+	
+	
+
 }
