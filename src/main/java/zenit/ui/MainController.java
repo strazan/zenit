@@ -410,6 +410,10 @@ public class MainController extends VBox {
 	 * same folder/directory, and the executed with only java standard lib.
 	 */
 	public void compileAndRun() {
+		if (getSelectedTab() == null) {
+			return;
+		}
+		
 		File file = getSelectedTab().getFile();
 		File projectFile = getMetadataFile(file);
 		saveFile(null);
