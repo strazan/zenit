@@ -2,24 +2,35 @@ package main.java.zenit;
 
 import java.io.PrintStream;
 
-import javafx.scene.control.TextArea;
-
+import main.java.zenit.console.ConsoleArea;
+import main.java.zenit.console.ConsoleAreaErrorStream;
+import main.java.zenit.console.ConsoleAreaOutputStream;
 
 /**
+ * This class redirects the PrintStream to given ConsoleArea.
  * 
- * @author Fredrik Eklundh
+ * @author siggelabor
  *
- * This class redirects the PrintStream from the console to a TextArea
  */
 public class ConsoleRedirect {
-	
-	public ConsoleRedirect(TextArea ta) {
+
+	/**
+	 * This method will set the out and error PrintStream to chosen ConsoleArea.
+	 * 
+	 * @param the ConsoleArea prints are to be directed to.
+	 */
+	public ConsoleRedirect(ConsoleArea ta) {
 		try {
-			TextAreaOutputStream tacos = new TextAreaOutputStream(ta);
-			PrintStream ps = new PrintStream(tacos);
-			System.setOut(ps);
-			System.setErr(ps);
-			
+		
+			ConsoleAreaOutputStream socat = new ConsoleAreaOutputStream(ta);
+			ConsoleAreaErrorStream tacos = new ConsoleAreaErrorStream(ta);
+
+			PrintStream outPrintStream = new PrintStream(socat);
+			PrintStream errPrintStream = new PrintStream(tacos);
+
+			System.setOut(outPrintStream);
+			System.setErr(errPrintStream);
+
 			/* 
 			 * TODO
 			 * System.setIn(in);
