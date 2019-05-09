@@ -10,7 +10,7 @@
 
 <AnchorPane id="rootNode" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color: #333;" stylesheets="@consoleStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.zenit.console.ConsoleController">
    <children>
-      <AnchorPane fx:id="rootAnchor" layoutY="33.0" prefHeight="267.0" prefWidth="700.0" style="-fx-background-color:#444" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="30.0">
+      <AnchorPane fx:id="rootAnchor" layoutY="33.0" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color:#444" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Text layoutX="291.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nothing to display." textAlignment="CENTER" AnchorPane.topAnchor="30.0">
                <font>
@@ -18,7 +18,7 @@
                </font>
             </Text>
          </children></AnchorPane>
-      <AnchorPane layoutX="2.0" layoutY="2.0" minHeight="20.0" prefHeight="27.0" prefWidth="698.0" style="-fx-background-color: #333;" AnchorPane.bottomAnchor="270.0" AnchorPane.leftAnchor="1.0" AnchorPane.rightAnchor="1.0" AnchorPane.topAnchor="1.0">
+      <AnchorPane layoutX="2.0" layoutY="2.0" minHeight="20.0" prefHeight="32.0" prefWidth="698.0" style="-fx-background-color: #333;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button id="btn" fx:id="btnConsole" layoutX="23.0" layoutY="5.0" onMouseClicked="#showConsoleTabs" prefHeight="0.0" stylesheets="@consoleStyle.css" text="CONSOLE" textFill="#666666">
                <cursor>
