@@ -127,9 +127,6 @@ public class JavaFileHandler extends FileHandler {
 		File tempFile = FileNameHelpers.getFilepathWithoutTopFile(oldFile); //Removes file name
 		
 		//Create new file with new name
-		if (!newFilename.endsWith(".java")) {
-			newFilename = newFilename + ".java"; //Adds suffix
-		}
 		String newFilepath = tempFile.getPath() + "/" + newFilename;
 		File newFile = new File(newFilepath);
 		

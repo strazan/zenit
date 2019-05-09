@@ -14,15 +14,12 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import main.java.zenit.ConsoleRedirect;
-import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -47,7 +44,6 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
-	private ConsoleArea consoleArea;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -386,7 +382,9 @@ public class MainController extends VBox {
 	 */
 	public File renameFile(File file) {
 		File newFile = null;
-		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", "new name");
+		int prefixPosition = file.getName().lastIndexOf('.');
+
+		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0, prefixPosition);
 		if (newName != null) {
 			newFile = fileController.renameFile(file, newName);
 			var tabs = tabPane.getTabs();
@@ -450,7 +448,6 @@ public class MainController extends VBox {
 				return packageFile;
 			}
 		}
-
 		return null;
 	}
 
@@ -679,13 +676,13 @@ public class MainController extends VBox {
 		File source = directoryChooser.showDialog(stage);
 		
 		if (source != null) {
-			File target = fileController.importProject(source);
-			if (target == null) {
-				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
-						"An error occured while trying to import project");
-			} else {
+			try {
+				File target = fileController.importProject(source);
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
 				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
+			} catch (IOException ex) {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
+						ex.getMessage());
 			}
 		}
 	}

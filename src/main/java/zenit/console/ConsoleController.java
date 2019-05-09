@@ -215,7 +215,7 @@ public class ConsoleController implements Initializable {
 		darkConfig.setForegroundColor(Color.WHITE);
 		darkConfig.setCursorBlink(true);
 		darkConfig.setCursorColor(Color.WHITE);
-		darkConfig.setFontFamily("consolas");
+//		darkConfig.setFontFamily("consolas");
 		darkConfig.setFontSize(12);
 		
 		

@@ -54,6 +54,9 @@ public class ProjectHandler extends FolderHandler {
 		targetFilepath += File.separator + projectName;
 		target = new File(targetFilepath);
 		
+		if (target.exists() ) {
+			throw new IOException("A project with that name already exists");
+		}
 		boolean success = target.mkdir();
 		
 		if (success) {
@@ -61,7 +64,7 @@ public class ProjectHandler extends FolderHandler {
 			MetadataFileHandler.createMetadataFile(target);
 			return target;
 		} else {
-			throw new IOException("Couldn't copy project");
+			throw new IOException("Couldn't copy file");
 		}
 	}
 	
