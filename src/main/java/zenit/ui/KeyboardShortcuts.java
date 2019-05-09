@@ -47,6 +47,7 @@ public final class KeyboardShortcuts {
 		    public void handle(KeyEvent ke) {
 		        if (ke.getCode() == KeyCode.ENTER) {
 		        	controller.commentsShortcutsTrigger();
+		        	controller.navigateToCorrectTabIndex();
 		            ke.consume(); // <-- stops passing the event to next node
 		        }
 		    }

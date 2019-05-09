@@ -10,11 +10,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
+import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -76,6 +79,12 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
+	
+	@FXML
+	private Label statusBarLeftLabel;
+	
+	@FXML
+	private Label statusBarRightLabel;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -90,10 +99,25 @@ public class MainController extends VBox {
 			 * selected workspace. Only prompts when unset and can be changed from within gui
 			 * Alex
 			 */
-			File workspace = WorkspaceHandler.readWorkspace();
+			
+			File workspace = null;
+			
+			try {
+				workspace = WorkspaceHandler.readWorkspace();
+			} catch (IOException ex) {
+				DirectoryChooser directoryChooser = new DirectoryChooser();
+				directoryChooser.setTitle("Select new workspace folder");
+				workspace = directoryChooser.showDialog(stage);
+			}
+			
 			FileController fileController = new FileController(workspace);
-
 			setFileController(fileController);
+			
+			if (workspace != null) {
+				// TODO: Log this
+				boolean success = fileController.changeWorkspace(workspace);
+			}
+
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
@@ -127,6 +151,7 @@ public class MainController extends VBox {
 	public void initialize() {
 		new ConsoleRedirect(taConsole);		
 		btnRun.setPickOnBounds(true);
+		btnRun.setOnAction(event -> compileAndRun());
 		initTree();
 	}
 	
@@ -202,13 +227,21 @@ public class MainController extends VBox {
 	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
 	 */
 	public void commentsShortcutsTrigger() {
-	FileTab selectedTab = getSelectedTab();
+		FileTab selectedTab = getSelectedTab();
 		
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
 		}	
 	}
-
+	
+	public void navigateToCorrectTabIndex() {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.navigateToCorrectTabIndex();
+		}
+	}
+	
 	/**
 	 * Grabs the text from the currently selected Tab and writes it to the currently
 	 * selected file. If no file selected, opens a file chooser for selection of
@@ -228,13 +261,6 @@ public class MainController extends VBox {
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
 
 		if (didWrite) {
-			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
-
-			if (!treeView.getRoot().getChildren().stream()
-					.anyMatch(n -> n.getValue().equals(newNode.getFile().getName()))) {
-				treeView.getRoot().getChildren().add(newNode);
-			}
-
 			tab.update(file);
 		} else {
 			System.out.println("Did not write.");
@@ -402,6 +428,14 @@ public class MainController extends VBox {
 		}
 	}
 	
+	public void updateStatusLeft(String text) {
+		statusBarLeftLabel.setText(text);
+	}
+	
+	public void updateStatusRight(String text) {
+		statusBarRightLabel.setText(text);
+	}
+	
 	/**
 	 * Switches between dark- and light mode depending on what is selected in the application's
 	 * 'Dark Mode'-checkbox.
@@ -413,23 +447,31 @@ public class MainController extends VBox {
 		boolean isDarkMode = cmiDarkMode.isSelected();
 		var stylesheets = stage.getScene().getStylesheets();
 		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+		var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
 		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
 		
 		if (isDarkMode) {
-			stylesheets.add(darkMode);
+			if (stylesheets.contains(lightMode)) {
+				stylesheets.remove(lightMode);
+			}
 			
 			if (stylesheets.contains(lightModeKeywords)) {
 				stylesheets.remove(lightModeKeywords);
 			}
+			
+			stylesheets.add(darkMode);
 			stylesheets.add(darkModeKeywords);
 		} else {
-			// Currently the Light Mode is the default CSS.
-			stylesheets.remove(darkMode);
+			if (stylesheets.contains(darkMode)) {
+				stylesheets.remove(darkMode);
+			}
 			
 			if (stylesheets.contains(darkModeKeywords)) {
 				stylesheets.remove(darkModeKeywords);
 			}
+			
+			stylesheets.add(lightMode);
 			stylesheets.add(lightModeKeywords);
 		}
 	}
