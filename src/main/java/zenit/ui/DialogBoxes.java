@@ -2,6 +2,8 @@ package main.java.zenit.ui;
 
 import java.util.Optional;
 
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
@@ -32,5 +34,23 @@ public class DialogBoxes {
 		   return result.get();
 		}
 		return null;
+	}
+	
+	public static void errorDialog(String title, String header, String content) {
+		Alert alert = new Alert(AlertType.ERROR);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		alert.showAndWait();
+	}
+	
+	public static void informationDialog(String title, String content) {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(null);
+		alert.setContentText(content);
+
+		alert.showAndWait();
 	}
 }

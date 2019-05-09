@@ -23,6 +23,7 @@ import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -54,6 +55,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private MenuItem saveFile;
+	
+	@FXML
+	private MenuItem importProject;
 
 	@FXML
 	private MenuItem changeWorkspace;
@@ -125,6 +129,16 @@ public class MainController extends VBox {
 		btnRun.setPickOnBounds(true);
 		initTree();
 	}
+	
+	/**
+	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 */
+	public void setTextSize() {
+		FileTab selectedTab = getSelectedTab();
+		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
+			new TextSizeController(selectedTab.getZenCodeArea());
+		}
+	}
 
 	/**
 	 * Initializes the {@link javafx.scene.control.TreeView TreeView}. Creates a
@@ -184,6 +198,9 @@ public class MainController extends VBox {
 		}
 	}
 	
+	/**
+	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
+	 */
 	public void commentsShortcutsTrigger() {
 	FileTab selectedTab = getSelectedTab();
 		
@@ -551,5 +568,29 @@ public class MainController extends VBox {
 		}
 
 		return null;
+	}
+	
+	/**
+	 * Tries to import a folder.
+	 * Displays a directory chooser and copies the selected folder into the current workspace
+	 * using {@link main.java.zenit.filesystem.FileController#importProject(File) importProject(File)}
+	 * Displays an error or information dialog to display the result.
+	 */
+	@FXML
+	public void importProject() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setTitle("Select project to import");
+		File source = directoryChooser.showDialog(stage);
+		
+		if (source != null) {
+			File target = fileController.importProject(source);
+			if (target == null) {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
+						"An error occured while trying to import project");
+			} else {
+				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
+				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
+			}
+		}
 	}
 }

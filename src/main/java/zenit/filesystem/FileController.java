@@ -256,4 +256,19 @@ public class FileController {
 		}
 		return success;
 	}
+	
+	/**
+	 * Tries to import a folder to workspace
+	 * @param source Folder to import
+	 * @return The copied File
+	 */
+	public File importProject(File source) {
+		try {
+			File target = ProjectHandler.importProject(source, workspace);
+			return target;
+		} catch (IOException e) {
+			System.err.println(e.getMessage());
+			return null;
+		}
+	}
 }
