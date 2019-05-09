@@ -57,6 +57,7 @@
 	        <artifactId>ikonli-javafx</artifactId>
 	        <version>11.3.3</version>
 	    </dependency>
+	    <dependency>
 		    <groupId>com.kodedu.terminalfx</groupId>
 		    <artifactId>terminalfx</artifactId>
 		    <version>1.0.9</version>

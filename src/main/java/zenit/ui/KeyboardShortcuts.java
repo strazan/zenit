@@ -45,11 +45,16 @@ public final class KeyboardShortcuts {
 		
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 		    public void handle(KeyEvent ke) {
-		        if (ke.getCode() == KeyCode.ENTER) {
-		        	controller.commentsShortcutsTrigger();
-		        	controller.navigateToCorrectTabIndex();
-		            ke.consume(); // <-- stops passing the event to next node
-		        }
+		    	if (controller.getSelectedTab()!= null) {
+		    		if (controller.getSelectedTab().getZenCodeArea().isFocused()) {
+		    			if (ke.getCode() == KeyCode.ENTER) {
+				        	controller.commentsShortcutsTrigger();
+				        	controller.navigateToCorrectTabIndex();
+				            ke.consume(); // <-- stops passing the event to next node
+				        }
+		    		}    
+		    	}
+		    	
 		    }
 		});
 	}

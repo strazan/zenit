@@ -110,8 +110,6 @@
 											            		  iconSize="24"/>
 											        </graphic>
 											    </Button>
-																		prefWidth="15.0"> -->
-                                                
                                                 <Button id="btnStop" 
                                                 		fx:id="btnStop" 
                                                 		minHeight="20.0" 
@@ -127,7 +125,6 @@
                                                       			iconLiteral="fa-stop-circle" 
                                                       			iconColor="red" 
                                                       			iconSize="24"/>
-																		</Region>
 																	</graphic>
 																</Button>
 															</children>
