@@ -15,9 +15,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
@@ -118,7 +116,7 @@ public class MainController extends VBox {
 			
 			if (workspace != null) {
 				// TODO: Log this
-				boolean success = fileController.changeWorkspace(workspace);
+				fileController.changeWorkspace(workspace);
 			}
 
 			loader.setRoot(this);

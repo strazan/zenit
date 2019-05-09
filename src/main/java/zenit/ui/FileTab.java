@@ -14,8 +14,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 
-import main.java.zenit.filesystem.FileController;
-import main.java.zenit.zencodearea.ZenCodeArea;
 import main.java.zenit.util.StringUtilities;
 
 /**
