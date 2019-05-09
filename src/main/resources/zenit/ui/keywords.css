@@ -59,9 +59,14 @@
 .styled-text-area .lineno {
 	-fx-background-color: #333;
 	-fx-fill: #FFF;
-	-fx-pref-width: 30px;
+	-fx-pref-width: 50px;
 }
 
 .caret {
     -fx-stroke: #fff;
 }
+
+.underline {
+	-fx-underline: true;
+}
+

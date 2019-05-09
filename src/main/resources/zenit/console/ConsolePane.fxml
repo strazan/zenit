@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="rootNode" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color: #333;" stylesheets="@consoleStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.zenit.console.ConsoleController">
+   <children>
+      <AnchorPane fx:id="rootAnchor" layoutY="33.0" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color:#444" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <children>
+            <Text layoutX="291.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nothing to display." textAlignment="CENTER" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children></AnchorPane>
+      <AnchorPane layoutX="2.0" layoutY="2.0" minHeight="20.0" prefHeight="32.0" prefWidth="698.0" style="-fx-background-color: #333;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button id="btn" fx:id="btnConsole" layoutX="23.0" layoutY="5.0" onMouseClicked="#showConsoleTabs" prefHeight="0.0" stylesheets="@consoleStyle.css" text="CONSOLE" textFill="#666666">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnTerminal" layoutX="99.0" layoutY="5.0" onMouseClicked="#showTerminalTabs" prefHeight="0.0" stylesheets="@consoleStyle.css" text="TERMINAL" textFill="#666666">
+               <font>
+                  <Font size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ChoiceBox fx:id="consoleChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefHeight="27.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ChoiceBox>
+            <ChoiceBox fx:id="terminalChoiceBox" nodeOrientation="LEFT_TO_RIGHT" prefHeight="27.0" prefWidth="100.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ChoiceBox>
+            <Button id="btn" fx:id="btnNewConsole" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#newConsole" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnNewTerminal" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#newTerminal" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnClearConsole" layoutX="500.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#clearConsole" stylesheets="@consoleStyle.css" text="CLEAR" textFill="#666666" AnchorPane.rightAnchor="158.4">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+             <Button id="btn" fx:id="btnClearTerminal" layoutX="500.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#clearTerminal" stylesheets="@consoleStyle.css" text="CLEAR" textFill="#666666" AnchorPane.rightAnchor="158.4">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

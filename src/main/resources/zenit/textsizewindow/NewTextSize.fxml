@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<fx:root maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="149.0" prefWidth="304.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Label layoutX="38.0" layoutY="23.0" text="Old text size:" />
+      <Label fx:id="lblOldValue" layoutX="250.0" layoutY="23.0" text="00" />
+      <Slider fx:id="sldrNewSize" layoutX="38.0" layoutY="103.0" min="6.0" />
+      <Label layoutX="38.0" layoutY="75.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
+      <Button layoutX="216.0" layoutY="90.0" mnemonicParsing="false" onMouseClicked="#exitFrame" text="Done" />
+      <TextField fx:id="fldNewSize" layoutX="121.0" layoutY="70.0" prefHeight="27.0" prefWidth="45.0" />
+   </children>
+</fx:root>

@@ -2,8 +2,10 @@ package main.java.zenit.ui;
 
 import java.util.Optional;
 
+import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
 
@@ -13,6 +15,10 @@ import javafx.stage.Stage;
  *
  */
 public class DialogBoxes {
+	
+	public static String inputDialog(Stage stage, String title, String header, String content, String textInput) {
+		return inputDialog(stage, title, header, content, textInput, 0, 0);
+	}
 
 	/**
 	 * Opens an input dialog for reading text from user.
@@ -23,12 +29,22 @@ public class DialogBoxes {
 	 * @param textInput The pre-written input text of the input dialog
 	 * @return
 	 */
-	public static String inputDialog(Stage stage, String title, String header, String content, String textInput) {
+	public static String inputDialog(Stage stage, String title, String header, String content, 
+			String textInput, int startSelection, int stopSelection) {
 		TextInputDialog dialog = new TextInputDialog(textInput);
 		dialog.setTitle(title);
 		dialog.setHeaderText(header);
 		dialog.setContentText(content);
+		TextField tf = dialog.getEditor();
 
+		Platform.runLater(() -> {
+			if (stopSelection <= 0) {
+				tf.selectRange(content.length() - 1, startSelection);
+			} else {
+				tf.selectRange(stopSelection, startSelection);
+			}
+		});
+		
 		Optional<String> result = dialog.showAndWait();
 		if (result.isPresent()){
 		   return result.get();

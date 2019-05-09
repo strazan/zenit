@@ -8,9 +8,17 @@
 	-fx-background-color:transparent;
 }
 
+#iconRun:hover {
+	-fx-opacity: 0.5;
+}
+
 
 #btnStop{
 	-fx-background-color:transparent;
+}
+
+#iconStop:hover {
+	-fx-opacity: 0.5;
 }
 
 #btnClearConsole {
@@ -20,10 +28,6 @@
 #btnClearConsole > *:hover {
 	-fx-fill: #666;
 	-fx-cursor: hand;
-}
-
-.tree-cell:hover, .tree-cell:hover > * {
-	-fx-background-color: #555 !important;
 }
 
 #menuBar {
@@ -118,7 +122,7 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #44444488;
+	-fx-background-color: #ff0000;
  }
  
  #treeView .thumb {

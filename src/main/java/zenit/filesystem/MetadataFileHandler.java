@@ -29,12 +29,15 @@ public class MetadataFileHandler extends FileHandler {
 		if (!success) {
 			throw new IOException("File already exist");
 		}
-		
-		String metadata = "-d \"bin\"\n"
-						+ "-sourcepath \"src\"";
 
 		BufferedWriter br = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(metadataFile), textEncoding));
-		br.write(metadata);
+		br.write("DIRECTORY");
+		br.newLine();
+		br.write("bin");
+		br.newLine();
+		br.write("SOURCEPATH");
+		br.newLine();
+		br.write("src");
 		br.flush();
 		br.close();
 	}

@@ -11,20 +11,25 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
+import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
-import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.javacodecompiler.DebugError;
+import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.javacodecompiler.ProcessBuffer;
+import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -43,7 +48,7 @@ public class MainController extends VBox {
 	private FileController fileController;
 
 	@FXML
-	private TextArea taConsole;
+	private AnchorPane consolePane;
 
 	@FXML
 	private MenuItem newFile;
@@ -77,6 +82,14 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
+	
+	@FXML
+	private ConsoleController consoleController;
+
+	private Label statusBarLeftLabel;
+	
+	@FXML
+	private Label statusBarRightLabel;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -91,10 +104,25 @@ public class MainController extends VBox {
 			 * selected workspace. Only prompts when unset and can be changed from within gui
 			 * Alex
 			 */
-			File workspace = WorkspaceHandler.readWorkspace();
+			
+			File workspace = null;
+			
+			try {
+				workspace = WorkspaceHandler.readWorkspace();
+			} catch (IOException ex) {
+				DirectoryChooser directoryChooser = new DirectoryChooser();
+				directoryChooser.setTitle("Select new workspace folder");
+				workspace = directoryChooser.showDialog(stage);
+			}
+			
 			FileController fileController = new FileController(workspace);
-
 			setFileController(fileController);
+			
+			if (workspace != null) {
+				// TODO: Log this
+				fileController.changeWorkspace(workspace);
+			}
+
 			loader.setRoot(this);
 			loader.setController(this);
 			loader.load();
@@ -126,9 +154,20 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
-		new ConsoleRedirect(taConsole);		
+
 		btnRun.setPickOnBounds(true);
+		btnRun.setOnAction(event -> compileAndRun());
 		initTree();
+	}
+	
+	/**
+	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 */
+	public void setTextSize() {
+		FileTab selectedTab = getSelectedTab();
+		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
+			new TextSizeController(selectedTab.getZenCodeArea());
+		}
 	}
 
 	/**
@@ -189,14 +228,25 @@ public class MainController extends VBox {
 		}
 	}
 	
+	/**
+	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
+	 */
 	public void commentsShortcutsTrigger() {
-	FileTab selectedTab = getSelectedTab();
+		FileTab selectedTab = getSelectedTab();
 		
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
 		}	
 	}
-
+	
+	public void navigateToCorrectTabIndex() {
+		FileTab selectedTab = getSelectedTab();
+		
+		if (selectedTab != null) {
+			selectedTab.navigateToCorrectTabIndex();
+		}
+	}
+	
 	/**
 	 * Grabs the text from the currently selected Tab and writes it to the currently
 	 * selected file. If no file selected, opens a file chooser for selection of
@@ -206,6 +256,10 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
+		return saveFile(true);
+	}
+	
+	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
 
@@ -216,15 +270,11 @@ public class MainController extends VBox {
 		boolean didWrite = fileController.writeFile(file, tab.getFileText());
 
 		if (didWrite) {
-			FileTreeItem<String> newNode = new FileTreeItem<String>(file, file.getName(), 0);
-
-			if (!treeView.getRoot().getChildren().stream()
-					.anyMatch(n -> n.getValue().equals(newNode.getFile().getName()))) {
-				treeView.getRoot().getChildren().add(newNode);
-			}
-
 			tab.update(file);
-//			backgroundCompiling(file);
+			
+			if (backgroundCompile) {
+				backgroundCompiling(file);
+			}
 		} else {
 			System.out.println("Did not write.");
 		}
@@ -232,16 +282,30 @@ public class MainController extends VBox {
 		return didWrite;
 	}
 	
+	/**
+	 * Compiles a file in the background.
+	 * @param file
+	 */
 	private void backgroundCompiling(File file) {
-		File projectFile = getMetadataFile(file);
+		File metadataFile = getMetadataFile(file);
 
 		try {
-			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-			if (file != null && projectFile != null) {
-				compiler.compileJavaFile(file, projectFile);
+			if (file != null) {
+				DebugErrorBuffer buffer = new DebugErrorBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this);
+				compiler.startCompile();
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
+		}
+	}
+	
+	public void errorHandler(DebugErrorBuffer buffer) {
+		DebugError error;
+		while (!buffer.isEmpty()) {
+			error = buffer.get();
+			
+			getSelectedTab().setStyle(error.getRow(), error.getColumn(), "underline");
 		}
 	}
 
@@ -320,7 +384,9 @@ public class MainController extends VBox {
 	 */
 	public File renameFile(File file) {
 		File newFile = null;
-		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", "new name");
+		int prefixPosition = file.getName().lastIndexOf('.');
+
+		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0, prefixPosition);
 		if (newName != null) {
 			newFile = fileController.renameFile(file, newName);
 			var tabs = tabPane.getTabs();
@@ -347,7 +413,7 @@ public class MainController extends VBox {
 	}
 
 	/**
-	 * Opens a input dialog to choose project name and then creates a new project
+	 * Opens an input dialog to choose project name and then creates a new project
 	 * with that name in the selected workspace folder
 	 * 
 	 * @param event
@@ -364,6 +430,12 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * Opens an input dialog to choose package name and then creates a new package
+	 * with that name in the selected folder (usually src).
+	 * @param parent Folder to create package in.
+	 * @return The created package if created, otherwise null.
+	 */
 	public File newPackage(File parent) {
 
 		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package",
@@ -378,7 +450,6 @@ public class MainController extends VBox {
 				return packageFile;
 			}
 		}
-
 		return null;
 	}
 
@@ -389,22 +460,35 @@ public class MainController extends VBox {
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
-			File projectFile = getMetadataFile(file);
-			saveFile(null);
-
+			File metadataFile = getMetadataFile(file);
+			saveFile(false);
+		
+		consoleController.newConsole(); //TODO: Maybe but in a better place ?
+		
 			try {
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-				if (file != null && projectFile != null) {
-					compiler.compileAndRunJavaFileInPackage(file, projectFile);
-				} else if (file != null) {
-					compiler.compileAndRunJavaFileWithoutPackage(file);
+				ProcessBuffer buffer = new ProcessBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
+				compiler.startCompileAndRun();
+				Process process = buffer.get();
+				if (process != null && process.isAlive()) {
+					//TODO Create new console tab from here.
 				}
+				
 			} catch (Exception e) {
 				e.printStackTrace();
 
 				// TODO: handle exception
 			}
+		
 		}
+	}
+	
+	public void updateStatusLeft(String text) {
+		statusBarLeftLabel.setText(text);
+	}
+	
+	public void updateStatusRight(String text) {
+		statusBarRightLabel.setText(text);
 	}
 	
 	/**
@@ -418,27 +502,40 @@ public class MainController extends VBox {
 		boolean isDarkMode = cmiDarkMode.isSelected();
 		var stylesheets = stage.getScene().getStylesheets();
 		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+		var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
 		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
 		
 		if (isDarkMode) {
-			stylesheets.add(darkMode);
+			if (stylesheets.contains(lightMode)) {
+				stylesheets.remove(lightMode);
+			}
 			
 			if (stylesheets.contains(lightModeKeywords)) {
 				stylesheets.remove(lightModeKeywords);
 			}
+			
+			stylesheets.add(darkMode);
 			stylesheets.add(darkModeKeywords);
 		} else {
-			// Currently the Light Mode is the default CSS.
-			stylesheets.remove(darkMode);
+			if (stylesheets.contains(darkMode)) {
+				stylesheets.remove(darkMode);
+			}
 			
 			if (stylesheets.contains(darkModeKeywords)) {
 				stylesheets.remove(darkModeKeywords);
 			}
+			
+			stylesheets.add(lightMode);
 			stylesheets.add(lightModeKeywords);
 		}
 	}
 
+	/**
+	 * Finds the metadata file for the project of a file.
+	 * @param file File within project to find metadata file in.
+	 * @return The found metadata file, null if not found.
+	 */
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
 		if (files != null) {
@@ -530,13 +627,6 @@ public class MainController extends VBox {
 		}
 	}
 
-	/**
-	 * Clears the text from console window.
-	 */
-	@FXML
-	private void clearConsole() {
-		taConsole.clear();
-	}
 
 	/**
 	 * Gets the currently selected tab on the tab pane.
@@ -588,13 +678,13 @@ public class MainController extends VBox {
 		File source = directoryChooser.showDialog(stage);
 		
 		if (source != null) {
-			File target = fileController.importProject(source);
-			if (target == null) {
-				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
-						"An error occured while trying to import project");
-			} else {
+			try {
+				File target = fileController.importProject(source);
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
 				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
+			} catch (IOException ex) {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
+						ex.getMessage());
 			}
 		}
 	}
