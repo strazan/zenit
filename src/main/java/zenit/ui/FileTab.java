@@ -101,7 +101,7 @@ public class FileTab extends Tab {
 			caretPosition - 4, caretPosition).equals("main")) 
 		{
 			zenCodeArea.replaceText(
-				caretPosition - 4, caretPosition, "public static void main(String[]Â args) {\n \n}"
+				caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}"
 			);
 			zenCodeArea.moveTo(caretPosition + 37);
 		}
