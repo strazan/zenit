@@ -1,243 +1,299 @@
 package main.java.zenit.javacodecompiler;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
+import java.util.concurrent.Executors;
+import java.util.regex.Matcher;
 
-import org.apache.commons.exec.CommandLine;
-import org.apache.commons.exec.DefaultExecutor;
-import org.apache.commons.exec.ExecuteException;
+import main.java.zenit.ui.MainController;
 
 /**
  * 
- * JavaSourceCodeCompiler compiles and runs / compiles a [Foo.java] file via terminal using the 
- * javac compiler. Java Virtual machine needs to be installed on the machine for the compiler
- * to work.  
+ * JavaSourceCodeCompiler creates commands for compiling and running java files using a java-class
+ * with a main-method a metadata-file (if more than one class is used) and can either compile in 
+ * the background or compile and run, redirecting process streams.
  * 
- * @author Sigge Labor
+ * Uses {@link CommandBuilder} to build commands and runs them using {@link TerminalHelpers}.
+ * 
+ * Java Virtual Machine needs to be installed on the machine for the compiler to work. 
+ * Also the correct compiler and java_home paths must be configured.
+ * 
+ * TODO Change JRE version before compiling/running
+ * 
+ * @author Sigge Labor, Alexander Libot
  *
  */
 public class JavaSourceCodeCompiler {
-
-	private DefaultExecutor executor = new DefaultExecutor();
-	private char slash;
-
-	public JavaSourceCodeCompiler() {
-		slash = System.getProperty("os.name").startsWith("Windows") ? '\\' : '/';
-	}
 	
-	/** 
-	 * starts a new thread where a .java file (in a defined package) will be compiled into chosen
-	 * directory and executed
-	 * @param file to be compiled and executed
-	 * @param targetDirectoryPath
-	 */
-//	public void compileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
-//		new CompileAndRunJavaFileInPackage(file, targetDirectoryPathIn);
-//	}
-	public void compileAndRunJavaFileInPackage(File file, File metadata) {
-		new CompileAndRunJavaFileInPackage(file, metadata).start();
-	}
-
-	/** 
-	 * starts a new thread where a .java file (without a defined package) will be compiled into
-	 * chosen directory and executed
-	 * @param file to be compiled and executed
-	 * @param targetDirectoryPath
-	 */
-	public void compileAndRunJavaFileWithoutPackage(File file, String targetDirectoryPathIn) {
-		new CompileAndRunJavaFileWithoutPackage(file, targetDirectoryPathIn).start();
-	}
-	
-	/** 
-	 * starts a new thread where the file will be compiled into chosen directory.
-	 * @param file to be compiled and executed
-	 * @param targetDirectoryPath
-	 */
-	public void compileJavaFile(File file, String targetDirectoryPathIn) {
-		new CompileJavaFile(file, targetDirectoryPathIn).start();
-	}
+	protected File file;
+	protected File metadata;
+	protected boolean inBackground;
+	protected Buffer<?> buffer;
+	protected MainController cont;
 
 	/**
-	 * Compiles and runs a [Foo.java] file, placed in a package.
-	 * 
-	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
-	 * method is. 
-	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
-	 * @param dependenciesPath are the paths to dependent libraries.
+	 * Creates a new JavaSourceCodeCompiler for single classes without metadata-file.
+	 * @param file The class to be compiled
+	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
-//	public class CompileAndRunJavaFileInPackage extends Thread {
-//		private File file;
-//		private String targetDirectoryPathIn;
-//
-//		public CompileAndRunJavaFileInPackage(File file, String targetDirectoryPathIn) {
-//			this.file = file;
-//			this.targetDirectoryPathIn = targetDirectoryPathIn;
-//		}
-//
-//		public void run() {
-//			String absolutePath = file.getAbsolutePath();
-//			String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
-//			String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
-//			CommandLine clCompileJavaFile = CommandLine.parse(
-//					"javac -cp src \"" + absolutePath + "\" -d \"" + targetDirectoryPath + "\""
-//					);
-//			CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-//					"java -classpath \"" + System.getProperty(
-//							"java.home") + "\" \"" + targetDirectoryPath + fileName + "\""
-//					);	
-//			try {
-//				executor.execute(clCompileJavaFile);
-//				executor.execute(clRunJavaByteCodeFile);
-//			} catch (ExecuteException e) {
-//				System.err.println("Compile and run file failed. The file was: " + absolutePath);
-//				e.printStackTrace();
-//			} catch (IOException e) {
-//				System.err.println("Something went wrong.");
-//				e.printStackTrace();
-//			}
-//		}
-//	}
+	public JavaSourceCodeCompiler(File file, boolean inBackground) {
+		this(file, null, inBackground, null, null);
+	}
 	
 	/**
-	 * Compiles and runs a java file using the .metadata file in project folder.
-	 * 
-	 * @param runFile The file to run, must contain main-method
-	 * @param projectFile The folder of the project. Must contain a .metadata file
-	 * with directory and sourcepath flags and directories and a bin folder.
+	 * Creates a new JavaSourceCodeCompiler for multiple classes in a project structure using
+	 * a metadata-file.
+	 * @param file The class containing the main-method to be run.
+	 * @param metadata A file containing metadata about the classes to be run, such as directory
+	 * sourcepath and library buildpaths.
+	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
-	public class CompileAndRunJavaFileInPackage extends Thread {
-		private File runFile;
-		private File projectFile;
+	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont) {
+		this.file = file;
+		this.metadata = metadata;
+		this.inBackground = inBackground;
+		this.buffer = buffer;
+		this.cont = cont;
+	}
+	
+	/**
+	 * Starts a new thread to compile.
+	 */
+	public void startCompile() {
+		new Compile().start();	
+	}
+	
+	/**
+	 * Starts a new thread to compile and run.
+	 */
+	public void startCompileAndRun() {
+		new CompileAndRun().start();
+	}
+	
+	/**
+	 * Class for creating commands for compiling, and redirecting process-streams.
+	 */
+	private class Compile extends Thread {
+		protected File sourcepath;
+		protected File directory;
+		protected File runPath;
+		protected File projectFile;
 
-		public CompileAndRunJavaFileInPackage(File runFile, File projectFile) {
-			this.runFile = runFile;
-			this.projectFile = projectFile;
+		/**
+		 * Only to be called via {@link Thread#start()}.
+		 * Decodes metadata, and runs {@link #compileInPackage()}.
+		 * If no metadata is provided, runs {@link #compile()}.
+		 */
+		public void run() {
+			if (metadata != null) {
+				decodeMetadata();
+				createProjectPath();
+				compileInPackage();
+			} else {
+				compile();
+			}
+			
+			if (inBackground && buffer instanceof DebugErrorBuffer) {
+				DebugErrorBuffer deb = (DebugErrorBuffer) buffer;
+				cont.errorHandler(deb);
+			}	
+		}
+		
+		/**
+		 * Creates a path to the project file using metadata-file.
+		 */
+		protected void createProjectPath() {
+			projectFile = metadata.getParentFile();
 		}
 
-		public void run() {
-			//Creates runPath within project folder
-			String runPath = runFile.getPath();
+		/**
+		 * Decodes the metadata-file to create directory and sourcepath.
+		 * TODO Add libraries
+		 */
+		protected void decodeMetadata() {
+			try (BufferedReader br = new BufferedReader(new FileReader(metadata))) {
+				String line = br.readLine();
+				while (line != null) {
+					if (line.equals("DIRECTORY")) {
+						directory = new File(br.readLine());
+					} else if (line.equals("SOURCEPATH")) {
+						sourcepath = new File (br.readLine());
+					}
+					line = br.readLine();
+				}
+			} catch (IOException ex) {
+				System.err.println(ex.getMessage());
+			}
+		}
+
+		/**
+		 * Builds a command using {@link CommandBuilder} to compile a single file
+		 * and executes command using {@link #executeCommand(String, File)} redirects
+		 * process streams using {@link #redirectStreams(Process)} and returns process.
+		 * @return Executed process.
+		 */
+		protected Process compile() {
+
+			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setRunPath(file.getPath());
+
+			String command = cb.generateCommand();
+			Process process = executeCommand(command, null);
+			redirectStreams(process);
+			return process;
+		}
+
+		/**
+		 * Builds a command using {@link CommandBuilder} to compile multiple files.
+		 * and executes command using {@link #executeCommand(String, File)} redirects
+		 * process streams using {@link #redirectStreams(Process)} and returns process.
+		 * @return Executed process.
+		 */
+		protected Process compileInPackage() {
+			runPath = new File(createRunPathInProject());
+
+			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setRunPath(runPath.getPath());
+			cb.setDirectory(directory.getPath());
+			cb.setSourcepath(sourcepath.getPath());
+
+			String command = cb.generateCommand();
+			Process process = executeCommand(command, projectFile);
+			redirectStreams(process);
+			return process;
+		}
+
+		/**
+		 * Executes a command in a directory using {@link TerminalHelpers}.
+		 * @param command Command to be executed.
+		 * @param projectFile Directory to execute command in.
+		 * @return The process created from executing command.
+		 */
+		protected Process executeCommand(String command, File projectFile) {
+			if (inBackground) {
+				DebugErrorBuffer deb = null;
+				if (buffer != null && buffer instanceof DebugErrorBuffer) {
+					deb = (DebugErrorBuffer) buffer;
+				}
+				return TerminalHelpers.runBackgroundCommand(command, projectFile, deb);
+			} else {
+				return TerminalHelpers.runCommand(command, projectFile);
+			}
+		}
+
+		/**
+		 * Modifies the run path by removing directories before project file.
+		 * @return Modified run path.
+		 */
+		protected String createRunPathInProject() {
+			File projectFile = metadata.getParentFile();
+			String runPath = file.getPath();
 			String projectPath = projectFile.getPath();
-			runPath = runPath.replaceAll(projectPath+"/", "");
 
-			//Creates command for compiling
-			String command = "javac " + runPath + " @.metadata";
+			runPath = runPath.replaceAll(Matcher.quoteReplacement(projectPath + File.separator), "");
 
-			//Runs command
-			TerminalHelpers.runCommand(command, projectFile);
-			
-			//Creates runPath without extension from package
-			runPath = runPath.replaceAll("src/", "");
-			runPath = runPath.replaceAll(".java", "");
-			
-			//Creates command for running
-			command = "java " + runPath;
-			
-			//Creates new directory folder, bin-folder
-			File binFile = new File(projectFile.getPath() + "/bin");
+			return runPath;
+		}
 
-			//Runs command
-			TerminalHelpers.runCommand(command, binFile);
-			
+		/**
+		 * Redirects the input stream and error stream from process to System.out and
+		 * System.error.
+		 * @param process Process to redirect streams from.
+		 */
+		protected void redirectStreams(Process process) {
+			StreamRedirector inStream = new StreamRedirector(process.getInputStream(), System.out::println);
+			StreamRedirector errorStream = new StreamRedirector(process.getErrorStream(), System.err::println);
+
+			Executors.newSingleThreadExecutor().submit(inStream);
+			Executors.newSingleThreadExecutor().submit(errorStream);
 		}
 	}
 
 	/**
-	 * Compiles and runs [Foo.java] file that is not placed in a package.
-	 * 
-	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
-	 * method is. 
-	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
-	 * @param dependenciesPath are the paths to dependent libraries.
-	 */	
-	private class CompileAndRunJavaFileWithoutPackage extends Thread {
-		private String targetDirectoryPathIn;
-		private File file;
-
-		public CompileAndRunJavaFileWithoutPackage(File file, String targetDirectoryPathIn) {
-			this.file = file;
-			this.targetDirectoryPathIn = targetDirectoryPathIn;
-		}
-
+	 * Class for creating command for compiling, running compiled code
+	 * and redirecting process-streams.
+	 */
+	private class CompileAndRun extends Compile {
+		
 		public void run() {
-			String absolutePath = file.getAbsolutePath();
-			String fileName = absolutePath.substring(absolutePath.lastIndexOf(slash) + 1).trim();
-			fileName = fileName.substring(0,(fileName.lastIndexOf('.')));
-			CommandLine clCompileJavaFile = CommandLine.parse(
-					"javac \"" + absolutePath + "\" -d \"" + targetDirectoryPathIn + "\""
-					);
-			CommandLine clRunJavaByteCodeFile = CommandLine.parse(
-					"java -classpath \"" + System.getProperty("java.home") + "\" -cp \"" + targetDirectoryPathIn  + "\" \"" + fileName + "\""
-					);
-			try {
-				executor.execute(clCompileJavaFile);
-				executor.execute(clRunJavaByteCodeFile);
-			} catch (ExecuteException e) {
-				System.err.println("Compile and run file failed. The file was: " + absolutePath);
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.err.println("Something went wrong.");
-				e.printStackTrace();
+			Process process;
+			if (metadata != null) {
+				decodeMetadata();
+				createProjectPath();
+				process = compileInPackage();
+				
+				if (isCompiled(process)) {
+					process = runFileInPackage();
+				}
+			} else {
+				process = compile();
+				if (isCompiled(process)) {
+					process = runFile();
+				}
+			}
+			
+			if (buffer != null && buffer instanceof ProcessBuffer) {
+				ProcessBuffer pb = (ProcessBuffer) buffer;
+				pb.put(process);
 			}
 		}
-	}
-
-	/**
-	 * Compiles a [Foo.java] file into a target directory.
-	 * 
-	 * @param absolutePath to the [Foo.java] file, including full file name, where the main 
-	 * method is. 
-	 * @param targetDirectoryIn is directory where the compiled [Foo.class] file will be placed.
-	 * @param dependenciesPath are the paths to dependent libraries.
-	 */
-	private class CompileJavaFile extends Thread {
-		private String targetDirectoryPathIn;
-		private File file;
-
-		public CompileJavaFile(File file, String targetDirectoryPathIn) {
-			this.file = file;
-			this.targetDirectoryPathIn = targetDirectoryPathIn;
-		}
-		public void run() {
-			String absolutePath = file.getAbsolutePath();
-			String targetDirectoryPath = formatDirectoryPath(targetDirectoryPathIn);
-			CommandLine clCompileJavaFile = CommandLine.parse(
-					"javac " + absolutePath + " -d " + targetDirectoryPath
-					);
+		
+		private boolean isCompiled(Process process) {
+			int exitValue = -1;
 			try {
-				executor.execute(clCompileJavaFile);
-			} catch (ExecuteException e) {
-				System.err.println("Compile and run file failed. The file was: " + absolutePath);
-				e.printStackTrace();
-			} catch (IOException e) {
-				System.err.println("Something went wrong.");
+				exitValue = process.waitFor();
+			} catch (InterruptedException e) {
 				e.printStackTrace();
 			}
+			
+			if (exitValue == 0) {
+				return true;
+			} else {
+				return false;
+			}
 		}
-	}
-
-	/**
-	 * NOT COMPLETE
-	 * 
-	 * prob. better to put in threads
-	 */
-	public void terminate() {
-
-	}
-
-	/**
-	 * Takes a (String) directory-path and correct it if it misses the final '/'. 
-	 * 
-	 * @param directoryIn
-	 * @return finalDirectory
-	 */
-	private synchronized String formatDirectoryPath(String targetDirectoryPathIn) {
-		String finalDirectoryPath = targetDirectoryPathIn;
-
-		if ((finalDirectoryPath.charAt(finalDirectoryPath.length() - 1)) != slash) {
-			finalDirectoryPath += slash;
+		
+		private Process runFile() {
+			runPath = new File(createRunPathForRunning(file.getName()));
+			
+			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setRunPath(runPath.getPath());
+			
+			String command = cb.generateCommand();
+			
+			Process process = executeCommand(command, file.getParentFile());
+			redirectStreams(process);
+			
+			return process;
 		}
+		
+		private Process runFileInPackage() {
+			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
+			
+			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setRunPath(runPath.getPath());
+			
+			String command = cb.generateCommand();
 
-		return finalDirectoryPath;
+			// Creates new directory folder, bin-folder
+			File binFile = new File(projectFile.getPath() + File.separator + "bin");
+			
+			Process process = executeCommand(command, binFile);
+
+			// Runs command
+			redirectStreams(process);
+			
+			return process;
+		}
+		
+		private String createRunPathForRunning(String runPath) {
+			String newRunPath;
+			newRunPath = runPath.replaceAll(Matcher.quoteReplacement("src" + File.separator), "");
+			newRunPath = newRunPath.replaceAll(".java", "");
+			
+			return newRunPath;
+		}	
 	}
 }

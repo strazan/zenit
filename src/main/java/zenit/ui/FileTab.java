@@ -1,18 +1,19 @@
 package main.java.zenit.ui;
 
 import java.io.File;
+import java.util.Arrays;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
+import main.java.zenit.filesystem.FileController;
+import main.java.zenit.zencodearea.ZenCodeArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 
-import main.java.zenit.filesystem.FileController;
-import main.java.zenit.zencodearea.ZenCodeArea;
 import main.java.zenit.util.StringUtilities;
 
 /**
@@ -68,6 +69,21 @@ public class FileTab extends Tab {
 		Platform.runLater(zenCodeArea::requestFocus);
 	}
 	
+	public void setStyle(int row, int column, String style) {
+		
+		int columnLength = zenCodeArea.getParagraph(row-1).getText().length();
+		
+		if (column >= columnLength) {
+			Platform.runLater(()->
+			zenCodeArea.setStyle(row-1,column-1,column,Arrays.asList(style)));
+		} else {
+			Platform.runLater(()->
+			zenCodeArea.setStyle(row-1,column,column+1,Arrays.asList(style)));
+		}
+		
+		
+	}
+	
 	public void addTextPropertyListener(ChangeListener<? super String> listener) {
 		zenCodeArea.textProperty().addListener(listener);
 	}
@@ -101,7 +117,7 @@ public class FileTab extends Tab {
 			caretPosition - 4, caretPosition).equals("main")) 
 		{
 			zenCodeArea.replaceText(
-				caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}"
+				caretPosition - 4, caretPosition, "public static void main(String[]args) {\n \n}"
 			);
 			zenCodeArea.moveTo(caretPosition + 37);
 		}

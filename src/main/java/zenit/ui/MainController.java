@@ -15,9 +15,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
@@ -28,7 +26,10 @@ import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.javacodecompiler.DebugError;
+import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
@@ -121,7 +122,7 @@ public class MainController extends VBox {
 			
 			if (workspace != null) {
 				// TODO: Log this
-				boolean success = fileController.changeWorkspace(workspace);
+				fileController.changeWorkspace(workspace);
 			}
 
 			loader.setRoot(this);
@@ -257,6 +258,10 @@ public class MainController extends VBox {
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
+		return saveFile(true);
+	}
+	
+	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
 
@@ -268,11 +273,42 @@ public class MainController extends VBox {
 
 		if (didWrite) {
 			tab.update(file);
+			
+			if (backgroundCompile) {
+				backgroundCompiling(file);
+			}
 		} else {
 			System.out.println("Did not write.");
 		}
 
 		return didWrite;
+	}
+	
+	/**
+	 * Compiles a file in the background.
+	 * @param file
+	 */
+	private void backgroundCompiling(File file) {
+		File metadataFile = getMetadataFile(file);
+
+		try {
+			if (file != null) {
+				DebugErrorBuffer buffer = new DebugErrorBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this);
+				compiler.startCompile();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void errorHandler(DebugErrorBuffer buffer) {
+		DebugError error;
+		while (!buffer.isEmpty()) {
+			error = buffer.get();
+			
+			getSelectedTab().setStyle(error.getRow(), error.getColumn(), "underline");
+		}
 	}
 
 	/**
@@ -331,6 +367,7 @@ public class MainController extends VBox {
 	 */
 	public void openFile(File file) {
 		if (file != null && getTabFromFile(file) == null) {
+			
 			FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 
@@ -376,7 +413,7 @@ public class MainController extends VBox {
 	}
 
 	/**
-	 * Opens a input dialog to choose project name and then creates a new project
+	 * Opens an input dialog to choose project name and then creates a new project
 	 * with that name in the selected workspace folder
 	 * 
 	 * @param event
@@ -393,6 +430,12 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * Opens an input dialog to choose package name and then creates a new package
+	 * with that name in the selected folder (usually src).
+	 * @param parent Folder to create package in.
+	 * @return The created package if created, otherwise null.
+	 */
 	public File newPackage(File parent) {
 
 		String packageName = DialogBoxes.inputDialog(null, "New package", "Create new package",
@@ -416,29 +459,29 @@ public class MainController extends VBox {
 	 * same folder/directory, and the executed with only java standard lib.
 	 */
 	public void compileAndRun() {
-		if (getSelectedTab() == null) {
-			return;
-		}
-		
-		File file = getSelectedTab().getFile();
-		File projectFile = getMetadataFile(file);
-		saveFile(null);
+		if (getSelectedTab() != null) {
+			File file = getSelectedTab().getFile();
+			File metadataFile = getMetadataFile(file);
+			saveFile(false);
 		
 		consoleController.newConsole(); //TODO: Maybe but in a better place ?
 		
-		try {
-			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler();
-			if (file != null && projectFile != null) {
-				compiler.compileAndRunJavaFileInPackage(file, projectFile);
-			} else if (file != null) {
-				compiler.compileAndRunJavaFileWithoutPackage(file, file.getParent());
-			}
-		} catch (Exception e) {
-			e.printStackTrace();
+			try {
+				ProcessBuffer buffer = new ProcessBuffer();
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
+				compiler.startCompileAndRun();
+				Process process = buffer.get();
+				if (process != null && process.isAlive()) {
+					//TODO Create new console tab from here.
+				}
+				
+			} catch (Exception e) {
+				e.printStackTrace();
 
-			// TODO: handle exception
-		}
+				// TODO: handle exception
+			}
 		
+		}
 	}
 	
 	public void updateStatusLeft(String text) {
@@ -489,12 +532,17 @@ public class MainController extends VBox {
 		}
 	}
 
+	/**
+	 * Finds the metadata file for the project of a file.
+	 * @param file File within project to find metadata file in.
+	 * @return The found metadata file, null if not found.
+	 */
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
 		if (files != null) {
 			for (File entry : files) {
 				if (entry.getName().equals(".metadata")) {
-					return entry.getParentFile();
+					return entry;
 				}
 			}
 		}

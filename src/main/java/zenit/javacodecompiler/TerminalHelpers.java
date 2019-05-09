@@ -3,10 +3,8 @@ package main.java.zenit.javacodecompiler;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.concurrent.Executors;
-import java.util.function.Consumer;
+import java.util.ArrayList;
 
 /**
  * Contains static helper methods to run shellscripts in terminal
@@ -15,7 +13,9 @@ import java.util.function.Consumer;
  */
 public class TerminalHelpers {
 	
-	//TODO Only works on UNIX atm
+	protected static Process runCommand(String command) {
+		return runCommand(command, null);
+	}
 	
 	/**
 	 * Tries to run the {@code command} in {@code directory} in the terminal.
@@ -23,7 +23,7 @@ public class TerminalHelpers {
 	 * @param command The command to be run in terminal
 	 * @param directory The directory to run the command in
 	 */
-	protected static void runCommand(String command, File directory) {
+	protected static Process runCommand(String command, File directory) {
 		try {
 			ProcessBuilder builder = new ProcessBuilder();
 			if (System.getProperty("os.name").startsWith("Windows")) {
@@ -35,41 +35,69 @@ public class TerminalHelpers {
 			builder.directory(directory);
 
 			Process process = builder.start();
-			StreamGobbler streamGobbler = new StreamGobbler(process.getInputStream(), System.out::println);
-			Executors.newSingleThreadExecutor().submit(streamGobbler);
-            
-//			int exitCode = process.waitFor();
-//			assert exitCode == 0;
-
+			
+			return process;
+			
 		} catch (IOException ex) {
 			ex.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
+			return null;
 		}
 	}
 	
-	/**
-	 * Used to print terminal output in consumers
-	 * @author Alexander Libot
-	 *
-	 */
-	protected static class StreamGobbler implements Runnable {
-		private InputStream inputStream;
-		private Consumer<String> consumer;
-		
-		/**
-		 * Creates a new StreamGobbler
-		 * @param inputStream inputstream to print
-		 * @param consumer Consumers to print inputStream messages to
-		 */
-		public StreamGobbler(InputStream inputStream, Consumer<String> consumer) {
-			this.inputStream = inputStream;
-			this.consumer = consumer;
-		}
-		
-		public void run() {
-			new BufferedReader(new InputStreamReader(inputStream)).lines().forEach(consumer);
-		}
+	protected static Process runBackgroundCommand(String command, DebugErrorBuffer buffer) {
+		return runBackgroundCommand(command, null, buffer);
 	}
+	
+	protected static Process runBackgroundCommand(String command, File directory, DebugErrorBuffer buffer) {
+		Process process = runCommand(command, directory);
+		
+		try {
+			process.waitFor();
+			
+			BufferedReader reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+			String line;
+			String place;
+			String problemType;
+			String problem;
+			int row;
+			int column;
+			
+			ArrayList<DebugError> errors = new ArrayList<>();
+			DebugError error;
+			
+			try {
+				while ((line = reader.readLine()) != null) {
 
+					int colon1Index = line.indexOf(':');
+					int colon2Index = line.indexOf(':', colon1Index + 1);
+					int colon3Index = line.indexOf(':', colon2Index + 1);
+
+					place = line.substring(0, colon1Index);
+					row = Integer.parseInt(line.substring(colon1Index + 1, colon2Index));
+					problemType = line.substring(colon2Index + 1, colon3Index);
+					problem = line.substring(colon3Index + 2);
+
+					line = reader.readLine();
+					line = reader.readLine();
+					column = line.indexOf('^');
+
+					error = new DebugError(place, problemType, problem, row, column);
+					errors.add(error);
+				}
+			} catch (NumberFormatException | IndexOutOfBoundsException ex) {
+
+			}
+			
+			if (buffer != null) {
+				for (DebugError de : errors) {
+					buffer.put(de);
+				}
+			}
+			
+		} catch (IOException | InterruptedException ex) {
+			ex.printStackTrace();
+		}
+		
+		return process;
+	}
 }
