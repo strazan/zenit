@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import main.java.zenit.filesystem.FileController;
@@ -12,6 +13,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
+
+import main.java.zenit.filesystem.FileController;
+import main.java.zenit.zencodearea.ZenCodeArea;
+import main.java.zenit.util.StringUtilities;
 
 /**
  * A Tab extension that holds a File.
@@ -59,6 +64,7 @@ public class FileTab extends Tab {
 			hasChanged = !initialFileContent.equals(newText);
 			updateUI();
 		});
+
 		setStyle("-fx-background-color: #444;");
 		setStyle("-fx-stroke: #fff;");
 		
@@ -70,6 +76,10 @@ public class FileTab extends Tab {
 //		zenCodeArea.setStyle(row, column, column, Arrays.asList(style));
 		Platform.runLater(()->
 		zenCodeArea.setStyle(row-1,column-1,column,Arrays.asList(style)));
+	}
+	
+	public void addTextPropertyListener(ChangeListener<? super String> listener) {
+		zenCodeArea.textProperty().addListener(listener);
 	}
 	
 	/**
@@ -91,11 +101,17 @@ public class FileTab extends Tab {
 			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.out.println();");
 			zenCodeArea.moveTo(caretPosition + 13);
 		}
+		else if (caretPosition >= 6 && text.substring(
+			caretPosition - 6, caretPosition).equals("syserr")) 
+		{
+			zenCodeArea.replaceText(caretPosition - 6, caretPosition, "System.err.println();");
+			zenCodeArea.moveTo(caretPosition + 13);
+		}
 		else if (caretPosition >= 4 && text.substring(
 			caretPosition - 4, caretPosition).equals("main")) 
 		{
 			zenCodeArea.replaceText(
-				caretPosition - 4, caretPosition, "public static void main(String[] args) {\n \n}"
+				caretPosition - 4, caretPosition, "public static void main(String[]args) {\n \n}"
 			);
 			zenCodeArea.moveTo(caretPosition + 37);
 		}
@@ -135,6 +151,53 @@ public class FileTab extends Tab {
 		}
 		else {
 			zenCodeArea.replaceText(caretPosition, caretPosition, "\n");
+		}
+	}
+	
+	/**
+	 * Checks what tab index the new line should begin at. Also adds a } if needed.
+	 * @author Pontus Laos
+	 */
+	public void navigateToCorrectTabIndex() {
+		int previousLine = zenCodeArea.getCurrentParagraph() - 1;
+		String previousText = zenCodeArea.getParagraph(previousLine).getText();
+		
+		int count = StringUtilities.countLeadingSpaces(previousText);
+		
+		String spaces = "";
+		for (int i = 0; i < count; i++) {
+			spaces += " ";
+		}
+		
+		if (previousText.endsWith("{")) {
+			spaces += "    "; // lol
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), spaces);
+			addMissingCurlyBrace(previousLine + 2, 0, spaces);
+		} else {
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), spaces);
+		}
+	}
+	
+	/**
+	 * Adds a curly brace on the appropriate line if one is missing.
+	 * @param row The row (line number) to add the curly brace to.
+	 * @param column The column to add the curly brace to.
+	 * @param spaces The amount of spaces to add before the curly brace.
+	 * @author Pontus Laos
+	 */
+	private void addMissingCurlyBrace(int row, int column, String spaces) {
+		int[] counts = {
+			StringUtilities.count(zenCodeArea.getText(), '{'),
+			StringUtilities.count(zenCodeArea.getText(), '}'),
+		};
+		
+		if (counts[0] == counts[1] + 1) {
+			zenCodeArea.insertText(zenCodeArea.getCaretPosition(), "\n");
+			zenCodeArea.insertText(
+				row, column, 
+				spaces.substring(0, spaces.length() - 4) + "}"
+			);
+			zenCodeArea.moveTo(row - 1, spaces.length());
 		}
 	}
 	
@@ -209,6 +272,10 @@ public class FileTab extends Tab {
 		return hasChanged;
 	}
 		
+	public ZenCodeArea getZenCodeArea() {
+		return zenCodeArea;
+		
+	}
 	/**
 	 * Shows a confirm dialog and performs a corresponding action to whether the user 
 	 * chose OK, Cancel, or No.

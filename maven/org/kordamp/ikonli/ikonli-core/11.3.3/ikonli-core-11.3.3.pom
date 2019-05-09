@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.kordamp.ikonli</groupId>
+  <artifactId>ikonli-core</artifactId>
+  <version>11.3.3</version>
+  <name>Ikonli</name>
+  <description>Icon packs for Java applications</description>
+  <url>https://github.com/aalmiray/ikonli</url>
+  <inceptionYear>2015</inceptionYear>
+  <licenses>
+    <license>
+      <name>Apache-2.0</name>
+      <url>https://spdx.org/licenses/Apache-2.0.html</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <id>aalmiray</id>
+      <name>Andres Almiray</name>
+      <roles>
+        <role>developer</role>
+      </roles>
+    </developer>
+  </developers>
+  <scm>
+    <url>https://github.com/aalmiray/ikonli.git</url>
+  </scm>
+</project>
