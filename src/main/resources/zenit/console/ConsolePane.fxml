@@ -10,7 +10,7 @@
 
 <AnchorPane id="rootNode" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color: #333;" stylesheets="@consoleStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.zenit.console.ConsoleController">
    <children>
-      <AnchorPane fx:id="rootAnchor" layoutY="33.0" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color:#444" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane fx:id="rootAnchor" layoutY="33.0" prefHeight="300.0" prefWidth="700.0" style="-fx-background-color:#444" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
          <children>
             <Text layoutX="291.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Nothing to display." textAlignment="CENTER" AnchorPane.topAnchor="30.0">
                <font>
