@@ -123,6 +123,19 @@ public class ProjectHandler extends FolderHandler {
 		
 		destinationFile = Files.copy(sourceFile.toPath(), destinationFolder.toPath()).toFile();
 		
+		File[] files = destinationFolder.getParentFile().getParentFile().listFiles();
+		File metadata = null;
+		
+		for (File file : files) {
+			if (file.getName().equals(".metadata")) {
+				metadata = file;
+			}
+		}
+	
+		if (metadata != null) {
+			MetadataFileHandler.addLibraryDependency(metadata, destinationFolder);
+		}
+		
 		if (destinationFile == null) {
 			throw new IOException(sourceFile.getName() + " couldn't be imported");
 		}

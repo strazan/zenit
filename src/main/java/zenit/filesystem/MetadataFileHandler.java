@@ -1,10 +1,14 @@
 package main.java.zenit.filesystem;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.util.ArrayList;
 
 /**
  * Method for creating a metadata file used during compilation
@@ -40,6 +44,43 @@ public class MetadataFileHandler extends FileHandler {
 		br.write("src");
 		br.flush();
 		br.close();
+	}
+	
+	protected static void addLibraryDependency(File metadata, File library) throws IOException {
+		BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(metadata), textEncoding)); 
+		
+		ArrayList<String> lines = new ArrayList<String>();
+		String line;
+		while ((line = br.readLine()) != null && !line.equals("LIBRARIES")) {
+			lines.add(line);
+		}
+		
+		if (line == null || !line.equals("LIBRARIES")) {
+			lines.add("LIBRARIES");
+		}
+		String libraryPath = library.getPath();
+		File projectFile = metadata.getParentFile();
+		String projectName = projectFile.getName();
+		
+		libraryPath = libraryPath.substring(libraryPath.lastIndexOf(projectName));
+		libraryPath = libraryPath.substring(libraryPath.indexOf("lib"));
+		
+		lines.add(libraryPath);
+		
+		while ((line = br.readLine()) != null) {
+			lines.add(line);
+		}
+		
+		br.close();
+		
+		BufferedWriter bw = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(metadata), textEncoding)); 
+		
+		for (String writeLine : lines) {
+			bw.write(writeLine);
+			bw.newLine();
+		}
+		
+		bw.close();
 	}
 	
 	//TODO Ability to add classpath when importing libraries

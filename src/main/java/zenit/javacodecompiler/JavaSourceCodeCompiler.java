@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
@@ -80,6 +81,7 @@ public class JavaSourceCodeCompiler {
 		protected File directory;
 		protected File runPath;
 		protected File projectFile;
+		protected ArrayList<File> libraries;
 
 		/**
 		 * Only to be called via {@link Thread#start()}.
@@ -120,6 +122,14 @@ public class JavaSourceCodeCompiler {
 						directory = new File(br.readLine());
 					} else if (line.equals("SOURCEPATH")) {
 						sourcepath = new File (br.readLine());
+					} else if (line.equals("LIBRARIES")) {
+						libraries = new ArrayList<File>();
+						
+						line = br.readLine();
+						while (line != null) {
+							libraries.add(new File(line));
+							line = br.readLine();
+						}	
 					}
 					line = br.readLine();
 				}
@@ -158,6 +168,13 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(runPath.getPath());
 			cb.setDirectory(directory.getPath());
 			cb.setSourcepath(sourcepath.getPath());
+			
+			File[] librariesArray = new File[libraries.size()];
+			int counter = 0;
+			for (File library : libraries) {
+				librariesArray[counter++] = library;
+			}
+			cb.setLibraries(librariesArray);
 
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);

@@ -31,6 +31,8 @@ public class TerminalHelpers {
 			} else {
 				builder.command("sh", "-c", command);
 			}
+			
+			System.out.println(command);
 
 			builder.directory(directory);
 
