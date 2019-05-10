@@ -215,8 +215,8 @@ public class ConsoleController implements Initializable {
 		darkConfig.setForegroundColor(Color.WHITE);
 		darkConfig.setCursorBlink(true);
 		darkConfig.setCursorColor(Color.WHITE);
-//		darkConfig.setFontFamily("consolas");
-		darkConfig.setFontSize(12);
+		darkConfig.setFontFamily("Ubuntu Mono");
+		darkConfig.setFontSize(14);
 		
 		
 		Terminal terminal = new Terminal(darkConfig, FileSystems.getDefault().getPath(".").toAbsolutePath());
