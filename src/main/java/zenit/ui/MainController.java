@@ -269,6 +269,7 @@ public class MainController extends VBox {
 
 		if (didWrite) {
 			tab.update(file);
+			FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), file);
 			
 			if (backgroundCompile) {
 				backgroundCompiling(file);

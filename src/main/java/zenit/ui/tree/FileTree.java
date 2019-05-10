@@ -1,6 +1,8 @@
 package main.java.zenit.ui.tree;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.Comparator;
 
 import javafx.scene.control.TreeItem;
 
@@ -26,6 +28,8 @@ public class FileTree {
 			return;
 		}
 		
+		var items = new ArrayList<FileTreeItem<String>>();
+		
 		File[] files = file.listFiles();
 		String itemName;
 		for (int index = 0; index < files.length; index++) {
@@ -33,12 +37,18 @@ public class FileTree {
 			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
 				type = calculateType(parent, itemName);
 				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type);
-				parent.getChildren().add(item);
+				items.add(item);
 				
 				if (files[index].isDirectory()) {
 					createNodes(item, files[index]);
 				}
 			}
+		}
+		
+		items.sort((a, b) -> a.getFile().getName().compareToIgnoreCase(b.getFile().getName()));
+		
+		for (var item : items) {
+			parent.getChildren().add(item);
 		}
 	}
 	
@@ -55,10 +65,24 @@ public class FileTree {
 			return;
 		}
 		
+		for (var child : parent.getChildren()) {
+			var fileTreeItem = (FileTreeItem<String>) child;
+			
+			if (fileTreeItem.getFile().getName().contentEquals(file.getName())) {
+				return;
+			}
+		}
+		
 		int type = calculateType(parent, file.getName());
 		
 		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
 		parent.getChildren().add(item);
+		parent.getChildren().sort((a, b) -> {
+			var fa = (FileTreeItem<String>) a;
+			var fb = (FileTreeItem<String>) b;
+			
+			return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+		});
 		
 		if (file.isDirectory()) {
 			createNodes(item, file);
