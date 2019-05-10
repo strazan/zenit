@@ -1,0 +1,69 @@
+#mainScrollPane #spAnchorPane {
+	-fx-background-color: #444;
+	-fx-padding: 0.0;
+  -fx-background-insets: 0.0, 0.0;
+  	  -fx-border-width: 0.0;
+  	  -fx-background-color: #444;
+}
+
+#spAnchorPane .button {
+	 -fx-border-width: 0.0;
+	 -fx-text-fill: #555;
+	 -fx-background-color: #555;
+	 -fx-text-fill: #fff;
+}
+
+#mainAnchorPane {
+	-fx-background-color: #444;
+	
+}
+
+#pnlTextAppearance {
+	-fx-background-color: #444;
+	-fx-text-fill: #444;
+}
+
+#pnlTextAppearance .label {
+	-fx-text-fill: #eee;
+}
+
+#pnlTextAppearance #lblTxtAppeaSize {
+	-fx-text-fill: #aaa;
+}
+#pnlTextAppearance #lblTxtAppeaFont {
+	-fx-text-fill: #aaa;
+}
+
+#pnlJavaHome {
+	-fx-background-color: #444;
+	-fx-text-fill: #444;
+}
+#pnlJavaHome .label {
+	 -fx-text-fill: #eee;
+}
+
+#chcbxNewFont {
+	-fx-background-color: rgba(255,255,255,0.1);
+	 -fx-mark-color: black; 
+}
+
+#chcbxNewFont .context-menu {	
+	-fx-background-color: #444;
+}
+
+#chcbxNewFont .menu-item:focused {
+	-fx-background-color: rgba(100,100,100,0.4);
+}
+
+#chcbxNewFont .menu-item > .label {
+	-fx-text-fill: #eee;
+}
+
+#chcbxNewFont > .label {
+ -fx-text-fill: #bbbbbb;
+  }
+ 
+ #fldNewSize {
+ 	-fx-background-color: rgba(100,100,100,0.4);
+ 	-fx-text-fill: #eee;
+ }

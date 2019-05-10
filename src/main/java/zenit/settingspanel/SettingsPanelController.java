@@ -1,17 +1,24 @@
 package main.java.zenit.settingspanel;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
+import org.apache.commons.exec.CommandLine;
+import org.apache.commons.exec.DefaultExecutor;
+
 import javafx.beans.value.ChangeListener;
+import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -40,12 +47,37 @@ public class SettingsPanelController extends AnchorPane {
 	private Label lblOldFont;
 	
 	@FXML
+	private Label lblCurrentJavaHome;
+	
+	@FXML
+	private Label newJavaHome;
+	
+	@FXML
+	private Label lblTxtAppeaSize;
+	
+	@FXML
 	private ChoiceBox<String> chcbxNewFont;
+	
+	@FXML
+	private Button btnTextAppearance;
+	
+	@FXML
+	private Button btnJavaHome;
+	
+	@FXML
+	private AnchorPane pnlTextAppearance;
+	
+	@FXML
+	private AnchorPane pnlJavaHome;
 
 	/**
 	 * constructs a controller for the TextSizeWindow. 
 	 * @param codeArea the ZenCodeArea that will be modified.
 	 */
+	public SettingsPanelController() {
+		this(new ZenCodeArea());
+	}
+	
 	public SettingsPanelController(ZenCodeArea codeArea) {
 		this.codeArea = codeArea;
 		oldSize = codeArea.getFontSize();
@@ -54,6 +86,7 @@ public class SettingsPanelController extends AnchorPane {
 			getClass().getResource("/zenit/settingspanel/SettingsPanel.fxml"
 		));
 
+		
 		loader.setRoot(this);
 		loader.setController(this);
 
@@ -66,10 +99,11 @@ public class SettingsPanelController extends AnchorPane {
 
 		window = new Stage();
 		Scene scene = new Scene(this);
-
+		
 		window.setScene(scene);
 		window.setTitle("preferences");
 		initialize();
+		scene.getStylesheets().add(getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toString());
 		window.show();
 	}
 	
@@ -97,6 +131,52 @@ public class SettingsPanelController extends AnchorPane {
 		}
 		sldrNewSize.setValue(size);
 		this.codeArea.setFontSize((int)size);
+	}
+	
+	/**
+	 * Moves a panel to the front, and thereby makes it visible.
+	 * @param e
+	 */
+	public void panelToFront(Event e) {
+		if(e.getSource() == btnTextAppearance) {
+			pnlTextAppearance.toFront();
+		}
+		else if(e.getSource() == btnJavaHome) {
+			pnlJavaHome.toFront();
+		}
+	}
+	
+	@FXML
+	private void setNewJavaHome() {
+		DirectoryChooser directoryChooser = new DirectoryChooser();
+		File selectedDirectory = directoryChooser.showDialog(window);
+
+		if(selectedDirectory == null){
+		     //No Directory selected
+		}
+		else{
+			Thread t = new Thread(new Runnable() {
+				public void run() {
+					CommandLine clCompileJavaFile = CommandLine.parse(
+						"export JAVA_HOME=" + selectedDirectory.getAbsolutePath()
+					);
+					DefaultExecutor executor = new DefaultExecutor();
+					try {
+						executor.execute(clCompileJavaFile);
+						newJavaHome.setText(System.getenv("JAVA_HOME"));
+						newJavaHome.setStyle("-fx-text-fill: #0B6623;");
+					} catch (IOException e) {
+					//TODO
+				}
+			}});
+			t.start();
+		}
+	}
+	
+	
+	private String getJavaHome() {
+		
+		return null;
 	}
 
 	/**
@@ -130,5 +210,7 @@ public class SettingsPanelController extends AnchorPane {
 		chcbxNewFont.getSelectionModel().selectedItemProperty().addListener((arg0, arg1, arg2) -> {
 			setNewFont(arg2);
 		});
+		
+		lblCurrentJavaHome.setText(System.getenv("JAVA_HOME"));
 	}
 }

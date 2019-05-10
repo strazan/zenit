@@ -43,6 +43,7 @@
                 	<CheckMenuItem fx:id="cmiDarkMode" mnemonicParsing="false" onAction="#darkModeChanged" selected="true" text="Dark Mode" />
 	            </items>
             </Menu>
+                  <MenuItem mnemonicParsing="false" onAction="#setTextSize" text="Settings" />
                   <MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
             <MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />
             <SeparatorMenuItem mnemonicParsing="false" />
@@ -58,8 +59,6 @@
             <MenuItem mnemonicParsing="false" text="Copy" />
             <MenuItem mnemonicParsing="false" text="Paste" />
             <MenuItem mnemonicParsing="false" text="Delete" />
-            <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#setTextSize" text="Text size" />
                   <SeparatorMenuItem mnemonicParsing="false" />
             <MenuItem mnemonicParsing="false" text="Select All" />
             <MenuItem mnemonicParsing="false" text="Unselect All" />

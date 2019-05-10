@@ -10,28 +10,41 @@
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
-<fx:root minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" stylesheets="@settingspanelstylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane hbarPolicy="NEVER" layoutX="-2.0" layoutY="-7.0" prefHeight="209.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="450.0" AnchorPane.topAnchor="0.0">
+      <ScrollPane fx:id="mainScrollPane" hbarPolicy="NEVER" layoutY="-7.0" prefHeight="209.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="600.0" AnchorPane.topAnchor="0.0">
         <content>
-          <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="150.0">
+          <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="150.0">
                <children>
-                  <Button layoutX="20.0" layoutY="17.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="84.0" text="text appearance" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Button layoutY="38.0" mnemonicParsing="false" prefHeight="38.0" prefWidth="150.0" text="setting 2" AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+                  <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="30.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="30.0" prefWidth="84.0" stylesheets="@settingspanelstylesheet.css" text="Text Appearance" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                  <Button fx:id="btnJavaHome" layoutY="38.0" minHeight="40.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="40.0" prefWidth="150.0" text="Java home" AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
                </children>
             </AnchorPane>
         </content>
       </ScrollPane>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane id="pnlJavaHome" fx:id="pnlJavaHome" prefHeight="400.0" prefWidth="467.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button layoutX="367.0" layoutY="187.0" mnemonicParsing="false" onAction="#setNewJavaHome" text="Choose dir" />
+            <Label layoutX="59.0" layoutY="93.0" text="Current Java Home" />
+            <Label layoutX="58.0" layoutY="192.0" text="Set new Java Home" />
+            <Label fx:id="lblCurrentJavaHome" layoutX="59.0" layoutY="116.0" text="current" textFill="#727272">
+               <font>
+                  <Font name="System Italic" size="13.0" />
+               </font>
+            </Label>
+            <Label fx:id="newJavaHome" layoutX="58.0" layoutY="214.0" text=".." textFill="#727272" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="pnlTextAppearance" fx:id="pnlTextAppearance" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane layoutY="162.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
                <children>
-                  <Label layoutX="100.0" layoutY="61.0" text="Old text size:" />
-                  <Label fx:id="lblOldTextSize" layoutX="328.0" layoutY="61.0" text="00" />
-                  <Slider fx:id="sldrNewSize" layoutX="100.0" layoutY="123.0" min="6.0" prefHeight="16.0" prefWidth="250.0" />
-                  <Label layoutX="100.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
-                  <TextField fx:id="fldNewSize" layoutX="305.0" layoutY="82.0" prefHeight="27.0" prefWidth="45.0" />
-                  <Label layoutX="14.0" layoutY="14.0" text="Size">
+                  <Label layoutX="175.0" layoutY="61.0" text="Old text size:" />
+                  <Label fx:id="lblOldTextSize" layoutX="403.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
+                  <Slider fx:id="sldrNewSize" layoutX="175.0" layoutY="123.0" min="6.0" prefHeight="16.0" prefWidth="250.0" AnchorPane.rightAnchor="175.0" />
+                  <Label layoutX="175.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
+                  <TextField id="fldNewSize" fx:id="fldNewSize" layoutX="380.0" layoutY="82.0" prefHeight="27.0" prefWidth="45.0" AnchorPane.rightAnchor="175.0" />
+                  <Label id="lblTxtAppeaSize" fx:id="lblTxtAppeaSize" layoutX="14.0" layoutY="14.0" text="Size">
                      <font>
                         <Font size="18.0" />
                      </font>
@@ -40,19 +53,19 @@
             </AnchorPane>
             <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Label layoutX="100.0" layoutY="61.0" text="Old font:" />
-                  <Label fx:id="lblOldFont" layoutX="294.0" layoutY="61.0" text="SansSerif" AnchorPane.rightAnchor="100.0" />
-                  <Label layoutX="100.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
-                  <Label layoutX="14.0" layoutY="14.0" text="Font">
+                  <Label layoutX="175.0" layoutY="61.0" text="Old font:" />
+                  <Label fx:id="lblOldFont" layoutX="294.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
+                  <Label layoutX="175.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
+                  <Label id="lblTxtAppeaFont" fx:id="lblTxtAppeaFont" layoutX="14.0" layoutY="14.0" text="Font">
                      <font>
                         <Font size="18.0" />
                      </font>
                   </Label>
-                  <ChoiceBox fx:id="chcbxNewFont" layoutX="201.0" layoutY="82.0" prefWidth="150.0" />
+                  <ChoiceBox fx:id="chcbxNewFont" layoutX="276.0" layoutY="82.0" prefWidth="150.0" AnchorPane.rightAnchor="175.0" />
                </children>
             </AnchorPane>
+            <Line endX="500.0" stroke="#363636" AnchorPane.bottomAnchor="199.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
          </children>
       </AnchorPane>
-      <Line endX="250.0" layoutX="251.0" layoutY="-16.0" startX="-100.0" stroke="#888888" AnchorPane.bottomAnchor="199.0" AnchorPane.leftAnchor="200.0" AnchorPane.rightAnchor="20.0" AnchorPane.topAnchor="200.0" />
    </children>
 </fx:root>

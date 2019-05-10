@@ -109,7 +109,12 @@ public class MainController extends VBox {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
-
+			
+			
+			 /* TO BE REMOVED
+			 */	setTextSize();
+			
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -132,13 +137,16 @@ public class MainController extends VBox {
 	}
 	
 	/**
-	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 * Creates a new SettingsPanel.
 	 */
 	public void setTextSize() {
 		FileTab selectedTab = getSelectedTab();
-	//	if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
+		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
 			new SettingsPanelController(selectedTab.getZenCodeArea());
-//		}
+		}
+		else {
+			new SettingsPanelController();
+		}
 	}
 
 	/**
