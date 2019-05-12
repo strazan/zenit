@@ -140,13 +140,13 @@ public class MainController extends VBox {
 	 * Creates a new SettingsPanel.
 	 */
 	public void setTextSize() {
-		FileTab selectedTab = getSelectedTab();
-		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
-			new SettingsPanelController(selectedTab.getZenCodeArea());
-		}
-		else {
-			new SettingsPanelController();
-		}
+	
+			new SettingsPanelController(this);
+		
+	}
+	
+	public Stage getStage() {
+		return stage;
 	}
 
 	/**
@@ -411,38 +411,6 @@ public class MainController extends VBox {
 		}
 	}
 	
-	/**
-	 * Switches between dark- and light mode depending on what is selected in the application's
-	 * 'Dark Mode'-checkbox.
-	 * @param event
-	 * @author Pontus Laos
-	 */
-	@FXML
-	private void darkModeChanged(Event event) {
-		boolean isDarkMode = cmiDarkMode.isSelected();
-		var stylesheets = stage.getScene().getStylesheets();
-		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
-		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
-		
-		if (isDarkMode) {
-			stylesheets.add(darkMode);
-			
-			if (stylesheets.contains(lightModeKeywords)) {
-				stylesheets.remove(lightModeKeywords);
-			}
-			stylesheets.add(darkModeKeywords);
-		} else {
-			// Currently the Light Mode is the default CSS.
-			stylesheets.remove(darkMode);
-			
-			if (stylesheets.contains(darkModeKeywords)) {
-				stylesheets.remove(darkModeKeywords);
-			}
-			stylesheets.add(lightModeKeywords);
-		}
-	}
-
 	public static File getMetadataFile(File file) {
 		File[] files = file.listFiles();
 		if (files != null) {

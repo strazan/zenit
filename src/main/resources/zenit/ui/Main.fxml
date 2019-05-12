@@ -2,7 +2,6 @@
 
 <?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
-<?import javafx.scene.control.CheckMenuItem?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Menu?>
 <?import javafx.scene.control.MenuBar?>
@@ -38,11 +37,6 @@
             <MenuItem mnemonicParsing="false" text="Save As…" />
             <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />
-            <Menu mnemonicParsing="false" text="Preferences…">
-	            <items>
-                	<CheckMenuItem fx:id="cmiDarkMode" mnemonicParsing="false" onAction="#darkModeChanged" selected="true" text="Dark Mode" />
-	            </items>
-            </Menu>
                   <MenuItem mnemonicParsing="false" onAction="#setTextSize" text="Settings" />
                   <MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
             <MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />

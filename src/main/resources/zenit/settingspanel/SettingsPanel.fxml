@@ -2,26 +2,68 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
+<?import org.controlsfx.control.ToggleSwitch?>
 
 <fx:root fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" stylesheets="@settingspanelstylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <ScrollPane fx:id="mainScrollPane" hbarPolicy="NEVER" layoutY="-7.0" prefHeight="209.0" prefWidth="232.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="600.0" AnchorPane.topAnchor="0.0">
-        <content>
-          <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="150.0">
+    <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="398.0" prefWidth="150.0">
+         <children>
+            <Button fx:id="btnJavaHome" layoutY="38.0" minHeight="40.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="40.0" prefWidth="150.0" text="Java home" AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+            <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="30.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="30.0" prefWidth="84.0" stylesheets="@settingspanelstylesheet.css" text="Text Appearance" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Button fx:id="btnTheme" layoutX="46.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Theme" AnchorPane.bottomAnchor="280.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+            <Button fx:id="btnSupport" layoutX="8.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="pnlSupport" fx:id="pnlSupport" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Hyperlink fx:id="linkOpenInGitHub" layoutX="89.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" prefHeight="25.0" prefWidth="106.0" text="Open in github" />
+            <Hyperlink fx:id="linkSubmitIssue" layoutX="248.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Submit an issue" />
+            <Label id="lblGitHub" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="GitHub" AnchorPane.leftAnchor="20.0" />
+            <Hyperlink fx:id="linkDownloadSource" layoutX="401.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Download source code" />
+            <Line endX="550.0" layoutY="87.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="86.5" />
+            <Label id="lblDocumentation" layoutX="14.0" layoutY="96.0" styleClass="paneHeader" text="Documentation" AnchorPane.leftAnchor="20.0" />
+            <Hyperlink layoutX="254.0" layoutY="128.0" text="zenit.github.io" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="254.0" />
+            <Line endX="550.0" layoutX="50.0" layoutY="181.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+            <Label id="lblThanksTo" layoutX="14.0" layoutY="189.0" styleClass="paneHeader" text="Thanks to" AnchorPane.leftAnchor="20.0" />
+            <Label layoutX="50.0" layoutY="233.0" text="RichTextFX" />
+            <Label layoutX="161.0" layoutY="233.0" text="Label" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="pnlTextAppearance" fx:id="pnlTextAppearance" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane layoutY="162.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
                <children>
-                  <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="30.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="30.0" prefWidth="84.0" stylesheets="@settingspanelstylesheet.css" text="Text Appearance" AnchorPane.bottomAnchor="360.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-                  <Button fx:id="btnJavaHome" layoutY="38.0" minHeight="40.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="40.0" prefWidth="150.0" text="Java home" AnchorPane.bottomAnchor="320.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
+                  <Label layoutX="170.0" layoutY="61.0" text="Old text size:" AnchorPane.leftAnchor="170.0" />
+                  <Label fx:id="lblOldTextSize" layoutX="403.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
+                  <Slider id="sldrNewSize" fx:id="sldrNewSize" layoutX="175.0" layoutY="123.0" min="6.0" prefHeight="16.0" prefWidth="268.0" AnchorPane.leftAnchor="170.0" AnchorPane.rightAnchor="170.0" />
+                  <Label layoutX="170.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" AnchorPane.leftAnchor="170.0" />
+                  <TextField id="fldNewSize" fx:id="fldNewSize" layoutX="380.0" layoutY="82.0" prefHeight="27.0" prefWidth="45.0" AnchorPane.rightAnchor="175.0" />
+                  <Label id="lblTxtAppeaSize" fx:id="lblTxtAppeaSize" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Size" />
                </children>
             </AnchorPane>
-        </content>
-      </ScrollPane>
+            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="175.0" layoutY="61.0" text="Old font:" AnchorPane.leftAnchor="170.0" />
+                  <Label fx:id="lblOldFont" layoutX="294.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
+                  <Label layoutX="167.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" AnchorPane.leftAnchor="170.0" />
+                  <Label id="lblTxtAppeaFont" fx:id="lblTxtAppeaFont" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Font">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Label>
+                  <ChoiceBox fx:id="chcbxNewFont" layoutX="276.0" layoutY="82.0" prefWidth="150.0" AnchorPane.rightAnchor="175.0" />
+               </children>
+            </AnchorPane>
+            <Line endX="500.0" stroke="#363636" AnchorPane.bottomAnchor="199.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
+         </children>
+      </AnchorPane>
       <AnchorPane id="pnlJavaHome" fx:id="pnlJavaHome" prefHeight="400.0" prefWidth="467.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button layoutX="367.0" layoutY="187.0" mnemonicParsing="false" onAction="#setNewJavaHome" text="Choose dir" />
@@ -33,38 +75,19 @@
                </font>
             </Label>
             <Label fx:id="newJavaHome" layoutX="58.0" layoutY="214.0" text=".." textFill="#727272" />
+            <Label layoutX="14.0" layoutY="23.0" styleClass="paneHeader" text="Java Home" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
          </children>
       </AnchorPane>
-      <AnchorPane id="pnlTextAppearance" fx:id="pnlTextAppearance" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane id="pnlTheme" fx:id="pnlTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane layoutY="162.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
-               <children>
-                  <Label layoutX="175.0" layoutY="61.0" text="Old text size:" />
-                  <Label fx:id="lblOldTextSize" layoutX="403.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
-                  <Slider fx:id="sldrNewSize" layoutX="175.0" layoutY="123.0" min="6.0" prefHeight="16.0" prefWidth="250.0" AnchorPane.rightAnchor="175.0" />
-                  <Label layoutX="175.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
-                  <TextField id="fldNewSize" fx:id="fldNewSize" layoutX="380.0" layoutY="82.0" prefHeight="27.0" prefWidth="45.0" AnchorPane.rightAnchor="175.0" />
-                  <Label id="lblTxtAppeaSize" fx:id="lblTxtAppeaSize" layoutX="14.0" layoutY="14.0" text="Size">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-               </children>
-            </AnchorPane>
-            <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="200.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Label layoutX="175.0" layoutY="61.0" text="Old font:" />
-                  <Label fx:id="lblOldFont" layoutX="294.0" layoutY="61.0" AnchorPane.rightAnchor="175.0" />
-                  <Label layoutX="175.0" layoutY="87.0" prefHeight="17.0" prefWidth="71.0" text="New value:" />
-                  <Label id="lblTxtAppeaFont" fx:id="lblTxtAppeaFont" layoutX="14.0" layoutY="14.0" text="Font">
-                     <font>
-                        <Font size="18.0" />
-                     </font>
-                  </Label>
-                  <ChoiceBox fx:id="chcbxNewFont" layoutX="276.0" layoutY="82.0" prefWidth="150.0" AnchorPane.rightAnchor="175.0" />
-               </children>
-            </AnchorPane>
-            <Line endX="500.0" stroke="#363636" AnchorPane.bottomAnchor="199.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
+            <Label fx:id="lblTheme" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Theme" AnchorPane.leftAnchor="20.0" />
+            <ToggleSwitch id="toggleDarkMode" fx:id="toggleDarkMode" alignment="CENTER" contentDisplay="CENTER" layoutX="274.0" layoutY="169.0" prefHeight="27.0" prefWidth="54.0" textAlignment="CENTER" AnchorPane.leftAnchor="274.0" AnchorPane.rightAnchor="270.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </ToggleSwitch>
+            <Label id="lblDarkMode" alignment="CENTER" layoutX="258.0" layoutY="119.0" prefHeight="20.0" prefWidth="85.0" text="DarkMode" textAlignment="CENTER" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="255.0" />
+            <Label id="lblDarkModeTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="231.0" text="If you don't use dark mode, you don't really deserve to use zenit" AnchorPane.leftAnchor="104.0" AnchorPane.rightAnchor="100.5" />
          </children>
       </AnchorPane>
    </children>
