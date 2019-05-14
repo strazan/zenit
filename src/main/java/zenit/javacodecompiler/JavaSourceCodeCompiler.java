@@ -292,6 +292,13 @@ public class JavaSourceCodeCompiler {
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setRunPath(runPath.getPath());
 			
+			File[] librariesArray = new File[libraries.size()];
+			int counter = 0;
+			for (File library : libraries) {
+				librariesArray[counter++] = library;
+			}
+			cb.setLibraries(librariesArray);
+			
 			String command = cb.generateCommand();
 
 			// Creates new directory folder, bin-folder

@@ -8,6 +8,7 @@ import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -35,6 +36,7 @@ import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.ui.FileTab;
+import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
@@ -98,12 +100,6 @@ public class MainController extends VBox {
 		this.stage = s;
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
-
-			/*
-			 * TODO Test if you like this idea. Saves and opens a local File-instance of your 
-			 * selected workspace. Only prompts when unset and can be changed from within gui
-			 * Alex
-			 */
 			
 			File workspace = null;
 			
@@ -366,13 +362,31 @@ public class MainController extends VBox {
 	public void openFile(File file) {
 		if (file != null && getTabFromFile(file) == null) {
 			
+			if (supportedFileFormat(file)) {
+			
 			FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
+			} else {
+				String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
+				DialogBoxes.errorDialog("Not supported", "File type not supported by Zenit", 
+						"The file type " + fileType + " is not yet supported by this application.");
+			}
 		} else if (file != null && getTabFromFile(file) != null) { // Tab already open
 			tabPane.getSelectionModel().select(getTabFromFile(file));
 		}
+	}
+	
+	private boolean supportedFileFormat(File file) {
+		String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
+		
+		switch (fileType) {
+		case ".java":
+		case ".txt": break;
+		default: return false;
+		}
+		return true;
 	}
 
 	/**
@@ -706,6 +720,10 @@ public class MainController extends VBox {
 				DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
 			}
 		}
-		
+	}
+	
+	public void showProjectProperties(File projectFile) {
+		ProjectMetadataController pmc = new ProjectMetadataController(fileController, projectFile);
+		pmc.start();
 	}
 }

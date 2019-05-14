@@ -5,6 +5,7 @@ import java.util.Optional;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TextInputDialog;
 import javafx.stage.Stage;
@@ -68,5 +69,27 @@ public class DialogBoxes {
 		alert.setContentText(content);
 
 		alert.showAndWait();
+	}
+	
+	public static int twoChoiceDialog(String title, String header, String content, String option1, String option2) {
+		Alert alert = new Alert(AlertType.CONFIRMATION);
+		alert.setTitle(title);
+		alert.setHeaderText(header);
+		alert.setContentText(content);
+
+		ButtonType buttonTypeOne = new ButtonType(option1);
+		ButtonType buttonTypeTwo = new ButtonType(option2);
+
+
+		alert.getButtonTypes().setAll(buttonTypeOne, buttonTypeTwo);
+
+		Optional<ButtonType> result = alert.showAndWait();
+		if (result.get() == buttonTypeOne){
+		    return 1;
+		} else if (result.get() == buttonTypeTwo) {
+		    return 2;
+		} else {
+			return 0;
+		}
 	}
 }

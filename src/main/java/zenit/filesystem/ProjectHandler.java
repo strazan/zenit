@@ -129,6 +129,7 @@ public class ProjectHandler extends FolderHandler {
 		for (File file : files) {
 			if (file.getName().equals(".metadata")) {
 				metadata = file;
+				break;
 			}
 		}
 	
@@ -139,5 +140,9 @@ public class ProjectHandler extends FolderHandler {
 		if (destinationFile == null) {
 			throw new IOException(sourceFile.getName() + " couldn't be imported");
 		}
+	}
+	
+	protected static void removeJar(File fileToRemove, File projectFile) throws IOException {
+		
 	}
 }

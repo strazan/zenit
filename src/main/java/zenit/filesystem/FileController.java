@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import main.java.zenit.filesystem.helpers.CodeSnippets;
@@ -283,9 +284,8 @@ public class FileController {
 		
 		if (libFolder != null) {
 			try {
-				for (File jarFile : jarFiles) {
-					ProjectHandler.importJar(jarFile, libFolder);
-				}
+				for (File jarFile : jarFiles)
+				ProjectHandler.importJar(jarFile, libFolder);
 			return true;
 			} catch (IOException e) {
 				System.err.println(e.getMessage());
@@ -293,5 +293,36 @@ public class FileController {
 		}
 		
 		return false;
+	}
+	
+	public boolean removeJars(List<String> libraries, File projectFile) {
+		
+		List<File> libraryFiles = new ArrayList<File>();
+		
+		File libraryFile;
+		for (String library : libraries) {
+			libraryFile = new File(library);
+			libraryFiles.add(libraryFile);
+		}
+		
+		
+		
+		return false;
+	}
+	
+	public File generateMetadata(File projectFile) {
+		try {
+			return MetadataFileHandler.createMetadataFile(projectFile);
+		} catch (IOException e) {
+			return null;
+		}
+	}
+	
+	public File updateMetadata(File metadata) {
+		try {
+			return MetadataFileHandler.replaceMetadataFile(metadata);
+		} catch (IOException e) {
+			return null;
+		}
 	}
 }

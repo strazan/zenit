@@ -42,13 +42,23 @@ public class CommandBuilder {
 		String command = tool;
 		
 		if (libraries != null) {
-			command += " -cp " + libraries[0];
-			if (libraries.length > 1) {
-				for (int i = 1; i < libraries.length; i++) {
-					command += ":" + libraries[i];
+			if (tool.equals(COMPILE)) {
+				command += " -cp " + libraries[0];
+				if (libraries.length > 1) {
+					for (int i = 1; i < libraries.length; i++) {
+						command += ":" + libraries[i];
+					}
 				}
+			} else if (tool.equals(RUN) ) {
+				command += " -cp \".." + File.separator + libraries[0];
+				if (libraries.length > 1) {
+					for (int i = 1; i < libraries.length; i++) {
+						command += ":.." + File.separator + libraries[i];
+					}
+				}
+				command += ":.\"";
 			}
-		}
+		} 
 
 		if (directory != null) {
 			command += " " + directory;
