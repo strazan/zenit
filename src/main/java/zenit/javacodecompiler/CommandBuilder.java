@@ -1,5 +1,8 @@
 package main.java.zenit.javacodecompiler;
 
+import java.io.File;
+import java.util.regex.Matcher;
+
 public class CommandBuilder {
 
 	public static final String RUN = "java";
@@ -38,7 +41,8 @@ public class CommandBuilder {
 
 	public String generateCommand() {
 		String command = tool;
-
+		
+		
 		if (directory != null) {
 			command += " " + directory;
 		}
@@ -49,6 +53,9 @@ public class CommandBuilder {
 			// TODO Add library(ies)
 		}
 		if (runPath != null) {
+			if (tool.equals(RUN)) {
+				runPath = runPath.replaceAll(Matcher.quoteReplacement(File.separator), "/");
+			}
 			command += " " + runPath;
 		}
 

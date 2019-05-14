@@ -158,7 +158,7 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(runPath.getPath());
 			cb.setDirectory(directory.getPath());
 			cb.setSourcepath(sourcepath.getPath());
-
+			
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
 			redirectStreams(process);
@@ -265,7 +265,6 @@ public class JavaSourceCodeCompiler {
 			
 			Process process = executeCommand(command, file.getParentFile());
 			redirectStreams(process);
-			
 			return process;
 		}
 		
@@ -274,14 +273,13 @@ public class JavaSourceCodeCompiler {
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
 			cb.setRunPath(runPath.getPath());
-			
 			String command = cb.generateCommand();
 
 			// Creates new directory folder, bin-folder
 			File binFile = new File(projectFile.getPath() + File.separator + "bin");
 			
 			Process process = executeCommand(command, binFile);
-
+			
 			// Runs command
 			redirectStreams(process);
 			
@@ -292,7 +290,6 @@ public class JavaSourceCodeCompiler {
 			String newRunPath;
 			newRunPath = runPath.replaceAll(Matcher.quoteReplacement("src" + File.separator), "");
 			newRunPath = newRunPath.replaceAll(".java", "");
-			
 			return newRunPath;
 		}	
 	}
