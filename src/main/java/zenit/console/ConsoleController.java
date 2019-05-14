@@ -74,8 +74,6 @@ public class ConsoleController implements Initializable {
 	@FXML
 	private Button btnClearConsole;
 	
-	@FXML
-	private Button btnClearTerminal;
 		
 	private AnchorPane terminalAnchorPane; //AnchorPane on which a terminal-instance is located. Used to move a terminal-instance to the "front", 
 										   //aka making it visible
@@ -84,7 +82,7 @@ public class ConsoleController implements Initializable {
 	   									 //aka making it visible
 	private ConsoleArea activeConsole;
 	
-	private Terminal activeTerminal;
+//	private Terminal activeTerminal;
 	
 	/**
 	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
@@ -104,8 +102,7 @@ public class ConsoleController implements Initializable {
 		btnNewConsole.setVisible(true);
 		btnClearConsole.setDisable(false);
 		btnClearConsole.setVisible(true);
-		btnClearTerminal.setDisable(true);
-		btnClearTerminal.setVisible(false);
+	
 			
 		if (consoleAnchorPane != null) {
 				consoleAnchorPane.toFront();
@@ -138,8 +135,6 @@ public class ConsoleController implements Initializable {
 		btnNewConsole.setVisible(false);
 		btnClearConsole.setDisable(true);
 		btnClearConsole.setVisible(false);
-		btnClearTerminal.setDisable(false);
-		btnClearTerminal.setVisible(true);
 				
 	}
 
@@ -203,25 +198,27 @@ public class ConsoleController implements Initializable {
 		}	
 	}
 	
-	
 	/*
 	 * Creates a new Terminal, adds it to the terminal
 	 *  AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
 	public void newTerminal() {
-		TerminalConfig darkConfig = new TerminalConfig();
-		darkConfig.setBackgroundColor(Color.BLACK);
-		darkConfig.setForegroundColor(Color.WHITE);
-		darkConfig.setCursorBlink(true);
-		darkConfig.setCursorColor(Color.WHITE);
-//		darkConfig.setFontFamily("consolas");
-		darkConfig.setFontSize(12);
+		TerminalConfig winConfig = new TerminalConfig();
+		winConfig.setBackgroundColor(Color.BLACK);
+		winConfig.setForegroundColor(Color.WHITE);
+		winConfig.setCursorBlink(true);
+		winConfig.setCursorColor(Color.WHITE);
+		winConfig.setFontFamily("consolas");
+		winConfig.setFontSize(12);
+		winConfig.setScrollbarVisible(false);
 		
+		TerminalConfig config = System.getProperty("os.name").startsWith("W") ? winConfig : new TerminalConfig();
 		
-		Terminal terminal = new Terminal(darkConfig, FileSystems.getDefault().getPath(".").toAbsolutePath());
+		Terminal terminal = new Terminal(config, FileSystems.getDefault().getPath(".").toAbsolutePath());
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
+
 		
 		fillAnchor(terminal);
 		fillAnchor(terminalAnchorPane);
@@ -257,19 +254,6 @@ public class ConsoleController implements Initializable {
 		activeConsole.clear();
 	}
 	
-	/**
-	 * Clears the active Terminal.
-	 */
-	public void clearTerminal(){
-		if( System.getProperty("os.name").startsWith("Windows") ) {
-			ConsoleHelpers.executeTerminalCommand(activeTerminal, "cls");
-		}
-		else {
-			ConsoleHelpers.executeTerminalCommand(activeTerminal, "reset");
-		}
-				
-		//TODO: Make it work when terminal is inside a "process" (when you need to press q, ex after git branch command).
-	}
 	
 	/**
 	 * Performs initialization steps.
@@ -284,7 +268,7 @@ public class ConsoleController implements Initializable {
 		
 		terminalChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			terminalList.get(newValue).toFront();
-			activeTerminal = (Terminal) terminalList.get(newValue).getChildren().get(0);
+//			activeTerminal = (Terminal) terminalList.get(newValue).getChildren().get(0);
 		});
 		
 		newConsole();

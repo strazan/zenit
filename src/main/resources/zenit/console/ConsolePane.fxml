@@ -55,13 +55,6 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
-             <Button id="btn" fx:id="btnClearTerminal" layoutX="500.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#clearTerminal" stylesheets="@consoleStyle.css" text="CLEAR" textFill="#666666" AnchorPane.rightAnchor="158.4">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets>
-               <cursor>
-                  <Cursor fx:constant="HAND" />
-               </cursor></Button>
          </children>
       </AnchorPane>
    </children>
