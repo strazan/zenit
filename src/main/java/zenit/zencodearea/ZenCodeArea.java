@@ -25,7 +25,8 @@ import org.fxmisc.wellbehaved.event.InputMap;
 
 public class ZenCodeArea extends CodeArea {
 	private ExecutorService executor;
-	private int fontSize;
+//	private int fontSize;
+//	private String font;
 
 	private static final String[] KEYWORDS = new String[] {
 		"abstract", "assert", "boolean", "break", "byte",
@@ -59,10 +60,10 @@ public class ZenCodeArea extends CodeArea {
 	);
 
 	public ZenCodeArea() {
-		this(14);
+		this(14, "Times new Roman");
 	}
 	
-	public ZenCodeArea(int textSize) {
+	public ZenCodeArea(int textSize, String font) {
 		setParagraphGraphicFactory(LineNumberFactory.get(this));
 
 		multiPlainChanges().successionEnds(
@@ -83,18 +84,19 @@ public class ZenCodeArea extends CodeArea {
 		}).subscribe(this::applyHighlighting);
 		computeHighlightingAsync();
 
-		fontSize = textSize;
-		setStyle("-fx-font-size: " + fontSize);
+//		fontSize = textSize;
+//		this.font = font;
+		setStyle("-fx-font-size: " + textSize +";-fx-font-family: " + font);
 	}
 	
-	public int getFontSize() {
-		return fontSize;	
-	}
-	
-	public void setFontSize(int newFontSize) {
-		fontSize = newFontSize;
-		setStyle("-fx-font-size: " + fontSize);
-	}
+//	public int getFontSize() {
+//		return fontSize;	
+//	}
+//	
+//	
+//	public String getFont() {
+//		return font;	
+//	}
 
 	private Task<StyleSpans<Collection<String>>> computeHighlightingAsync() {
 		String text = getText();
@@ -146,4 +148,14 @@ public class ZenCodeArea extends CodeArea {
 
 		return spansBuilder.create();
 	}
+
+	public void setFontSize(int newFontSize) {
+		//fontSize = newFontSize;
+		setStyle("-fx-font-size: " + newFontSize);
+	}
+	
+	public void setFontFamily(String fontFamily) {
+	//	font = fontFamily;
+		setStyle("-fx-font-family: " + fontFamily);	
+	}	
 }

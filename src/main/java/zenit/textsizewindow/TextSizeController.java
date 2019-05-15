@@ -29,7 +29,7 @@ public class TextSizeController extends AnchorPane {
 	private TextField fldNewSize;
 
 	@FXML
-	private Label lblOldValue;
+	private Label lblOldTextSize;
 
 	@FXML
 	private Slider sldrNewSize;
@@ -94,7 +94,7 @@ public class TextSizeController extends AnchorPane {
 	 * initializing steps. Variables will get their value. ActionListeners added.
 	 */
 	private void initialize() {
-		lblOldValue.setText(String.valueOf(oldSize));
+		lblOldTextSize.setText(String.valueOf(oldSize));
 		fldNewSize.setText(String.valueOf(oldSize));
 		sldrNewSize.setValue(oldSize);
 		sldrNewSize.valueProperty().addListener(

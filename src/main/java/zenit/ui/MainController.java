@@ -2,6 +2,7 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -28,6 +29,7 @@ import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.textsizewindow.TextSizeController;
+import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -44,6 +46,9 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private int zenCodeAreasTextSize;
+	private String zenCodeAreasFontFamily;
+	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -59,13 +64,13 @@ public class MainController extends VBox {
 
 	@FXML
 	private MenuItem saveFile;
-	
+
 	@FXML
 	private MenuItem importProject;
 
 	@FXML
 	private MenuItem changeWorkspace;
-	
+
 	@FXML
 	private CheckMenuItem cmiDarkMode;
 
@@ -80,31 +85,36 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
-	
+
 	@FXML
 	private ConsoleController consoleController;
 
 	private Label statusBarLeftLabel;
-	
+
 	@FXML
 	private Label statusBarRightLabel;
 
 	/**
-	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
+	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
+	 * it.
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
+		this.zenCodeAreasTextSize = 14;
+		this.zenCodeAreasFontFamily = "Times new Roman";
+		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
+
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
 
 			/*
-			 * TODO Test if you like this idea. Saves and opens a local File-instance of your 
-			 * selected workspace. Only prompts when unset and can be changed from within gui
-			 * Alex
+			 * TODO Test if you like this idea. Saves and opens a local File-instance of
+			 * your selected workspace. Only prompts when unset and can be changed from
+			 * within gui Alex
 			 */
-			
+
 			File workspace = null;
-			
+
 			try {
 				workspace = WorkspaceHandler.readWorkspace();
 			} catch (IOException ex) {
@@ -112,10 +122,10 @@ public class MainController extends VBox {
 				directoryChooser.setTitle("Select new workspace folder");
 				workspace = directoryChooser.showDialog(stage);
 			}
-			
+
 			FileController fileController = new FileController(workspace);
 			setFileController(fileController);
-			
+
 			if (workspace != null) {
 				// TODO: Log this
 				fileController.changeWorkspace(workspace);
@@ -135,6 +145,10 @@ public class MainController extends VBox {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
+
+			/*
+			 * TO BE REMOVED
+			 */ openSettingsPanel();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -157,15 +171,55 @@ public class MainController extends VBox {
 		btnRun.setOnAction(event -> compileAndRun());
 		initTree();
 	}
-	
+
 	/**
-	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 * Creates a new SettingsPanel.
+	 * 
+	 * @author Sigge Labor
 	 */
-	public void setTextSize() {
-		FileTab selectedTab = getSelectedTab();
-		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
-			new TextSizeController(selectedTab.getZenCodeArea());
+	public void openSettingsPanel() {
+		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);
+	}
+
+	/**
+	 * Sets the zenCodeAreasTextSize to a new value, and updates the text size of
+	 * all active ZenCodeAreas.
+	 * 
+	 * @author Sigge Labor
+	 */
+	public synchronized void setFontSize(int newFontSize) {
+		zenCodeAreasTextSize = newFontSize;
+
+		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
+			activeZenCodeAreas.get(i).setFontSize(zenCodeAreasTextSize);
 		}
+	}
+
+	/**
+	 * Sets the zenCodeAreasFontFamily to a new value, and updates the font family
+	 * of all active ZenCodeAreas
+	 * 
+	 * @author Sigge Labor.
+	 */
+	public void setFontFamily(String newFontFamily) {
+		zenCodeAreasFontFamily = newFontFamily;
+
+		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
+			activeZenCodeAreas.get(i).setFontFamily(zenCodeAreasFontFamily);
+		}
+	}
+
+	/**
+	 * @return the stage
+	 */
+	public Stage getStage() {
+		return stage;
+	}
+
+	public ZenCodeArea createNewZenCodeArea() {
+		ZenCodeArea zenCodeArea = new ZenCodeArea(zenCodeAreasTextSize, zenCodeAreasFontFamily);
+		activeZenCodeAreas.add(zenCodeArea);
+		return zenCodeArea;
 	}
 
 	/**
@@ -214,37 +268,37 @@ public class MainController extends VBox {
 		}
 		return file;
 	}
-	
+
 	/**
 	 * If a tab is open, attempt to call its shortcutsTrigger-method.
 	 */
 	public void shortcutsTrigger() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.shortcutsTrigger();
 		}
 	}
-	
+
 	/**
 	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
 	 */
 	public void commentsShortcutsTrigger() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
-		}	
+		}
 	}
-	
+
 	public void navigateToCorrectTabIndex() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.navigateToCorrectTabIndex();
 		}
 	}
-	
+
 	/**
 	 * Grabs the text from the currently selected Tab and writes it to the currently
 	 * selected file. If no file selected, opens a file chooser for selection of
@@ -256,7 +310,7 @@ public class MainController extends VBox {
 	public boolean saveFile(Event event) {
 		return saveFile(true);
 	}
-	
+
 	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
@@ -269,7 +323,7 @@ public class MainController extends VBox {
 
 		if (didWrite) {
 			tab.update(file);
-			
+
 			if (backgroundCompile) {
 				backgroundCompiling(file);
 			}
@@ -279,9 +333,10 @@ public class MainController extends VBox {
 
 		return didWrite;
 	}
-	
+
 	/**
 	 * Compiles a file in the background.
+	 * 
 	 * @param file
 	 */
 	private void backgroundCompiling(File file) {
@@ -297,12 +352,12 @@ public class MainController extends VBox {
 			e.printStackTrace();
 		}
 	}
-	
+
 	public void errorHandler(DebugErrorBuffer buffer) {
 		DebugError error;
 		while (!buffer.isEmpty()) {
 			error = buffer.get();
-			
+
 			getSelectedTab().setStyle(error.getRow(), error.getColumn(), "underline");
 		}
 	}
@@ -363,7 +418,7 @@ public class MainController extends VBox {
 	 */
 	public void openFile(File file) {
 		if (file != null && getTabFromFile(file) == null) {
-			
+
 			FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 
@@ -384,7 +439,8 @@ public class MainController extends VBox {
 		File newFile = null;
 		int prefixPosition = file.getName().lastIndexOf('.');
 
-		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0, prefixPosition);
+		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0,
+				prefixPosition);
 		if (newName != null) {
 			newFile = fileController.renameFile(file, newName);
 			var tabs = tabPane.getTabs();
@@ -431,6 +487,7 @@ public class MainController extends VBox {
 	/**
 	 * Opens an input dialog to choose package name and then creates a new package
 	 * with that name in the selected folder (usually src).
+	 * 
 	 * @param parent Folder to create package in.
 	 * @return The created package if created, otherwise null.
 	 */
@@ -460,77 +517,38 @@ public class MainController extends VBox {
 			File file = getSelectedTab().getFile();
 			File metadataFile = getMetadataFile(file);
 			saveFile(false);
-		
-		consoleController.newConsole(); //TODO: Maybe but in a better place ?
-		
+
+			consoleController.newConsole(); // TODO: Maybe but in a better place ?
+
 			try {
 				ProcessBuffer buffer = new ProcessBuffer();
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
 				compiler.startCompileAndRun();
 				Process process = buffer.get();
 				if (process != null && process.isAlive()) {
-					//TODO Create new console tab from here.
+					// TODO Create new console tab from here.
 				}
-				
+
 			} catch (Exception e) {
 				e.printStackTrace();
 
 				// TODO: handle exception
 			}
-		
+
 		}
 	}
-	
+
 	public void updateStatusLeft(String text) {
 		statusBarLeftLabel.setText(text);
 	}
-	
+
 	public void updateStatusRight(String text) {
 		statusBarRightLabel.setText(text);
-	}
-	
-	/**
-	 * Switches between dark- and light mode depending on what is selected in the application's
-	 * 'Dark Mode'-checkbox.
-	 * @param event
-	 * @author Pontus Laos
-	 */
-	@FXML
-	private void darkModeChanged(Event event) {
-		boolean isDarkMode = cmiDarkMode.isSelected();
-		var stylesheets = stage.getScene().getStylesheets();
-		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-		var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
-		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
-		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
-		
-		if (isDarkMode) {
-			if (stylesheets.contains(lightMode)) {
-				stylesheets.remove(lightMode);
-			}
-			
-			if (stylesheets.contains(lightModeKeywords)) {
-				stylesheets.remove(lightModeKeywords);
-			}
-			
-			stylesheets.add(darkMode);
-			stylesheets.add(darkModeKeywords);
-		} else {
-			if (stylesheets.contains(darkMode)) {
-				stylesheets.remove(darkMode);
-			}
-			
-			if (stylesheets.contains(darkModeKeywords)) {
-				stylesheets.remove(darkModeKeywords);
-			}
-			
-			stylesheets.add(lightMode);
-			stylesheets.add(lightModeKeywords);
-		}
 	}
 
 	/**
 	 * Finds the metadata file for the project of a file.
+	 * 
 	 * @param file File within project to find metadata file in.
 	 * @return The found metadata file, null if not found.
 	 */
@@ -558,7 +576,7 @@ public class MainController extends VBox {
 	 * @return The new Tab.
 	 */
 	public FileTab addTab() {
-		FileTab tab = new FileTab();
+		FileTab tab = new FileTab(createNewZenCodeArea());
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 
@@ -625,7 +643,6 @@ public class MainController extends VBox {
 		}
 	}
 
-
 	/**
 	 * Gets the currently selected tab on the tab pane.
 	 * 
@@ -662,27 +679,27 @@ public class MainController extends VBox {
 
 		return null;
 	}
-	
+
 	/**
-	 * Tries to import a folder.
-	 * Displays a directory chooser and copies the selected folder into the current workspace
-	 * using {@link main.java.zenit.filesystem.FileController#importProject(File) importProject(File)}
-	 * Displays an error or information dialog to display the result.
+	 * Tries to import a folder. Displays a directory chooser and copies the
+	 * selected folder into the current workspace using
+	 * {@link main.java.zenit.filesystem.FileController#importProject(File)
+	 * importProject(File)} Displays an error or information dialog to display the
+	 * result.
 	 */
 	@FXML
 	public void importProject() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		directoryChooser.setTitle("Select project to import");
 		File source = directoryChooser.showDialog(stage);
-		
+
 		if (source != null) {
 			try {
 				File target = fileController.importProject(source);
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
 				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
 			} catch (IOException ex) {
-				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
-						ex.getMessage());
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", ex.getMessage());
 			}
 		}
 	}
