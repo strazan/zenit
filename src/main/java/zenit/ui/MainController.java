@@ -560,10 +560,16 @@ public class MainController extends VBox {
 		return null;
 	}
 	
-	public class Search extends Thread{
+	/**
+	 * The Search class lets you search for a word then either
+	 * highlights it yellow or grey, depending on what background you have,
+	 * or replaces it with another word of your choosing
+	 * 
+	 * @author Fredrik EKlundh
+	 *
+	 */
+	public class Search{
 		private ZenCodeArea zenCodeArea;
-		
-		private Thread thread;
 		
 		private Scanner txtscan = null;
 		
@@ -579,11 +585,12 @@ public class MainController extends VBox {
 		private String word;
 		
 		/**
-		 * @author Fredrik EKlundh
+		 * Opens a TextInputDialog and let's you type in a word to search for 
+		 * 
 		 * @throws FileNotFoundException
 		 */
 		public void searchInFile() {
-
+			
 			TextInputDialog dialog = new TextInputDialog("search");
 			dialog.setTitle("Search");
 			dialog.setHeaderText("What are you looking for?");
@@ -594,16 +601,15 @@ public class MainController extends VBox {
 			
 			zenCodeArea = getSelectedTab().getZenCodeArea();
 
+			clearZen();
+			
 			word = "";
 
 			numberOfTimes = 0;
 			numberOfLines = -1;
 			lineLenght = 0;
-			
-			//Tab tab = getSelectedTab();
 
 			File file = getSelectedTab().getFile();
-				//	currentlySelectedFiles.get(tab);
 		
 			try {
 				txtscan = new Scanner(file);
@@ -615,46 +621,51 @@ public class MainController extends VBox {
 			if (result.isPresent()) {
 				word = result.get();
 				notCaseSensetive();
-				//caseSensetive();
+				//caseSensetive();   kunna välja vilken man vill använda i sökpanelen
 
 			}
 
 			if (numberOfTimes > 0) {
-				System.out.println("Exsist " + numberOfTimes + " times");
+				System.out.println("Exsist " + numberOfTimes + " times");  //visa i sökpanelen
 				
 				for (int i = 0; i < numberOfTimes; i++) {
 
 					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search-dark-mode"));
+//					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search-light-mode"));				
 					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
 
 				}
 				zenCodeArea.moveTo(absolutePos.get(0));
 				zenCodeArea.requestFollowCaret();
 				
-				//replaceWord(word, "hehe", absolutePos);
-			} else {
-				// System.out.println("LEARN TO SPELL");
+//				replaceWord(word, "hehe", absolutePos);
 			}
-			
-			thread = new Thread(this);
-			thread.start();
 		}
-		
-//		public void run() {
-//			System.out.println("run method");
-//		}
 
+		/**
+		 * Clears the highlighted words of their highlight
+		 */
 		private void clearZen() {
 			zenCodeArea.appendText(" ");
 			zenCodeArea.deletePreviousChar();
 		}
 		
+		/**
+		 * Replaces every occurrence of a certain word with another word 
+		 * 
+		 * @param wordBefore
+		 * @param wordAfter
+		 * @param absolutePos
+		 */
 		private void replaceWord(String wordBefore, String wordAfter, List<Integer> absolutePos) {
 			for (int i = absolutePos.size() -1; i >= 0; i--) {
 				zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + wordBefore.length(), wordAfter);
 			}
 		}
 		
+		/**
+		 * Jumps down/to the next occurrence of the highlighted word
+		 */
 		public void jumpDown() {
 			if (i < absolutePos.size()) {
 				i++;
@@ -664,6 +675,9 @@ public class MainController extends VBox {
 			zenCodeArea.requestFollowCaret();
 		}
 		
+		/**
+		 * Jumps up/to the previous occurrence of the highlighted word
+		 */
 		public void jumpUp() {
 			if(i > 0) {
 				i--;
@@ -673,6 +687,9 @@ public class MainController extends VBox {
 			zenCodeArea.requestFollowCaret();	
 		}
 		
+		/**
+		 * Making the search ignore if it's capital letters or lowercase
+		 */
 		private void notCaseSensetive() {
 			
 			while (txtscan.hasNextLine()) {
@@ -693,6 +710,9 @@ public class MainController extends VBox {
 			}
 		}
 		
+		/**
+		 * This search makes a different if it's capital letters or lowercase
+		 */
 		private void caseSensetive() {
 			
 			while (txtscan.hasNextLine()) {

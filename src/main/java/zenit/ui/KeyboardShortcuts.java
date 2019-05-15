@@ -43,6 +43,8 @@ public final class KeyboardShortcuts {
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
 		add(scene, KeyCode.F, KeyCombination.SHORTCUT_DOWN, search::searchInFile);
+		add(scene, KeyCode.B, KeyCombination.SHORTCUT_DOWN, search::jumpUp);
+		add(scene, KeyCode.M, KeyCombination.SHORTCUT_DOWN, search::jumpDown);
 		add(scene, KeyCode.SPACE, KeyCombination.SHORTCUT_DOWN, controller::shortcutsTrigger);
 		
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
