@@ -145,6 +145,9 @@ public class MainController extends VBox {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
+			
+			/* TODO REMOVE */
+			openSettingsPanel();
 
 		} catch (Exception e) {
 			e.printStackTrace();

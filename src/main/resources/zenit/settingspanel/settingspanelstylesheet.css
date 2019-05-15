@@ -17,6 +17,7 @@
 
 #mainAnchorPane {
 	-fx-background-color: #444;
+		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
@@ -103,9 +104,90 @@
     -fx-background-color: orange;
 }
 
+/* Custom CSS pane */
+#pnlCustomCSS {
+	-fx-background-color: #444;
+}
+#lblAddCustomCssLines {
+	-fx-text-fill: #eee;
+}
+#fldCustomCSSInput {
+	-fx-background-color: #444;
+	-fx-border-color: rgba(255,255,255,0.4);
+	-fx-text-fill: #009911;
+}
+
+#scrollPaneAddedCSS{
+	  -fx-background-color: #444;
+	  -fx-border-color: transparent;
+}
+
+#listViewAddedCSS {
+	 -fx-background-color: #444;
+	 -fx-border-color: transparent;
+}
+#listViewAddedCSS .list-cell { 
+	-fx-background-color: #444; /* 5 */
+	-fx-text-fill: #eee;
+	
+}
+
+#listViewAddedCSS .list-cell:even {
+	 -fx-background-color: #555;
+}
+
+#scrollPaneAddedCSS .scroll-pane {
+    -fx-background-color: #444;
+}
+
+#scrollPaneAddedCSS .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+#scrollPaneAddedCSS .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+#scrollPaneAddedCSS .scroll-bar:vertical .thumb {
+    -fx-background-color: #eee;
+    -fx-background-radius: 5em;
+}
+
+#scrollPaneAddedCSS .increment-button,#scrollPaneAddedCSS .decrement-button {
+	 -fx-background-color: transparent;
+	
+}
+
+#scrollPaneAddedCSS  .scroll-bar .increment-arrow,
+#scrollPaneAddedCSS  .scroll-bar .decrement-arrow {	
+	
+}
+
+.lblCSSText {
+	-fx-text-fill: #eee;
+}
+
+
+#btnRemoveCSS {
+	-icon-paint: red;
+    -fx-background-color: -icon-paint;
+    -size: 15;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+
+    -fx-shape: "M 100 100 L 200 200 L 100 200 L 200 100 Z";
+    
+    -fx-shape: "M 100 300 L 200 200 L 100 200 L 200 100 Z";
+}
+	
+
+
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #444;
+	-fx-background-color: #CC888888;
 }
 
 #pnlSupport .hyperlink {
@@ -123,3 +205,4 @@
 	-fx-text-fill: #bbb;
 	-fx-font-size: 16px;
 }
+

@@ -5,6 +5,8 @@
 <?import javafx.scene.control.ChoiceBox?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,7 +14,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<fx:root fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="mainAnchorPane" fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" stylesheets="@settingspanelstylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
     <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
          <children>
@@ -23,6 +25,7 @@
                   <Insets />
                </opaqueInsets></Button>
             <Button fx:id="btnSupport" layoutX="8.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
+            <Button layoutX="46.0" layoutY="129.0" mnemonicParsing="false" text="Custom CSS" AnchorPane.bottomAnchor="238.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
          </children>
       </AnchorPane>
       <AnchorPane id="pnlSupport" fx:id="pnlSupport" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -92,6 +95,23 @@
             </ToggleSwitch>
             <Label id="lblDarkMode" alignment="CENTER" layoutX="258.0" layoutY="119.0" prefHeight="20.0" prefWidth="85.0" text="DarkMode" textAlignment="CENTER" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="255.0" />
             <Label id="lblDarkModeTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="231.0" text="If you don't use dark mode, you don't really deserve to use zenit" AnchorPane.leftAnchor="104.0" AnchorPane.rightAnchor="100.5" />
+         </children>
+      </AnchorPane>
+      <AnchorPane id="pnlCustomCSS" fx:id="pnlCustomCSS" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label id="lblAddCustomCssLines" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="84.0" prefHeight="19.0" prefWidth="223.0" text="Add custom CSS lines to zenit" AnchorPane.leftAnchor="188.0" AnchorPane.rightAnchor="187.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Custom CSS" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
+            <TextField id="fldCustomCSSInput" fx:id="fldCSSLineInput" layoutX="188.0" layoutY="120.0" prefHeight="27.0" prefWidth="223.0" />
+            <ScrollPane id="scrollPaneAddedCSS" hbarPolicy="NEVER" layoutY="200.0" pannable="true" prefHeight="200.0" prefWidth="598.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
+               <content>
+                  <ListView id="listViewAddedCSS" fx:id="listViewAddedCSS" prefHeight="211.0" prefWidth="600.0" />
+               </content>
+            </ScrollPane>
+            <Button layoutX="420.0" layoutY="121.0" mnemonicParsing="false" onAction="#addCSSLine" text="Add" />
          </children>
       </AnchorPane>
    </children>

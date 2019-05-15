@@ -2,6 +2,7 @@ package main.java.zenit.settingspanel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -20,9 +21,11 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -40,7 +43,8 @@ public class SettingsPanelController extends AnchorPane {
 
 	private int oldSize;
 	private String oldFont;
-
+	private LinkedList<String> addedCSSLines;
+	
 	private Stage window;
 	private MainController mainController;
 	
@@ -51,6 +55,9 @@ public class SettingsPanelController extends AnchorPane {
 
 	@FXML
 	private TextField fldNewSize;
+	
+	@FXML
+	private TextField fldCSSLineInput;
 
 	@FXML
 	private Slider sldrNewSize;
@@ -98,6 +105,9 @@ public class SettingsPanelController extends AnchorPane {
 	private ToggleSwitch toggleDarkMode;
 	
 	@FXML
+	private ListView listViewAddedCSS;
+	
+	@FXML
 	private AnchorPane pnlTextAppearance;
 	
 	@FXML
@@ -119,6 +129,8 @@ public class SettingsPanelController extends AnchorPane {
 		
 		oldSize = oldFontSize;
 		oldFont = oldFontFamily;
+		addedCSSLines = new LinkedList<String>();
+		
 		FXMLLoader loader = new FXMLLoader(
 			getClass().getResource("/zenit/settingspanel/SettingsPanel.fxml"
 		));
@@ -220,8 +232,49 @@ public class SettingsPanelController extends AnchorPane {
 		}
 	}
 	
+	// TODO update the comments below im tired.
+	
 	/**
-	 * Opens a link in default browser. The URL depends on witch button that is clicked.
+	 * Adds the string written in fldCSSLineInput to the setStyle method. till will add the styling
+	 * to the application. 
+	 */
+	@FXML
+	private void addCSSLine() {
+		
+		String CSSLine = fldCSSLineInput.getText();
+		try {
+			Scene mockScene = new Scene(new Region());
+			mockScene.getRoot().setStyle(CSSLine);
+			
+			String allLinesOfCSS = "";
+			addedCSSLines.addFirst(CSSLine);
+			
+			for(int i = 0; i < addedCSSLines.size(); i++) {
+				allLinesOfCSS += addedCSSLines.get(i);
+			}
+			setStyle(allLinesOfCSS);
+			
+			updateCustomCSSListView();
+		}
+		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Updates the listViewAddedCSS to show the correct lines. 
+	 */
+	private void updateCustomCSSListView() {
+		listViewAddedCSS.getItems().clear();
+		
+		for(int i = 0; i < addedCSSLines.size(); i++) {
+			listViewAddedCSS.getItems().add(new CustomCSSListItem(addedCSSLines.get(i)));
+		}
+	}
+	
+	/**
+	 * Calls the openInBrowser method. The URL depends on which button that is clicked.
 	 * @param e
 	 */
 	@FXML
@@ -239,7 +292,8 @@ public class SettingsPanelController extends AnchorPane {
 	}
 	
 	/**
-	 * Opens an URL an the computers default browser.
+	 * Opens an URL an the computers default browser. The command varies depending on the users
+	 * operating system.
 	 * @param url
 	 */
 	private void openInBrowser(String url) {
@@ -372,6 +426,10 @@ public class SettingsPanelController extends AnchorPane {
 				darkModeChanged(toggleDarkMode.isSelected());
 			}
         });
+		
+		listViewAddedCSS.getItems().add(new AnchorPane());
+
+		
 	}
 	
 	//TODO remove I GUESS
