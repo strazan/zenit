@@ -203,24 +203,18 @@ public class ConsoleController implements Initializable {
 	 *  AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
-	public void newTerminal() {
-		TerminalConfig winConfig = new TerminalConfig();
-		winConfig.setBackgroundColor(Color.BLACK);
-		winConfig.setForegroundColor(Color.WHITE);
-		winConfig.setCursorBlink(true);
-		winConfig.setCursorColor(Color.WHITE);
-		winConfig.setFontFamily("consolas");
-		winConfig.setFontSize(12);
-		winConfig.setScrollbarVisible(false);
-		
-		TerminalConfig config = System.getProperty("os.name").startsWith("W") ? winConfig : new TerminalConfig();
-		
-		Terminal terminal = new Terminal(config, FileSystems.getDefault().getPath(".").toAbsolutePath());
+	public void newTerminal() {		
+		Terminal terminal = new Terminal(createTerminalConfig(), FileSystems.getDefault().getPath(".").toAbsolutePath());
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
-
-		
+		terminalAnchorPane.setStyle("-fx-background-color:black");
+		terminal.setMinSize(400, 300);
+//		terminalAnchorPane.setMinSize(400, 300);
 		fillAnchor(terminal);
+//		terminalAnchorPane.setTopAnchor(terminal, 0.0);
+//		terminalAnchorPane.setRightAnchor(terminal, 0.0);
+//		terminalAnchorPane.setBottomAnchor(terminal, 0.0);
+//		terminalAnchorPane.setLeftAnchor(terminal, 0.0);
 		fillAnchor(terminalAnchorPane);
 		
 		terminalAnchorPane.getChildren().add(terminal);
@@ -231,8 +225,23 @@ public class ConsoleController implements Initializable {
 		showTerminalTabs();
 	}
 	
-	// TODO maybe add to (create) package 'helpers' //Oskar vad menas??
+	private TerminalConfig createTerminalConfig() {
+		TerminalConfig windowsConfig = new TerminalConfig();
+		windowsConfig.setBackgroundColor(Color.BLACK);
+		windowsConfig.setForegroundColor(Color.WHITE);
+		windowsConfig.setCursorBlink(true);
+		windowsConfig.setCursorColor(Color.WHITE);
+		windowsConfig.setFontFamily("consolas");
+		windowsConfig.setFontSize(12);
+		windowsConfig.setScrollbarVisible(false);
+		
+		//TODO Non-windows config (if needed).
+		
+		
+		return (System.getProperty("os.name").startsWith("W") ? windowsConfig : new TerminalConfig());
+	}
 	
+
 	
 	/**
 	 * sets the anchor of a node to fill parent 
@@ -252,6 +261,7 @@ public class ConsoleController implements Initializable {
 	 */
 	public void clearConsole() {
 		activeConsole.clear();
+		
 	}
 	
 	
