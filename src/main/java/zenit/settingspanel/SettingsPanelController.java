@@ -26,7 +26,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import main.java.zenit.ui.FileTab;
+
 import main.java.zenit.ui.MainController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -39,7 +39,8 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class SettingsPanelController extends AnchorPane {
 
 	private int oldSize;
-	private ZenCodeArea codeArea;
+	private String oldFont;
+
 	private Stage window;
 	private MainController mainController;
 	
@@ -113,20 +114,11 @@ public class SettingsPanelController extends AnchorPane {
 	 * @param codeArea the ZenCodeArea that will be modified.
 	 */
 	
-	public SettingsPanelController(MainController mainController) {
+	public SettingsPanelController(MainController mainController, int oldFontSize, String oldFontFamily) {
 		this.mainController = mainController;
-		FileTab selectedTab = mainController.getSelectedTab();
-		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
-			this.codeArea = selectedTab.getZenCodeArea();
-		}
-		else {
-			this.codeArea = new ZenCodeArea();
-		}
-		//TODO CHANGE THIS LOL VERY BAD
 		
-		
-		oldSize = codeArea.getFontSize();
-
+		oldSize = oldFontSize;
+		oldFont = oldFontFamily;
 		FXMLLoader loader = new FXMLLoader(
 			getClass().getResource("/zenit/settingspanel/SettingsPanel.fxml"
 		));
@@ -159,7 +151,7 @@ public class SettingsPanelController extends AnchorPane {
 	 */
 	public void setNewFont(String newFont) {
 		chcbxNewFont.setValue(newFont);
-		codeArea.setFont(newFont);
+		mainController.setFontFamily(newFont);
 	}
 	
 	/**
@@ -176,7 +168,7 @@ public class SettingsPanelController extends AnchorPane {
 			size = 6;
 		}
 		sldrNewSize.setValue(size);
-		this.codeArea.setFontSize((int)size);
+		mainController.setFontSize((int)size);//this.codeArea.setFontSize((int)size);
 	}
 	
 	/**
@@ -200,6 +192,9 @@ public class SettingsPanelController extends AnchorPane {
 	
 	@FXML
 	private void setNewJavaHome() {
+		/*
+		 * TODO REMOVE
+		 */
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		File selectedDirectory = directoryChooser.showDialog(window);
 
@@ -225,6 +220,10 @@ public class SettingsPanelController extends AnchorPane {
 		}
 	}
 	
+	/**
+	 * Opens a link in default browser. The URL depends on witch button that is clicked.
+	 * @param e
+	 */
 	@FXML
 	private void openLinkInBrowserEvent(Event e) {	
 		
@@ -283,17 +282,23 @@ public class SettingsPanelController extends AnchorPane {
 	 * Switches between dark- and light mode depending on what is selected in the setting pane's
 	 * toggle switch.
 	 * @param event
-	 * @author Pontus Laos
+	 * @author Pontus Laos, Sigge Labor
 	 */
 	private void darkModeChanged(boolean isDarkMode) {
 		
 		var stylesheets = this.mainController.getStage().getScene().getStylesheets();
+		var settingsPanelStylesheets = window.getScene().getStylesheets();
+		
 		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
+		var settingsPanelDarkMode = getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm();
+		var settingsPanelLightMode = getClass().getResource("/zenit/settingspanel/settingspanelLightMode.css").toExternalForm();
 		
 		if (isDarkMode) {
 			stylesheets.add(darkMode);
+			settingsPanelStylesheets.remove(settingsPanelLightMode);
+			settingsPanelStylesheets.add(settingsPanelDarkMode);
 			
 			if (stylesheets.contains(lightModeKeywords)) {
 				stylesheets.remove(lightModeKeywords);
@@ -301,6 +306,8 @@ public class SettingsPanelController extends AnchorPane {
 			stylesheets.add(darkModeKeywords);
 		} else {
 			stylesheets.remove(darkMode);
+			settingsPanelStylesheets.remove(settingsPanelDarkMode);
+			settingsPanelStylesheets.add(settingsPanelLightMode);
 			
 			if (stylesheets.contains(darkModeKeywords)) {
 				stylesheets.remove(darkModeKeywords);
@@ -335,8 +342,8 @@ public class SettingsPanelController extends AnchorPane {
 		for(int i = 0; i < fonts.size(); i++) {
 			chcbxNewFont.getItems().add(fonts.get(i));
 		}
-		chcbxNewFont.setValue(codeArea.getFont());
-		lblOldFont.setText(codeArea.getFont());
+		chcbxNewFont.setValue(oldFont);
+		lblOldFont.setText(oldFont);
 		chcbxNewFont.getSelectionModel().selectedItemProperty().addListener((arg0, arg1, arg2) -> {
 			setNewFont(arg2);
 		});
@@ -366,6 +373,8 @@ public class SettingsPanelController extends AnchorPane {
 			}
         });
 	}
+	
+	//TODO remove I GUESS
 	
 //	private class SetJavaHome extends Thread {
 //		private String directory;

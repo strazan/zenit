@@ -2,6 +2,7 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -24,7 +25,6 @@ import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.settingspanel.SettingsPanelController;
-import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -41,6 +41,9 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private int zenCodeAreasTextSize;
+	private String zenCodeAreasFontFamily;
+	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 
 	@FXML
 	private TextArea taConsole;
@@ -83,6 +86,10 @@ public class MainController extends VBox {
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
+		this.zenCodeAreasTextSize = 14;
+		this.zenCodeAreasFontFamily = "Times new Roman";
+		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
+		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
 
@@ -112,7 +119,7 @@ public class MainController extends VBox {
 			
 			
 			 /* TO BE REMOVED
-			 */	setTextSize();
+			 */	openSettingsPanel();
 			
 			
 		} catch (Exception e) {
@@ -138,15 +145,49 @@ public class MainController extends VBox {
 	
 	/**
 	 * Creates a new SettingsPanel.
+	 * @author Sigge Labor
 	 */
-	public void setTextSize() {
-	
-			new SettingsPanelController(this);
-		
+	public void openSettingsPanel() {
+			new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);	
 	}
 	
+	/**
+	 * Sets the zenCodeAreasTextSize to a new value, and updates the text size of all active 
+	 * ZenCodeAreas.
+	 * @author Sigge Labor
+	 */
+	public synchronized void setFontSize(int newFontSize) {
+		zenCodeAreasTextSize = newFontSize;
+		
+		for(int i = 0; i < activeZenCodeAreas.size(); i++) {
+			activeZenCodeAreas.get(i).setFontSize(zenCodeAreasTextSize);
+		}
+	}
+	
+	/**
+	 * Sets the zenCodeAreasFontFamily to a new value, and updates the font family of all active 
+	 * ZenCodeAreas
+	 * @author Sigge Labor.
+	 */
+	public void setFontFamily(String newFontFamily) {
+		zenCodeAreasFontFamily = newFontFamily;
+		
+		for(int i = 0; i < activeZenCodeAreas.size(); i++) {
+			activeZenCodeAreas.get(i).setFontFamily(zenCodeAreasFontFamily);
+		}
+	}
+	
+	/**
+	 * @return the stage
+	 */
 	public Stage getStage() {
 		return stage;
+	}
+	
+	public ZenCodeArea createNewZenCodeArea() {
+		ZenCodeArea zenCodeArea = new ZenCodeArea(zenCodeAreasTextSize, zenCodeAreasFontFamily);
+		activeZenCodeAreas.add(zenCodeArea);
+		return zenCodeArea;
 	}
 
 	/**
@@ -435,7 +476,7 @@ public class MainController extends VBox {
 	 * @return The new Tab.
 	 */
 	public FileTab addTab() {
-		FileTab tab = new FileTab();
+		FileTab tab = new FileTab(createNewZenCodeArea());
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 

@@ -11,8 +11,6 @@
 }
 
 #spAnchorPane .button {
-	-fx-border-width: 0.0;
-	-fx-text-fill: #555;
 	-fx-background-color: #555;
 	-fx-text-fill: #fff;
 }

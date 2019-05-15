@@ -37,7 +37,7 @@
             <MenuItem mnemonicParsing="false" text="Save As…" />
             <MenuItem mnemonicParsing="false" text="Revert" />
             <SeparatorMenuItem mnemonicParsing="false" />
-                  <MenuItem mnemonicParsing="false" onAction="#setTextSize" text="Settings" />
+                  <MenuItem mnemonicParsing="false" onAction="#openSettingsPanel" text="Settings" />
                   <MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
             <MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />
             <SeparatorMenuItem mnemonicParsing="false" />
