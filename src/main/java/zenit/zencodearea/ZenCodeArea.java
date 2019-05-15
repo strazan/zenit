@@ -154,8 +154,9 @@ public class ZenCodeArea extends CodeArea {
 		setStyle("-fx-font-size: " + newFontSize);
 	}
 	
-	public void setFontFamily(String fontFamily) {
+	public void updateAppearance(String fontFamily, int size) {
 	//	font = fontFamily;
-		setStyle("-fx-font-family: " + fontFamily);	
+		setStyle("-fx-font-family: " + fontFamily + ";" + 
+				"-fx-font-size: " + size + ";");
 	}	
 }

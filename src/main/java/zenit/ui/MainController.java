@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -28,7 +29,6 @@ import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
-import main.java.zenit.textsizewindow.TextSizeController;
 import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
@@ -100,8 +100,8 @@ public class MainController extends VBox {
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
-		this.zenCodeAreasTextSize = 14;
-		this.zenCodeAreasFontFamily = "Times new Roman";
+		this.zenCodeAreasTextSize = 12;
+		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
 
 		try {
@@ -146,10 +146,6 @@ public class MainController extends VBox {
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
 
-			/*
-			 * TO BE REMOVED
-			 */ openSettingsPanel();
-
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -174,7 +170,6 @@ public class MainController extends VBox {
 
 	/**
 	 * Creates a new SettingsPanel.
-	 * 
 	 * @author Sigge Labor
 	 */
 	public void openSettingsPanel() {
@@ -182,31 +177,31 @@ public class MainController extends VBox {
 	}
 
 	/**
-	 * Sets the zenCodeAreasTextSize to a new value, and updates the text size of
-	 * all active ZenCodeAreas.
-	 * 
+	 * Sets the zenCodeAreasTextSize to a new value.
 	 * @author Sigge Labor
 	 */
 	public synchronized void setFontSize(int newFontSize) {
 		zenCodeAreasTextSize = newFontSize;
-
-		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
-			activeZenCodeAreas.get(i).setFontSize(zenCodeAreasTextSize);
-		}
+		updateZenCodeAreasAppearance();
 	}
 
 	/**
-	 * Sets the zenCodeAreasFontFamily to a new value, and updates the font family
-	 * of all active ZenCodeAreas
-	 * 
+	 * Sets the zenCodeAreasFontFamily to a new value.
 	 * @author Sigge Labor.
 	 */
-	public void setFontFamily(String newFontFamily) {
+	public synchronized void setFontFamily(String newFontFamily) {
 		zenCodeAreasFontFamily = newFontFamily;
-
+		updateZenCodeAreasAppearance();
+	}
+	
+	/**
+	 * Updates the appearance (text size and font family) of all active ZenCodeAreas.
+	 * @author Sigge Labor.
+	 */
+	public void updateZenCodeAreasAppearance() {
 		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
-			activeZenCodeAreas.get(i).setFontFamily(zenCodeAreasFontFamily);
-		}
+			activeZenCodeAreas.get(i).updateAppearance(zenCodeAreasFontFamily, zenCodeAreasTextSize);
+		}	
 	}
 
 	/**
