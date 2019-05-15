@@ -2,6 +2,8 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -654,65 +656,136 @@ public class MainController extends VBox {
 		
 		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
 		
-		int nextRowEnd = whereToReplace -1;
-		
-		int whereToReplace2 = nextRowEnd - zenCodeArea.getParagraphLength(rowNumber -1);
-		
-		int whereToReplace3 = whereToReplace2 - zenCodeArea.getParagraphLength(rowNumber -2);
-		
-		int[] whereToReplaceArray = new int[3];
-		
+		List<Integer> whereToReplaceList = new ArrayList<>();
 		
 		IndexRange zen = zenCodeArea.getSelection();
 		
 		int endOfSelection = zen.getEnd();
 		int startOfSelection = zen.getStart();
 		
+		boolean normal = true;
+		
+		int n = 1;
+		int j = 2;
+		
+		whereToReplaceList.add(whereToReplace);
+		
+		if(carretPos == endOfSelection && whereToReplace > startOfSelection) {
+			normal = true;
+			do {
+				
+				whereToReplace = whereToReplace - 1 - zenCodeArea.getParagraphLength(rowNumber - n);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while(whereToReplace > startOfSelection);
+		}
+		
+		if(carretPos == startOfSelection && whereToReplace + paragraphLength < endOfSelection) {
+			normal = false;
+			do {
+				
+				whereToReplace = whereToReplace + 1 + zenCodeArea.getParagraphLength(rowNumber + n - 1);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while(whereToReplace + zenCodeArea.getParagraphLength(rowNumber + n - 1) < endOfSelection);
+			
+			System.out.println(whereToReplaceList.size());
+			System.out.println(whereToReplaceList.get(0));
+			System.out.println(whereToReplaceList.get(1));
+		}
+
+		
 		
 		System.out.println("carretPos " + carretPos);
 		
 		System.out.println("whereToReplace1 " + whereToReplace);
-		
-		System.out.println("whereTo2 " + whereToReplace2);
-		
-		System.out.println("whereTo3 " + whereToReplace3);
-		
-		System.out.println("row number " + rowNumber);
 
 		System.out.println("row lenght " + paragraphLength);
 		
 		System.out.println(zenCodeArea.getSelection());
-
 		
+		if(normal == true) {
+			
+			for(int i = 0; i < n; i++) {
+				whereToReplace = whereToReplaceList.get(i);
 				
-		if(carretPos > length - 3) {
-			zenCodeArea.insertText(carretPos, "	  ");
-			zenCodeArea.moveTo(carretPos);
+				if(carretPos > length - 3) {
+					zenCodeArea.insertText(carretPos, "	  ");
+					zenCodeArea.moveTo(carretPos);
+				}
+				
+				if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+				//	System.out.println("replace comment");
+					if(zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						zenCodeArea.moveTo(carretPos);
+					}
+					
+				}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+					//	System.out.println("delete comment");
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						if(whereToReplace == carretPos) {
+							zenCodeArea.moveTo(carretPos);
+						}else if(whereToReplace + 1 == carretPos) {
+							zenCodeArea.moveTo(carretPos - 1);
+						}else {
+							zenCodeArea.moveTo(carretPos - 2);
+						}
+							
+					}else {
+				//		System.out.println("insert comment");
+						zenCodeArea.insertText(whereToReplace, "//");
+						zenCodeArea.moveTo(carretPos + 2);
+					}		
+				}	
+			}
 		}
 		
-		if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
-		//	System.out.println("replace comment");
-			zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
-			zenCodeArea.moveTo(carretPos);
+		if(normal == false) {
 			
-		}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
-			
-			if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
-			//	System.out.println("delete comment");
-				zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
-				if(whereToReplace == carretPos) {
+			for(int i = whereToReplaceList.size() - 1; i >= 0; i--) {
+				whereToReplace = whereToReplaceList.get(i);
+				
+				if(carretPos > length - 3) {
+					zenCodeArea.insertText(carretPos, "	  ");
 					zenCodeArea.moveTo(carretPos);
-				}else if(whereToReplace + 1 == carretPos) {
-					zenCodeArea.moveTo(carretPos - 1);
-				}else {
-					zenCodeArea.moveTo(carretPos - 2);
 				}
+				
+				if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+				//	System.out.println("replace comment");
+					if(zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						zenCodeArea.moveTo(carretPos);
+					}
 					
-			}else {
-		//		System.out.println("insert comment");
-				zenCodeArea.insertText(whereToReplace, "//");
-				zenCodeArea.moveTo(carretPos + 2);
-			}		
-		}	
+				}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if(zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+					//	System.out.println("delete comment");
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						if(whereToReplace == carretPos) {
+							zenCodeArea.moveTo(carretPos);
+						}else if(whereToReplace + 1 == carretPos) {
+							zenCodeArea.moveTo(carretPos - 1);
+						}else {
+							zenCodeArea.moveTo(carretPos - 2);
+						}
+							
+					}else {
+				//		System.out.println("insert comment");
+						zenCodeArea.insertText(whereToReplace, "//");
+						zenCodeArea.moveTo(carretPos + 2);
+					}		
+				}	
+			}
+		}
 	}
 }
