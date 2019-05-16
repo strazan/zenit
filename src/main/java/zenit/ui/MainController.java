@@ -695,22 +695,24 @@ public class MainController extends VBox {
 		
 		if (normal == true) {
 			
+			int stepsToMove = 0;
+			
 			for (int i = 0; i < n; i++) {
 				whereToReplace = whereToReplaceList.get(i);
 				
 				if (carretPos > length - 3) {
 					zenCodeArea.insertText(carretPos, "	  ");
-					zenCodeArea.moveTo(carretPos);
+//					zenCodeArea.moveTo(carretPos);
 				}
 				
 				if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
 
 					if (zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
 						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
-						
+						stepsToMove = stepsToMove - 2;
 					}else {
 						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
-						zenCodeArea.moveTo(carretPos);
+//						zenCodeArea.moveTo(carretPos);
 					}
 					
 				}else if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
@@ -719,21 +721,28 @@ public class MainController extends VBox {
 						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
 						
 						if (whereToReplace == carretPos) {
-							zenCodeArea.moveTo(carretPos);
+//							zenCodeArea.moveTo(carretPos);
 							
 						}else if (whereToReplace + 1 == carretPos) {
-							zenCodeArea.moveTo(carretPos - 1);
+//							zenCodeArea.moveTo(carretPos - 1);
+							stepsToMove--;
 							
 						}else {
-							zenCodeArea.moveTo(carretPos - 2);
+							stepsToMove = stepsToMove - 2;
+//							zenCodeArea.moveTo(carretPos - 2);
 						}
-							
+					
+					}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("    ")) {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
+						
 					}else {
 						zenCodeArea.insertText(whereToReplace, "//");
-						zenCodeArea.moveTo(carretPos + 2);
+						stepsToMove = stepsToMove + 2;
 					}		
 				}	
 			}
+			
+			zenCodeArea.moveTo(carretPos + stepsToMove);
 		}
 		
 		if (normal == false) {
