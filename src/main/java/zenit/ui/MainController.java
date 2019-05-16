@@ -582,7 +582,8 @@ public class MainController extends VBox {
 		private int lineLenght;
 		private int i = 0;
 		
-		private String word;
+		private String searchWord;
+		private String replaceWord;
 		
 		/**
 		 * Opens a TextInputDialog and let's you type in a word to search for 
@@ -603,12 +604,17 @@ public class MainController extends VBox {
 
 			clearZen();
 			
-			word = "";
+			searchWord = "";
+			replaceWord = "";
 
 			numberOfTimes = 0;
 			numberOfLines = -1;
 			lineLenght = 0;
 
+			boolean darkMode = cmiDarkMode.isSelected();
+			boolean caseSensetive = false;
+			boolean replace = false;
+			
 			File file = getSelectedTab().getFile();
 		
 			try {
@@ -619,31 +625,52 @@ public class MainController extends VBox {
 
 			Optional<String> result = dialog.showAndWait();
 			if (result.isPresent()) {
-				word = result.get();
-				notCaseSensetive();
-				//caseSensetive();   kunna välja vilken man vill använda i sökpanelen
+				searchWord = result.get();
+				//caseSensetive needs to be change from the panel
+				if (caseSensetive == false) {
+					notCaseSensetive();
+				}else {
+					caseSensetive();   //
+				}
+				
+				
 
 			}
 
 			if (numberOfTimes > 0) {
 				System.out.println("Exsist " + numberOfTimes + " times");  //visa i sökpanelen
 				
-				for (int i = 0; i < numberOfTimes; i++) {
-
-					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search-dark-mode"));
-//					zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + word.length(), List.of("search-light-mode"));				
-					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-
+				//replace has to be change from the panel
+				if (replace == false) {
+					
+					for (int i = 0; i < numberOfTimes; i++) {
+						if (darkMode) {
+							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
+							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+							
+						}else {
+							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
+							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+						}
+					}
+				}else {
+					
+					for (int i = 0; i < numberOfTimes; i++) {
+						absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+					}
+					//replace word needs to be set from the panel
+					replaceWord(searchWord, replaceWord, absolutePos);
 				}
+
 				zenCodeArea.moveTo(absolutePos.get(0));
 				zenCodeArea.requestFollowCaret();
 				
-//				replaceWord(word, "hehe", absolutePos);
 			}
 		}
 
 		/**
-		 * Clears the highlighted words of their highlight
+		 * Appends a Char to make the highlight disappear from 
+		 * the highlighted words then removes it again
 		 */
 		private void clearZen() {
 			zenCodeArea.appendText(" ");
@@ -696,16 +723,16 @@ public class MainController extends VBox {
 				String str = txtscan.nextLine().toLowerCase();
 				numberOfLines++;
 				lineLenght = 0;
-				while (str.indexOf(word) != -1) {
+				while (str.indexOf(searchWord.toLowerCase()) != -1) {
 					numberOfTimes++;
 
 					line.add(numberOfLines);
 
-					wordPos.add(str.indexOf(word) + lineLenght);
+					wordPos.add(str.indexOf(searchWord.toLowerCase()) + lineLenght);
 
-					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+					lineLenght += str.length() - str.substring(str.indexOf(searchWord.toLowerCase()) + searchWord.length()).length();
 
-					str = str.substring(str.indexOf(word) + word.length());
+					str = str.substring(str.indexOf(searchWord.toLowerCase()) + searchWord.length());
 				}
 			}
 		}
@@ -719,16 +746,16 @@ public class MainController extends VBox {
 				String str = txtscan.nextLine();
 				numberOfLines++;
 				lineLenght = 0;
-				while (str.indexOf(word) != -1) {
+				while (str.indexOf(searchWord) != -1) {
 					numberOfTimes++;
 
 					line.add(numberOfLines);
 
-					wordPos.add(str.indexOf(word) + lineLenght);
+					wordPos.add(str.indexOf(searchWord) + lineLenght);
 
-					lineLenght += str.length() - str.substring(str.indexOf(word) + word.length()).length();
+					lineLenght += str.length() - str.substring(str.indexOf(searchWord) + searchWord.length()).length();
 
-					str = str.substring(str.indexOf(word) + word.length());
+					str = str.substring(str.indexOf(searchWord) + searchWord.length());
 				}
 			}
 		}
