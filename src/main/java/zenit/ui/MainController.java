@@ -3,6 +3,7 @@ package main.java.zenit.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -48,6 +49,7 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
+	private ProjectMetadataController pmc;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -133,7 +135,7 @@ public class MainController extends VBox {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
-
+			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -543,6 +545,10 @@ public class MainController extends VBox {
 			stylesheets.add(lightMode);
 			stylesheets.add(lightModeKeywords);
 		}
+		
+		if (pmc != null) {
+			pmc.ifDarkModeChanged(isDarkMode);
+		}
 	}
 
 	/**
@@ -723,7 +729,7 @@ public class MainController extends VBox {
 	}
 	
 	public void showProjectProperties(File projectFile) {
-		ProjectMetadataController pmc = new ProjectMetadataController(fileController, projectFile);
+		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected());
 		pmc.start();
 	}
 }

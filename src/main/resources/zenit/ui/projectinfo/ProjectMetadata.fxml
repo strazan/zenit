@@ -25,14 +25,14 @@
                                  <children>
                                     <ListView fx:id="internalLibrariesList" layoutX="23.0" layoutY="160.0" prefHeight="127.0" prefWidth="339.0" />
                                     <ListView fx:id="externalLibrariesList" layoutX="20.0" layoutY="349.0" prefHeight="127.0" prefWidth="339.0" />
-                                    <Text layoutX="42.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sourcepath" />
-                                    <Text fx:id="directoryPath" layoutX="141.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="/path/to/src" />
-                                    <Text layoutX="42.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Directory" />
-                                    <Text fx:id="sourcepathPath" layoutX="141.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" text="/path/to/bin" />
+                                    <Text layoutX="42.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Sourcepath" />
+                                    <Text fx:id="directoryPath" layoutX="141.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="/path/to/src" />
+                                    <Text layoutX="42.0" layoutY="32.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Directory" />
+                                    <Text fx:id="sourcepathPath" layoutX="141.0" layoutY="69.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="/path/to/bin" />
                                     <Button layoutX="290.0" layoutY="14.0" mnemonicParsing="false" text="Change" />
                                     <Button layoutX="290.0" layoutY="51.0" mnemonicParsing="false" text="Change" />
-                                    <Text layoutX="29.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Internal libraries" />
-                                    <Text layoutX="27.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" text="External libraries" />
+                                    <Text layoutX="29.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Internal libraries" />
+                                    <Text layoutX="27.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="External libraries" />
                                     <Button fx:id="addInternalLibrary" layoutX="26.0" layoutY="291.0" mnemonicParsing="false" onAction="#addInternalLibrary" text="Add internal libraries" />
                                     <Button fx:id="removeInternalLibrary" layoutX="189.0" layoutY="291.0" mnemonicParsing="false" onAction="#removeInternalLibrary" text="Remove internal libraries" />
                                     <Button fx:id="addExternalLibrary" layoutX="24.0" layoutY="481.0" mnemonicParsing="false" onAction="#addExternalLibrary" text="Add external libraries" />
@@ -40,7 +40,7 @@
                                     <Separator layoutX="20.0" layoutY="318.0" prefHeight="15.0" prefWidth="339.0" />
                                     <Separator layoutX="23.0" layoutY="130.0" prefHeight="2.0" prefWidth="339.0" />
                                     <ComboBox fx:id="JREVersions" layoutX="205.0" layoutY="89.0" onAction="#changeJREVersion" prefWidth="150.0" />
-                                    <Text layoutX="41.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Java (JRE) Version" />
+                                    <Text layoutX="41.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Java (JRE) Version" />
                                  </children>
                               </Pane>
                            </children>
@@ -52,14 +52,16 @@
             <content>
               <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
                      <children>
-                        <Text layoutX="35.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Program Arguments" />
+                        <Text layoutX="35.0" layoutY="179.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Program Arguments" />
                         <TextArea fx:id="taProgramArguments" layoutX="35.0" layoutY="182.0" prefHeight="120.0" prefWidth="311.0" />
-                        <Text layoutX="34.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" text="VM Arguments" />
+                        <Text layoutX="34.0" layoutY="338.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="VM Arguments" />
                         <TextArea fx:id="taVMArguments" layoutX="34.0" layoutY="341.0" prefHeight="120.0" prefWidth="314.0" />
-                        <ListView layoutX="33.0" layoutY="27.0" prefHeight="120.0" prefWidth="315.0" />
-                        <Text layoutX="33.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Runnable classes" />
+                        <ListView layoutX="33.0" layoutY="27.0" prefHeight="86.0" prefWidth="315.0" />
+                        <Text layoutX="33.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Runnable classes" />
                         <Button fx:id="save" layoutX="245.0" layoutY="473.0" mnemonicParsing="false" onAction="#save" text="Save" />
                         <Button fx:id="run" layoutX="304.0" layoutY="473.0" mnemonicParsing="false" onAction="#run" text="Run" />
+                        <Button layoutX="34.0" layoutY="124.0" mnemonicParsing="false" text="Add runnable class" />
+                        <Button layoutX="186.0" layoutY="124.0" mnemonicParsing="false" text="Remove runnable class" />
                      </children></AnchorPane>
             </content>
           </Tab>

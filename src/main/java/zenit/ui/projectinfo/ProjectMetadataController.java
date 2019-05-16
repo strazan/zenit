@@ -22,6 +22,7 @@ import javafx.stage.Stage;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.MetadataFileHandler;
 import main.java.zenit.ui.DialogBoxes;
+import main.java.zenit.zencodearea.ZenCodeArea;
 
 public class ProjectMetadataController extends AnchorPane {
 
@@ -30,6 +31,8 @@ public class ProjectMetadataController extends AnchorPane {
 	private FileController fileController;
 
 	private File projectFile;
+	
+	private boolean darkmode;
 
 	private String directory;
 	private String sourcepath;
@@ -75,9 +78,10 @@ public class ProjectMetadataController extends AnchorPane {
 	@FXML
 	private Button run;
 
-	public ProjectMetadataController(FileController fc, File projectFile) {
+	public ProjectMetadataController(FileController fc, File projectFile, boolean darkmode) {
 		this.projectFile = projectFile;
 		fileController = fc;
+		this.darkmode = darkmode;
 	}
 
 	private void initialize() {
@@ -132,6 +136,7 @@ public class ProjectMetadataController extends AnchorPane {
 
 			if (decodeMetadata()) {
 				initialize();
+				ifDarkModeChanged(darkmode);
 				propertyStage.show();
 			}
 		} catch (Exception e) {
@@ -307,5 +312,23 @@ public class ProjectMetadataController extends AnchorPane {
 	private void run() {
 		System.out.println("run");
 	}
-
+	
+	public void ifDarkModeChanged(boolean isDarkMode) {
+		var stylesheets = propertyStage.getScene().getStylesheets();
+		var darkMode = getClass().getResource("/zenit/ui/projectinfo/mainStyle.css").toExternalForm();
+		var lightMode = getClass().getResource("/zenit/ui/projectinfo/mainStyle-lm.css").toExternalForm();
+		
+		if (isDarkMode) {
+			if (stylesheets.contains(lightMode)) {
+				stylesheets.remove(lightMode);
+			}
+			
+			stylesheets.add(darkMode);
+		} else {
+			if (stylesheets.contains(darkMode)) {
+				stylesheets.remove(darkMode);
+			}
+			stylesheets.add(lightMode);
+		}	
+	}
 }
