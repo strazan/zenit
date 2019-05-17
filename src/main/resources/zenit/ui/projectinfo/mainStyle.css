@@ -1,8 +1,18 @@
+/* Container styling */
 .root {
 	-fx-focus-color: transparent;
 	-fx-border-width: 0;
 }
 
+.anchor-pane{
+	fx-background-color: #333;
+}
+
+.pane {
+	fx-background-color: #333;
+}
+
+/* Tab styling */
 .tab-pane {
 	-fx-background-color: #444;
 	-fx-fill: #fff;
@@ -28,6 +38,7 @@
 	-fx-background-color: #444;
 }
 
+/* Text styling */
 .text-id {
  	-fx-font-smoothing-type: lcd;
  	-fx-fill: #fffa;
@@ -38,15 +49,7 @@
 	 -fx-fill: #fffa;
 }
 
-.anchor-pane{
-	fx-background-color: #333;
-}
-
-.pane {
-	fx-background-color: #333;
-}
-
-
+/* List styling */
 .list-view {
 	-fx-background-color: #333;
 }
@@ -65,14 +68,17 @@
     -fx-text-fill: #fffa;
 }
 
+/* Button styling */
 .button {
 	-fx-background-color: #252525;
 }
 
+/* Separator styling */
 .separator *.line {
     -fx-border-color: black;
 }
 
+/* Text area styling */
 .text-area {
 	-fx-background-color: #333;
 	-fx-control-inner-background: #333;
@@ -89,18 +95,27 @@
     -fx-background-color: #333;
 }
 
-.scroll-bar:horizontal, .scroll-bar:vertical{
+.scroll-bar:vertical {
     -fx-background-color:transparent;
     -fx-pref-width: 10;
     -fx-padding: 0;
 }
 
-.scroll-bar .increment-button, scroll-bar .decrement-button {
-    -fx-background-color: transparent;
-    -fx-border-color: transparent;
-    -fx-shape: "";
- 	-fx-padding: 0;
+.scroll-bar:horizontal {
+	-fx-background-color:transparent;
+    -fx-pref-height: 10;
+    -fx-padding: 0;
 }
+
+ .scroll-bar:vertical .increment-arrow, .decrement-arrow {
+ 	-fx-shape: "";
+ 	-fx-padding: 0;
+ }
+ 
+ .scroll-bar:horizontal .increment-arrow, .decrement-arrow {
+ 	-fx-shape: "";
+ 	-fx-padding: 0;
+ }
 
 .scroll-bar:horizontal .track,
 .scroll-bar:vertical .track{
@@ -119,6 +134,7 @@
     -fx-background-color: black;
 }
 
+/* Combo box styling */
 .combo-box {
 	-fx-background-color: #333;
 	-fx-control-inner-background: #333;

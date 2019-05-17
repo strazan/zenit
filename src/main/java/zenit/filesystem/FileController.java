@@ -5,10 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 import main.java.zenit.filesystem.helpers.CodeSnippets;
+import main.java.zenit.filesystem.metadata.Metadata;
 
 /**
  * Class for controlling and manipulating the file system of a project.
@@ -265,64 +265,77 @@ public class FileController {
 	 * @return The copied File
 	 */
 	public File importProject(File source) throws IOException {
-//		try {
 			File target = ProjectHandler.importProject(source, workspace);
 			return target;
-//		} catch (IOException e) {
-//			System.err.println(e.getMessage());
-//			return null;
-//		}
 	}
 	
-	public boolean importJar(List<File> jarFiles, File projectFile) {
-		File libFolder = null;
-		if (!ProjectHandler.libFolderExists(projectFile)) {
-			libFolder = ProjectHandler.createLibFolder(projectFile);
-		} else {
-			libFolder = new File(projectFile + File.separator + "lib");
-		}
-		
-		if (libFolder != null) {
-			try {
-				for (File jarFile : jarFiles)
-				ProjectHandler.importJar(jarFile, libFolder);
-			return true;
-			} catch (IOException e) {
-				System.err.println(e.getMessage());
-			}
-		}
-		
-		return false;
-	}
+	//Library methods
 	
-	public boolean removeJars(List<String> libraries, File projectFile) {
-		
-		List<File> libraryFiles = new ArrayList<File>();
-		
-		File libraryFile;
-		for (String library : libraries) {
-			libraryFile = new File(library);
-			libraryFiles.add(libraryFile);
-		}
-		
-		
-		
-		return false;
-	}
-	
-	public File generateMetadata(File projectFile) {
+	/**
+	 * Tries to copy the files in parameter to project's lib-folder (creates one if it doesn't 
+	 * already exist). Adds the build paths to metadata-file. Uses 
+	 * {@link ProjectHandler#addInternalLibraries(List, ProjectFile)}.
+	 * @param internalLibraryFiles Files to copy and create build paths to. File path should
+	 * exclude project file path. Correct path: {@code lib/library.jar}
+	 * @param projectFile The project the files should be copied to, must have a metadata-file.
+	 * @return {@code true} if imported successfully, otherwise {@code false}. Note that files can
+	 * be copied and still return {@code false}
+	 */
+	public boolean addInternalLibraries(List<File> internalLibraryFiles, ProjectFile projectFile) {
 		try {
-			return MetadataFileHandler.createMetadataFile(projectFile);
+			return ProjectHandler.addInternalLibraries(internalLibraryFiles, projectFile);
 		} catch (IOException e) {
-			return null;
+			return false;
 		}
 	}
 	
-	public File updateMetadata(File metadata) {
-		try {
-			return MetadataFileHandler.replaceMetadataFile(metadata);
-		} catch (IOException e) {
-			return null;
-		}
+	/**
+	 * Tries to remove the files in parameter from project's lib-folder. Removes the build paths
+	 * from metadata-file. Uses {@link ProjectHandler#removeInternalLibraries(List, ProjectFile)}.
+	 * @param internalLibraryPaths Files to remove, file path should exclude project file path.
+	 * Correct path: {@code lib/library.jar}
+	 * @param projectFile The project the files should be removed from, must have a metadata-file.
+	 * @return {@code true} if removed successfully, otherwise {@code false}. Note that files can
+	 * be removed and still return {@code false}
+	 */
+	public boolean removeInternalLibraries(List<String> internalLibraryPaths, ProjectFile projectFile) {
+		return ProjectHandler.removeInternalLibraries(internalLibraryPaths, projectFile);
+	}
+	
+	/**
+	 * Tries to add build paths for files in parameter to project's metadata file. Uses
+	 * {@link ProjectHandler#addExternalLibraries(List, ProjectFile)}. 
+	 * @param externalLibraryFiles Files to add, the file paths should contain the full file path
+	 * from root.
+	 * @param projectFile The project to which build paths should be made to. Project must have a
+	 * metadata-file.
+	 * @return {@code true} if build paths added successfully, otherwise {@code false}.
+	 */
+	public boolean addExternalLibraries(List<File> externalLibraryFiles, ProjectFile projectFile) {	
+		return ProjectHandler.addExternalLibraries(externalLibraryFiles, projectFile);
+	}
+	
+	/**
+	 * Tries to remove build paths for files in parameter from project's metadata file. Uses
+	 * {@link ProjectHandler#removeExternalLibraries(List, ProjectFile)}.
+	 * @param externalLibraryPaths Files to remove, the file path should contain the full file path
+	 * from root.
+	 * @param projectFile The project to which build paths should be removed from. Project must
+	 * have a metadata-file.
+	 * @return {@code true} if build paths removed successfully, otherwise {@code false}.
+	 */
+	public boolean removeExternalLibraries(List<String> externalLibraryPaths, ProjectFile projectFile) {
+		return ProjectHandler.removeExternalLibraries(externalLibraryPaths, projectFile);
+	}
+	
+	//Metadata
+	
+	/**
+	 * Updates metadata file to the latest version
+	 * @param metadataFile The metadata-file to update
+	 * @return The updated metadata-file
+	 */
+	public Metadata updateMetadate(File metadataFile) {
+		return MetadataFileHandler.updateMetadata(metadataFile);
 	}
 }

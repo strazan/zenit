@@ -1,4 +1,4 @@
-package main.java.zenit.filesystem;
+package main.java.zenit.filesystem.metadata;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -8,21 +8,45 @@ import java.io.InputStreamReader;
 import java.util.LinkedList;
 import java.util.NoSuchElementException;
 
+import main.java.zenit.filesystem.RunnableClass;
+
+/**
+ * Decodes a .metadata file and adds data to a {@link Metadata} object.
+ * @author Alexander Libot
+ *
+ */
 public class MetadataDecoder {
 	
+	/**
+	 * Decodes all lines in {@code metadataFile} and adds the data to {@code metadata}
+	 * @param metadataFile
+	 * @param metadata
+	 */
 	public static void decode(File metadataFile, Metadata metadata) {
 		try {
+			//Read lines from file
 			LinkedList<String> lines = readMetadata(metadataFile);
 			String line = lines.removeFirst();
+			
+			//Decode lines
 			while (line != null) {
+				//Version
 				if (line.equals("ZENIT METADATA")) {
 					metadata.setVersion(lines.removeFirst());
+					
+				//Directory
 				} else if (line.equals("DIRECTORY")) {
 					metadata.setDirectory(lines.removeFirst());
+					
+				//Sourcepath
 				} else if (line.equals("SOURCEPATH")) {
 					metadata.setSourcepath(lines.removeFirst());
+					
+				//JRE version
 				} else if (line.equals("JRE VERSION")) {
 					metadata.setJREVersion(lines.removeFirst());
+					
+				//Runnable classes
 				} else if (line.equals("RUNNABLE CLASSES")) {
 					int nbrOfRunnableClasses = Integer.parseInt(lines.removeFirst());
 					if (nbrOfRunnableClasses != 0) {
@@ -51,6 +75,8 @@ public class MetadataDecoder {
 						}
 						metadata.setRunnableClasses(runnableClasses);
 					}
+					
+				//Internal libraries
 				} else if (line.equals("INTERNAL LIBRARIES")) {
 					int nbrOfInternalLibraries = Integer.parseInt(lines.removeFirst());
 					if (nbrOfInternalLibraries != 0) {
@@ -60,6 +86,8 @@ public class MetadataDecoder {
 						}
 						metadata.setInternalLibraries(internalLibraries);
 					}
+					
+				//External libraries
 				} else if (line.equals("EXTERNAL LIBRARIES")) {
 					int nbrOfExternalLibraries = Integer.parseInt(lines.removeFirst());
 					if (nbrOfExternalLibraries != 0) {
@@ -77,14 +105,20 @@ public class MetadataDecoder {
 		} catch (NoSuchElementException e) {}
 	}
 	
-	private static LinkedList<String> readMetadata(File metadata) throws IOException {
+	/**
+	 * Reads all lines from {@code metadataFile}
+	 * @param metadataFile File to read from
+	 * @return A {@code LinkedList<String>} object with all read lines.
+	 * @throws IOException
+	 */
+	private static LinkedList<String> readMetadata(File metadataFile) throws IOException {
 		
-		if (!metadata.exists()) {
+		if (!metadataFile.exists()) {
 			throw new IOException("Metadata don't exist");
 		}
 		
 		LinkedList<String> lines = new LinkedList<String>();
-		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(metadata), "UTF-8"))) {
+		try (BufferedReader br = new BufferedReader(new InputStreamReader(new FileInputStream(metadataFile), "UTF-8"))) {
 			String line = br.readLine();
 			
 			while (line != null) {
@@ -95,11 +129,5 @@ public class MetadataDecoder {
 		} catch (IOException ex) {
 			throw new IOException("Couldn't read metadata");
 		}
-	}
-	
-	public static void main(String[] args) {
-		File file = new File("/Users/Alexander/Desktop/_testfolder/TestProject/.metadata");
-		Metadata md = new Metadata(file);
-		System.out.println(md.toString());
 	}
 }

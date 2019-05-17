@@ -11,6 +11,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.ui.MainController;
 
@@ -153,9 +154,11 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				selectedItem.getChildren().add(packageNode);
 			}
 		} else if (actionEvent.getSource().equals(importJar)) {
-			controller.importJar(selectedFile);
-		} else if (actionEvent.getSource().equals(properties)) {
-			controller.showProjectProperties(selectedItem.getFile());
+			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
+			controller.chooseAndImportLibraries(projectFile);
+		} else if (actionEvent.getSource().equals(properties) && selectedItem.getType() == FileTreeItem.PROJECT) {
+			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
+			controller.showProjectProperties(projectFile);
 		}
 	}
 }

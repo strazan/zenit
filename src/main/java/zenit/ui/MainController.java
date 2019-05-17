@@ -3,13 +3,11 @@ package main.java.zenit.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.Properties;
 
 import javafx.application.Platform;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -22,10 +20,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
-import javafx.stage.FileChooser.ExtensionFilter;
 import javafx.stage.Stage;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
@@ -193,11 +191,10 @@ public class MainController extends VBox {
 	/**
 	 * Input name from dialog box and creates a new file in specified parent folder.
 	 * 
-	 * @param parent   The parent folder of the file to be created.
+	 * @param parent The parent folder of the file to be created.
 	 * @param typeCode The type of code snippet that should be implemented in the
-	 *                 file. Use constants from
-	 *                 {@link main.java.zenit.filesystem.helpers.CodeSnippets
-	 *                 CodeSnippets} class.
+	 * file. Use constants from {@link main.java.zenit.filesystem.helpers.CodeSnippets
+	 * CodeSnippets} class.
 	 * @return The File if created, otherwise null.
 	 */
 	public File createFile(File parent, int typeCode) {
@@ -246,17 +243,20 @@ public class MainController extends VBox {
 	}
 	
 	/**
-	 * Grabs the text from the currently selected Tab and writes it to the currently
-	 * selected file. If no file selected, opens a file chooser for selection of
-	 * file to overwrite.
-	 * 
-	 * @param event
+	 * Runs {@link #saveFile(boolean)} with parameter true.
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
 		return saveFile(true);
 	}
 	
+	/**
+	 * Grabs the text from the currently selected Tab and writes it to the currently
+	 * selected file. If no file selected, opens a file chooser for selection of
+	 * file to overwrite.
+	 * @param backgroundCompile {@code true} if code should compile in background upon save
+	 * @return {@code true} if written to file, otherwise {@code false}
+	 */
 	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
@@ -298,6 +298,10 @@ public class MainController extends VBox {
 		}
 	}
 	
+	/**
+	 * Collects errors from buffer and displays them in code area
+	 * @param buffer Buffer to collect errors from
+	 */
 	public void errorHandler(DebugErrorBuffer buffer) {
 		DebugError error;
 		while (!buffer.isEmpty()) {
@@ -380,6 +384,11 @@ public class MainController extends VBox {
 		}
 	}
 	
+	/**
+	 * Checks if the file format of the file parameter is supported.
+	 * @param file File to check
+	 * @return {@code true} if file format is supported, otherwise {@code false}
+	 */
 	private boolean supportedFileFormat(File file) {
 		String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
 		
@@ -709,7 +718,12 @@ public class MainController extends VBox {
 		}
 	}
 	
-	public void importJar(File projectFile) {
+	/**
+	 * Let's user choose .jar and .zip files and adds them to projects lib-folder and creates 
+	 * build paths. Show dialog box if import failed or not.
+	 * @param projectFile Project to import jar-files to
+	 */
+	public void chooseAndImportLibraries(ProjectFile projectFile) {
 		FileChooser fileChooser = new FileChooser();
 		fileChooser.setTitle("Select jar file to import");
 		
@@ -719,7 +733,7 @@ public class MainController extends VBox {
 		List<File> jarFiles = fileChooser.showOpenMultipleDialog(stage);
 		
 		if (jarFiles != null) {
-			boolean success = fileController.importJar(jarFiles, projectFile);
+			boolean success = fileController.addInternalLibraries(jarFiles, projectFile);
 			if (success) {
 				DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
 			} else {
@@ -728,7 +742,11 @@ public class MainController extends VBox {
 		}
 	}
 	
-	public void showProjectProperties(File projectFile) {
+	/**
+	 * Opens up the project settings for specified project
+	 * @param projectFile Project to open settings for
+	 */
+	public void showProjectProperties(ProjectFile projectFile) {
 		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected());
 		pmc.start();
 	}
