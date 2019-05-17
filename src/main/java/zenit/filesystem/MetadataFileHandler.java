@@ -2,6 +2,7 @@ package main.java.zenit.filesystem;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.regex.Matcher;
 
 import main.java.zenit.filesystem.metadata.Metadata;
 
@@ -79,5 +80,28 @@ public class MetadataFileHandler extends FileHandler {
 		} else {
 			return null;
 		}		
+	}
+	
+	/**
+	 * Changes the compile directory to directory parameter in project.
+	 * @param directory New directory
+	 * @param projectFile Project to change directory in
+	 * @param internal {@code true} if directory path should be internal, otherwise {@code false}
+	 * @return The new directory path
+	 */
+	protected static String changeDirectory(File directory, ProjectFile projectFile,
+			boolean internal) {
+		String directoryPath = directory.getPath();
+		
+		if (internal) {
+			directoryPath = directoryPath.replaceFirst(Matcher.quoteReplacement(
+					projectFile.getPath() + File.separator), "");
+		}
+		
+		Metadata metadata = new Metadata(projectFile.getMetadata());
+		metadata.setDirectory(directoryPath);
+		metadata.encode();
+		
+		return directoryPath;
 	}
 }

@@ -89,6 +89,26 @@ public class ProjectFile extends File {
 	}
 	
 	/**
+	 * Returns the bin file. If not initiated, searches the project folder for one.
+	 * If no bin-file is found, returns null
+	 * @return
+	 */
+	public File getBin() {
+		if (bin == null) {
+			File[] files = listFiles();
+			
+			for (File file : files) {
+				if (file.getName().equals("bin")) {
+					bin = file;
+					break;
+				}
+			}
+		}
+		
+		return bin;
+	}
+	
+	/**
 	 * If metadata-file doesn't exist, creates a new one
 	 * @return
 	 */
@@ -109,19 +129,18 @@ public class ProjectFile extends File {
 	 * If no metadata-file is found, returns null.
 	 */
 	public File getMetadata() {
-		if (metadata != null) {
-			return metadata;
-		} else {
+		if (metadata == null) {
 			File[] files = listFiles();
 		
 			for (File file : files) {
 				if (file.getName().equals(".metadata")) {
-					return file;
+					metadata = file;
+					break;
 				}
 			}
-			
-			return null;
 		}
+		
+		return metadata;
 	}
 	
 	/**

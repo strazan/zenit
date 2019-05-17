@@ -13,6 +13,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.filesystem.FileController;
@@ -47,10 +48,9 @@ public class ProjectMetadataController extends AnchorPane {
 	private FileChooser.ExtensionFilter libraryFilter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
 
 	@FXML
-	private Text directoryPath;
+	private ListView<String> directoryPathList;
 	@FXML
-	private Text sourcepathPath;
-
+	private ListView<String> sourcepathList;
 	@FXML
 	private ListView<String> internalLibrariesList;
 	@FXML
@@ -140,7 +140,7 @@ public class ProjectMetadataController extends AnchorPane {
 			} else if (verification == MetadataVerifier.METADATA_OUTDATED) {
 				int returnCode = ProjectInfoErrorHandling.metadataOutdated();
 				if (returnCode == 1) {
-					metadata = fileController.updateMetadate(metadataFile);
+					metadata = fileController.updateMetadata(metadataFile);
 					initialize();
 					ifDarkModeChanged(darkmode);
 					propertyStage.show();
@@ -157,7 +157,7 @@ public class ProjectMetadataController extends AnchorPane {
 	private void initialize() {
 		String directory = metadata.getDirectory();
 		if (directory != null) {
-			directoryPath.setText(directory);
+			updateText(directoryPathList, directory);
 		}
 		String sourcepath = metadata.getSourcepath();
 		if (sourcepath != null) {
@@ -212,7 +212,26 @@ public class ProjectMetadataController extends AnchorPane {
 	 */
 	@FXML
 	private void changeDirectory() {
-		System.out.println("Change directory");
+		int returnValue = DialogBoxes.twoChoiceDialog("Internal directory", "Internal directory",
+				"Do you want the new directory to be internal or external?", "Internal", "External");
+		boolean internal;
+		if (returnValue == 1) {
+			internal = true;
+		} else if (returnValue == 2) {
+			internal = false;
+		} else {
+			return;
+		}
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setInitialDirectory(projectFile.getBin());
+		dc.setTitle("Choose new directory");
+		
+		File directory = dc.showDialog(propertyStage);
+		
+		if (directory != null) {
+			String directoryPath = fileController.changeDirectory(directory, projectFile, internal);
+			updateText(directoryPathList, directoryPath);
+		}
 	}
 	
 	/**
@@ -418,5 +437,10 @@ public class ProjectMetadataController extends AnchorPane {
 			}
 			stylesheets.add(lightMode);
 		}	
+	}
+	
+	private void updateText(ListView<String> list, String string) {
+		list.getItems().clear();
+		list.getItems().add(string);
 	}
 }

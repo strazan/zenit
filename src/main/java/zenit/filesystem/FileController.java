@@ -311,7 +311,7 @@ public class FileController {
 	 * metadata-file.
 	 * @return {@code true} if build paths added successfully, otherwise {@code false}.
 	 */
-	public boolean addExternalLibraries(List<File> externalLibraryFiles, ProjectFile projectFile) {	
+	public boolean addExternalLibraries(List<File> externalLibraryFiles, ProjectFile projectFile) {
 		return ProjectHandler.addExternalLibraries(externalLibraryFiles, projectFile);
 	}
 	
@@ -324,7 +324,8 @@ public class FileController {
 	 * have a metadata-file.
 	 * @return {@code true} if build paths removed successfully, otherwise {@code false}.
 	 */
-	public boolean removeExternalLibraries(List<String> externalLibraryPaths, ProjectFile projectFile) {
+	public boolean removeExternalLibraries(List<String> externalLibraryPaths, 
+			ProjectFile projectFile) {
 		return ProjectHandler.removeExternalLibraries(externalLibraryPaths, projectFile);
 	}
 	
@@ -335,7 +336,18 @@ public class FileController {
 	 * @param metadataFile The metadata-file to update
 	 * @return The updated metadata-file
 	 */
-	public Metadata updateMetadate(File metadataFile) {
+	public Metadata updateMetadata(File metadataFile) {
 		return MetadataFileHandler.updateMetadata(metadataFile);
+	}
+	
+	/**
+	 * Changes the compile directory to directory parameter in project.
+	 * @param directory New directory
+	 * @param projectFile Project to change directory in
+	 * @param internal {@code true} if directory path should be internal, otherwise {@code false}
+	 * @return The new directory path
+	 */
+	public String changeDirectory(File directory, ProjectFile projectFile, boolean internal) {
+		return MetadataFileHandler.changeDirectory(directory, projectFile, internal);
 	}
 }

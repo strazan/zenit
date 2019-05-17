@@ -68,6 +68,14 @@
     -fx-text-fill: #fffa;
 }
 
+#directoryPathList {
+	-fx-background-color: #444;
+}
+
+#directoryPathList .list-cell {
+	-fx-background-color: #444;
+}
+
 /* Button styling */
 .button {
 	-fx-background-color: #252525;
@@ -130,8 +138,12 @@
     -fx-background-radius: 3em;
 }
 
-.scroll-pane > .corner {
-    -fx-background-color: black;
+.list-view .corner {
+    -fx-background-color: #333;
+}
+
+#directoryPathList .corner {
+	-fx-background-color: #444;
 }
 
 /* Combo box styling */
