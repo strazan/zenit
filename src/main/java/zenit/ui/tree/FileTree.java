@@ -61,15 +61,18 @@ public class FileTree {
 	 * in FileTreeItem-structure
 	 */
 	public static void createParentNode(FileTreeItem<String> parent, File file) {
-		if (file == null) {
+		if (parent == null || file == null) {
 			return;
 		}
 		
-		for (var child : parent.getChildren()) {
-			var fileTreeItem = (FileTreeItem<String>) child;
-			
-			if (fileTreeItem.getFile().getName().contentEquals(file.getName())) {
-				return;
+		if (parent.getChildren().size() > 0) {
+			// Prevents adding the file to the tree if it already exists
+			for (var child : parent.getChildren()) {
+				var fileTreeItem = (FileTreeItem<String>) child;
+				
+				if (fileTreeItem.getFile().getName().contentEquals(file.getName())) {
+					return;
+				}
 			}
 		}
 		
@@ -78,10 +81,15 @@ public class FileTree {
 		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
 		parent.getChildren().add(item);
 		parent.getChildren().sort((a, b) -> {
-			var fa = (FileTreeItem<String>) a;
-			var fb = (FileTreeItem<String>) b;
-			
-			return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+			try {
+				var fa = (FileTreeItem<String>) a;
+				var fb = (FileTreeItem<String>) b;
+				
+				return fa.getFile().getName().compareToIgnoreCase(fb.getFile().getName());
+			}
+			catch (ClassCastException ex) {
+				return 0;
+			}
 		});
 		
 		if (file.isDirectory()) {
@@ -111,6 +119,33 @@ public class FileTree {
 				changeFileForNodes(ftItem, ftItem.getFile());
 			}
 		}
+	}
+	
+	/**
+	 * Traverses the specified root and returns the first tree item containing the given file.
+	 * @param root The root tree item to begin searching through.
+	 * @param file The file to search for.
+	 * @return The {@link FileTreeItem<String>} that contains {@link file}, null if none was found.
+	 * @author Pontus Laos
+	 */
+	public static FileTreeItem<String> getTreeItemFromFile(FileTreeItem<String> root, File file) {
+		if (root == null || file == null) {
+			return null;
+		}
+		
+		if (root.getFile().getAbsolutePath().equals(file.getAbsolutePath())) {
+			return root;
+		}
+		
+		for (var foo : root.getChildren()) {
+			var bar = getTreeItemFromFile((FileTreeItem<String>) foo, file);
+			
+			if (bar != null && bar.getFile().getAbsolutePath().equals(file.getAbsolutePath())) {
+				return bar;
+			}
+		}
+		
+		return null;
 	}
 	
 	/**

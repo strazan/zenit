@@ -2,6 +2,8 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.LinkedList;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -88,6 +90,9 @@ public class MainController extends VBox {
 	
 	@FXML
 	private Label statusBarRightLabel;
+	
+	private LinkedList<File> deletedFiles = new LinkedList<>();
+	private HashMap<File, String> deletedTexts = new HashMap<>();
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -146,6 +151,16 @@ public class MainController extends VBox {
 	 */
 	public void setFileController(FileController fileController) {
 		this.fileController = fileController;
+	}
+	
+	public FileTreeItem<String> getSelectedFileTreeItem() {
+		return (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
+	}
+	
+	public void foo() {
+		var selectedItem = getSelectedFileTreeItem();
+		deleteFile(selectedItem.getFile());
+		selectedItem.getParent().getChildren().remove(selectedItem);
 	}
 
 	/**
@@ -234,7 +249,7 @@ public class MainController extends VBox {
 		
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
-		}	
+		}
 	}
 	
 	public void navigateToCorrectTabIndex() {
@@ -278,6 +293,36 @@ public class MainController extends VBox {
 			System.out.println("Did not write.");
 		}
 
+		return didWrite;
+	}
+	
+	/**
+	 * Saves an arbitrary string to a file.
+	 * @param backgroundCompile Whether or not the saving should initiate a compiling process.
+	 * @param file The file to save the text to.
+	 * @param text The text to write to the file.
+	 * @return True if the file was written to, else false.
+	 * @author Pontus Laos
+	 */
+	private boolean saveFile(boolean backgroundCompile, File file, String text) {
+		if (file == null) {
+			return saveFile(backgroundCompile);
+		}
+
+		boolean didWrite = fileController.writeFile(file, text);
+		
+		if (didWrite) {
+			FileTreeItem<String> root = FileTree.getTreeItemFromFile((FileTreeItem<String>) treeView.getRoot(), file.getParentFile());
+			System.out.println(root);
+			FileTree.createParentNode(root, file);
+			treeView.refresh();
+			treeView.layout();
+			
+			if (backgroundCompile) {
+				backgroundCompiling(file);
+			}
+		}
+		
 		return didWrite;
 	}
 	
@@ -407,8 +452,37 @@ public class MainController extends VBox {
 	 * @param file The file to be deleted.
 	 */
 	public void deleteFile(File file) {
+		deletedFiles.add(file);
+		deletedTexts.put(file, FileController.readFile(file));
 		fileController.deleteFile(file);
 		// TODO Remove open tab aswell
+	}
+	
+	/**
+	 * Attempts to undo the latest delete invokation.
+	 */
+	public void undoDeleteFile() {
+		if (!treeView.isFocused()) {
+			System.out.println("not focused");
+			return;
+		}
+		
+		
+		if (deletedFiles.size() > 0) {
+			File file = deletedFiles.removeLast();
+			
+			if (!file.exists()) {
+				try { file.createNewFile(); }
+				catch (IOException ex) {}
+			}
+			String text = deletedTexts.remove(file);
+
+			System.out.println("File: " + file.getAbsolutePath());
+			System.out.println("Text: " + text);
+			
+			
+			this.saveFile(false, file, text);
+		}
 	}
 
 	/**

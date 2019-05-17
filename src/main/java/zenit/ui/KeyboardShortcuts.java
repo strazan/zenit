@@ -42,6 +42,7 @@ public final class KeyboardShortcuts {
 		add(scene, KeyCode.W, KeyCombination.SHORTCUT_DOWN, () -> controller.closeTab(null)); 		
 		add(scene, KeyCode.R, KeyCombination.SHORTCUT_DOWN, controller::compileAndRun);
 		add(scene, KeyCode.SPACE, KeyCombination.CONTROL_DOWN, controller::shortcutsTrigger);
+		add(scene, KeyCode.Z, KeyCombination.SHORTCUT_DOWN, controller::undoDeleteFile);
 		
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
 		    public void handle(KeyEvent ke) {
@@ -56,6 +57,14 @@ public final class KeyboardShortcuts {
 		    	}
 		    	
 		    }
+		});
+		
+		scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+			if (controller.getSelectedFileTreeItem() != null) {
+				if (event.getCode() == KeyCode.DELETE) {
+					controller.foo();
+				}
+			}
 		});
 	}
 }

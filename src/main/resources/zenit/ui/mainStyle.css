@@ -94,6 +94,10 @@
 	-fx-fill: #fffa;
 }
 
+#treeView *:selected {
+	-fx-background-color: #1e1e1e66;
+}
+
 #treeView .arrow  {
 	-fx-background-color: #fffb;
 }
@@ -101,6 +105,7 @@
 .split-pane:horizontal > .split-pane-divider {
    -fx-background-color: #1e1e1e;
 }
+
 .split-pane:vertical > .split-pane-divider {
    -fx-background-color: #1e1e1e;
 }
