@@ -25,11 +25,11 @@
                                  <children>
                                     <ListView fx:id="internalLibrariesList" layoutX="23.0" layoutY="160.0" prefHeight="127.0" prefWidth="339.0" />
                                     <ListView fx:id="externalLibrariesList" layoutX="20.0" layoutY="349.0" prefHeight="127.0" prefWidth="339.0" />
-                                    <ListView layoutX="114.0" layoutY="53.0" prefHeight="40.0" prefWidth="172.0" />
+                                    <ListView fx:id="sourcepathList" layoutX="114.0" layoutY="49.0" prefHeight="40.0" prefWidth="172.0" />
                                     <Text layoutX="42.0" layoutY="67.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Sourcepath" />
                                     <Text layoutX="42.0" layoutY="27.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Directory" />
-                                    <Button layoutX="290.0" layoutY="10.0" mnemonicParsing="false" onAction="#changeDirectory" text="Change" />
-                                    <Button layoutX="290.0" layoutY="50.0" mnemonicParsing="false" onAction="#changeSourcepath" text="Change" />
+                                    <Button layoutX="290.0" layoutY="9.0" mnemonicParsing="false" onAction="#changeDirectory" text="Change" />
+                                    <Button layoutX="290.0" layoutY="49.0" mnemonicParsing="false" onAction="#changeSourcepath" text="Change" />
                                     <Text layoutX="29.0" layoutY="157.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Internal libraries" />
                                     <Text layoutX="27.0" layoutY="346.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="External libraries" />
                                     <Button fx:id="addInternalLibrary" layoutX="26.0" layoutY="291.0" mnemonicParsing="false" onAction="#addInternalLibrary" text="Add internal libraries" />
@@ -40,7 +40,7 @@
                                     <Separator layoutX="23.0" layoutY="130.0" prefHeight="2.0" prefWidth="339.0" />
                                     <ComboBox fx:id="JREVersions" layoutX="205.0" layoutY="96.0" onAction="#changeJREVersion" prefWidth="150.0" />
                                     <Text layoutX="41.0" layoutY="115.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Java (JRE) Version" />
-                                    <ListView fx:id="directoryPathList" layoutX="114.0" layoutY="14.0" prefHeight="40.0" prefWidth="172.0" />
+                                    <ListView fx:id="directoryPathList" layoutX="114.0" layoutY="10.0" prefHeight="40.0" prefWidth="172.0" />
                                  </children>
                               </Pane>
                            </children>

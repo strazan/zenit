@@ -10,6 +10,8 @@ public class CommandBuilder {
 	String tool;
 	String directory;
 	String sourcepath;
+	String[] internalLibraries;
+	String[] externalLibraries;
 	String[] libraries;
 	String runPath;
 
@@ -25,21 +27,41 @@ public class CommandBuilder {
 		this.sourcepath = "-sourcepath " + sourcepath;
 	}
 
-	public void setLibraries(File[] libraries) {
-		int length = libraries.length;
-		this.libraries = new String[length];
-
-		for (int i = 0; i < length; i++) {
-			this.libraries[i] = libraries[i].getPath();
-		}
+	public void setInternalLibraries(String[] internalLibraries) {
+		this.internalLibraries = internalLibraries;
+	}
+	
+	public void setExternalLibraries(String[] externalLibraries) {
+		this.externalLibraries = externalLibraries;
 	}
 
 	public void setRunPath(String runPath) {
 		this.runPath = runPath;
 	}
+	
+	private void mergeLibraries() {
+		int intLength = 0;
+		int extLength = 0;
+		if (internalLibraries != null) {
+			intLength = internalLibraries.length;
+		}
+		if (externalLibraries != null) {
+			extLength = externalLibraries.length;
+		}
+		libraries = new String[intLength + extLength];
+		for (int i = 0; i < libraries.length; i++) {
+			if (i < intLength) {
+				libraries[i] = internalLibraries[i];
+			} else {
+				libraries[i] = externalLibraries[i-intLength];
+			}
+		}
+	}
 
 	public String generateCommand() {
 		String command = tool;
+		
+		mergeLibraries();
 		
 		if (libraries != null) {
 			if (tool.equals(COMPILE)) {

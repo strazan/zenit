@@ -350,4 +350,15 @@ public class FileController {
 	public String changeDirectory(File directory, ProjectFile projectFile, boolean internal) {
 		return MetadataFileHandler.changeDirectory(directory, projectFile, internal);
 	}
+	
+	/**
+	 * Changes the compile directory to directory parameter in project.
+	 * @param directory New source path directory
+	 * @param projectFile Project to change source path directory in
+	 * @param internal {@code true} if source path should be internal, otherwise {@code false}
+	 * @return The new source path
+	 */
+	public String changeSourcepath(File directory, ProjectFile projectFile, boolean internal) {
+		return MetadataFileHandler.changeSourcepath(directory, projectFile, internal);
+	}
 }

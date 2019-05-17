@@ -12,7 +12,6 @@ import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -161,7 +160,7 @@ public class ProjectMetadataController extends AnchorPane {
 		}
 		String sourcepath = metadata.getSourcepath();
 		if (sourcepath != null) {
-			sourcepathPath.setText(sourcepath);
+			updateText(sourcepathList, sourcepath);
 		}
 
 		updateLists();
@@ -235,11 +234,31 @@ public class ProjectMetadataController extends AnchorPane {
 	}
 	
 	/**
-	 * Opens directory chooser to choose a new sourcepath directory
+	 * Opens directory chooser to choose a new source path directory
 	 */
 	@FXML
 	private void changeSourcepath() {
-		System.out.println("Change sourcepath");
+		int returnValue = DialogBoxes.twoChoiceDialog("Internal sourcepath", "Internal sourcepath",
+				"Do you want the new sourcepath to be internal or external?", 
+				"Internal", "External");
+		boolean internal;
+		if (returnValue == 1) {
+			internal = true;
+		} else if (returnValue == 2) {
+			internal = false;
+		} else {
+			return;
+		}
+		DirectoryChooser dc = new DirectoryChooser();
+		dc.setInitialDirectory(projectFile.getSrc());
+		dc.setTitle("Choose new sourcepath");
+		
+		File directory = dc.showDialog(propertyStage);
+		
+		if (directory != null) {
+			String sourcepath = fileController.changeSourcepath(directory, projectFile, internal);
+			updateText(sourcepathList, sourcepath);
+		}
 	}
 	
 	/**

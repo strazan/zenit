@@ -68,11 +68,11 @@
     -fx-text-fill: #fffa;
 }
 
-#directoryPathList {
+#directoryPathList, #sourcepathList {
 	-fx-background-color: #444;
 }
 
-#directoryPathList .list-cell {
+#directoryPathList .list-cell, #sourcepathList .list-cell {
 	-fx-background-color: #444;
 }
 
@@ -142,7 +142,7 @@
     -fx-background-color: #333;
 }
 
-#directoryPathList .corner {
+#directoryPathList .corner , #sourcepathList .corner{
 	-fx-background-color: #444;
 }
 

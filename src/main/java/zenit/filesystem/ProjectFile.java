@@ -74,6 +74,21 @@ public class ProjectFile extends File {
 		return src;
 	}
 	
+	public File getSrc() {
+		if (src == null) {
+			File[] files = listFiles();
+			
+			for (File file : files) {
+				if (file.getName().equals("src")) {
+					src = file;
+					break;
+				}
+			}
+		}
+		
+		return src;
+	}
+	
 	/**
 	 * If bin-file doesn't exist, creates a new one.
 	 * @return The bin-file

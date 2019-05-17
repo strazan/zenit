@@ -104,4 +104,27 @@ public class MetadataFileHandler extends FileHandler {
 		
 		return directoryPath;
 	}
+	
+	/**
+	 * Changes the compile source path to directory parameter in project.
+	 * @param directory New source path directory
+	 * @param projectFile Project to change directory in
+	 * @param internal {@code true} if source path should be internal, otherwise {@code false}
+	 * @return The new source path
+	 */
+	protected static String changeSourcepath(File directory, ProjectFile projectFile,
+			boolean internal) {
+		String sourcepath = directory.getPath();
+		
+		if (internal) {
+			sourcepath = sourcepath.replaceFirst(Matcher.quoteReplacement(
+					projectFile.getPath() + File.separator), "");
+		}
+		
+		Metadata metadata = new Metadata(projectFile.getMetadata());
+		metadata.setSourcepath(sourcepath);
+		metadata.encode();
+		
+		return sourcepath;
+	}
 }
