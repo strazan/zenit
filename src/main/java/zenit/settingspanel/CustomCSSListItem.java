@@ -7,15 +7,20 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
+/**
+ * JavaFX component for the ListView in the settingspanel.
+ * @author siggelabor
+ *
+ */
 public class CustomCSSListItem extends AnchorPane {
 
 	@FXML 
 	private Label lblCSSText;
 	
-	private String CSSLINEM;
+	private String cssStyleLine;
 	
-	public CustomCSSListItem(String name) {
-		CSSLINEM = name;
+	public CustomCSSListItem(String style) {
+		cssStyleLine = style;
 		FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/settingspanel/CustomCSSListItem.fxml"));
 		loader.setRoot(this);
 		loader.setController(this);
@@ -25,7 +30,6 @@ public class CustomCSSListItem extends AnchorPane {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-		
 		try {
 			loader.setRoot(this);
 
@@ -38,6 +42,6 @@ public class CustomCSSListItem extends AnchorPane {
 	}
 
 	private void initialize() {
-		lblCSSText.setText(CSSLINEM);;
+		lblCSSText.setText(cssStyleLine);;
 	}
 }

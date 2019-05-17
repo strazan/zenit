@@ -13,12 +13,14 @@ import org.controlsfx.control.ToggleSwitch;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
@@ -26,13 +28,13 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 
 import main.java.zenit.ui.MainController;
 import main.java.zenit.zencodearea.ZenCodeArea;
-
 
 /**
  * Controller class for the NewTextSize window,
@@ -47,6 +49,9 @@ public class SettingsPanelController extends AnchorPane {
 	
 	private Stage window;
 	private MainController mainController;
+	private CusomCSSThemeHandler themeHandler;
+	
+	private boolean isCustomTheme = false;
 	
 	private enum OS {	
 		MACOS, WINDOWS, LINUX
@@ -93,6 +98,12 @@ public class SettingsPanelController extends AnchorPane {
 	private Button btnTheme;
 	
 	@FXML
+	private Button btnCustomCSS;
+	
+	@FXML
+	private Button btnCustomTheme;
+	
+	@FXML
 	private Hyperlink linkOpenInGitHub;
 	
 	@FXML
@@ -108,6 +119,9 @@ public class SettingsPanelController extends AnchorPane {
 	private ListView listViewAddedCSS;
 	
 	@FXML
+	private ColorPicker colorPickerPrimaryColor;
+	
+	@FXML
 	private AnchorPane pnlTextAppearance;
 	
 	@FXML
@@ -118,6 +132,14 @@ public class SettingsPanelController extends AnchorPane {
 	
 	@FXML
 	private AnchorPane pnlTheme;
+	
+	@FXML
+	private AnchorPane pnlCustomCSS;
+	
+	@FXML
+	private AnchorPane pnlCustomTheme;
+	
+	
 
 	/**
 	 * constructs a controller for the TextSizeWindow. 
@@ -154,7 +176,11 @@ public class SettingsPanelController extends AnchorPane {
 		scene.getStylesheets().add(getClass().getResource(
 			"/zenit/settingspanel/settingspanelstylesheet.css").toString(
 		));
+
 		window.show();
+		
+		
+		themeHandler = new CusomCSSThemeHandler(mainController, this);
 	}
 	
 	/**
@@ -199,6 +225,12 @@ public class SettingsPanelController extends AnchorPane {
 		}
 		else if(e.getSource() == btnTheme) {
 			pnlTheme.toFront();
+		}
+		else if(e.getSource() == btnCustomCSS) {
+			pnlCustomCSS.toFront();
+		}
+		else if(e.getSource() == btnCustomTheme) {
+			pnlCustomTheme.toFront();
 		}
 	}
 	
@@ -246,13 +278,13 @@ public class SettingsPanelController extends AnchorPane {
 			Scene mockScene = new Scene(new Region());
 			mockScene.getRoot().setStyle(CSSLine);
 			
-			String allLinesOfCSS = "";
+			String allCusomLinesOfCSS = "";
 			addedCSSLines.addFirst(CSSLine);
 			
 			for(int i = 0; i < addedCSSLines.size(); i++) {
-				allLinesOfCSS += addedCSSLines.get(i);
+				allCusomLinesOfCSS += addedCSSLines.get(i);
 			}
-			setStyle(allLinesOfCSS);
+			this.window.getScene().getRoot().setStyle(allCusomLinesOfCSS);
 			
 			updateCustomCSSListView();
 		}
@@ -265,6 +297,7 @@ public class SettingsPanelController extends AnchorPane {
 	/**
 	 * Updates the listViewAddedCSS to show the correct lines. 
 	 */
+	@SuppressWarnings("unchecked")
 	private void updateCustomCSSListView() {
 		listViewAddedCSS.getItems().clear();
 		
@@ -429,8 +462,29 @@ public class SettingsPanelController extends AnchorPane {
 		
 		listViewAddedCSS.getItems().add(new AnchorPane());
 
+		colorPickerPrimaryColor.setOnAction(new EventHandler() {
+		     public void handle(Event t) {
+		    	 revmoveStylesheets();
+		    	 themeHandler.setPrimaryColor(colorPickerPrimaryColor.getValue());
+		    	 System.out.println(colorPickerPrimaryColor.getValue().toString());
+		     }
+		});	
 		
 	}
+	
+	public void revmoveStylesheets() {
+		if(!isCustomTheme) {
+			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
+			var settingsPanelStylesheets = window.getScene().getStylesheets();
+			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+			var settingsPanelDarkMode = getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm();
+			
+			stylesheets.remove(darkMode);
+			settingsPanelStylesheets.remove(settingsPanelDarkMode);
+			isCustomTheme = true;
+		}		
+	}
+	
 	
 	//TODO remove I GUESS
 	
@@ -461,4 +515,12 @@ public class SettingsPanelController extends AnchorPane {
 //		}
 //	}
 //	}
+	
+	/**
+	 * 
+	 * @return this stage
+	 */
+	public Stage getStage() {
+		return this.window;
+	}
 }

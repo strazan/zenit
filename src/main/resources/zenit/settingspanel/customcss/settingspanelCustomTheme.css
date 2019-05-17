@@ -3,11 +3,11 @@
 }
 
 #spAnchorPane {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 	-fx-padding: 0.0;
 	-fx-background-insets: 0.0, 0.0;
   	-fx-border-width: 0.0;
-  	-fx-background-color: #444;
+  	-fx-background-color: #E6994D;
 }
 
 #spAnchorPane .button {
@@ -16,14 +16,14 @@
 }
 
 #mainAnchorPane {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
 #pnlTextAppearance {
-	-fx-background-color: #444;
-	-fx-text-fill: #444;
+	-fx-background-color: #E6994D;
+	-fx-text-fill: #E6994D;
 }
 
 #pnlTextAppearance .label {
@@ -43,7 +43,7 @@
 }
 
 #chcbxNewFont .context-menu {	
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 
 #chcbxNewFont .menu-item:focused {
@@ -70,7 +70,7 @@
  
  /* Java Home pane */
 #pnlJavaHome {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 
 #pnlJavaHome .label {
@@ -80,7 +80,7 @@
 /* Theme pane */
 
 #pnlTheme {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 
 #pnlTheme #lblDarkModeTxt {
@@ -106,28 +106,28 @@
 
 /* Custom CSS pane */
 #pnlCustomCSS {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 #lblAddCustomCssLines {
 	-fx-text-fill: #eee;
 }
 #fldCustomCSSInput {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 	-fx-border-color: rgba(255,255,255,0.4);
 	-fx-text-fill: #009911;
 }
 
 #scrollPaneAddedCSS{
-	  -fx-background-color: #444;
+	  -fx-background-color: #E6994D;
 	  -fx-border-color: transparent;
 }
 
 #listViewAddedCSS {
-	 -fx-background-color: #444;
+	 -fx-background-color: #E6994D;
 	 -fx-border-color: transparent;
 }
 #listViewAddedCSS .list-cell { 
-	-fx-background-color: #444; /* 5 */
+	-fx-background-color: #E6994D; /* 5 */
 	-fx-text-fill: #eee;
 	
 }
@@ -137,7 +137,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-pane {
-    -fx-background-color: #444;
+    -fx-background-color: #E6994D;
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical{
@@ -154,7 +154,7 @@
     -fx-background-radius: 5em;
 }
 
-#scrollPaneAddedCSS .increment-button,#scrollPaneAddedCSS .decrement-button {
+#scrollPaneAddedCSS .increment-button, #scrollPaneAddedCSS .decrement-button {
 	 -fx-background-color: transparent;
 	
 }
@@ -194,7 +194,7 @@
  * 
  */
  #pnlCustomTheme {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 
  #pnlCustomTheme .color-picker {
@@ -204,7 +204,7 @@
  
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #444;
+	-fx-background-color: #E6994D;
 }
 
 #pnlSupport .hyperlink {
