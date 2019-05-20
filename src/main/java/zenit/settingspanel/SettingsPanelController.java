@@ -10,6 +10,7 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.controlsfx.control.ToggleSwitch;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
@@ -49,7 +50,7 @@ public class SettingsPanelController extends AnchorPane {
 	
 	private Stage window;
 	private MainController mainController;
-	private CusomCSSThemeHandler themeHandler;
+	private CustomCSSThemeHandler themeHandler;
 	
 	private boolean isCustomTheme = false;
 	
@@ -122,6 +123,15 @@ public class SettingsPanelController extends AnchorPane {
 	private ColorPicker colorPickerPrimaryColor;
 	
 	@FXML
+	private ColorPicker colorPickerPrimaryTint;
+	
+	@FXML
+	private ColorPicker colorPickerSecondaryColor;
+	
+	@FXML
+	private ColorPicker colorPickerSecondaryTint;
+	
+	@FXML
 	private AnchorPane pnlTextAppearance;
 	
 	@FXML
@@ -180,7 +190,7 @@ public class SettingsPanelController extends AnchorPane {
 		window.show();
 		
 		
-		themeHandler = new CusomCSSThemeHandler(mainController, this);
+		themeHandler = new CustomCSSThemeHandler(mainController, this);
 	}
 	
 	/**
@@ -462,14 +472,33 @@ public class SettingsPanelController extends AnchorPane {
 		
 		listViewAddedCSS.getItems().add(new AnchorPane());
 
-		colorPickerPrimaryColor.setOnAction(new EventHandler() {
-		     public void handle(Event t) {
-		    	 revmoveStylesheets();
-		    	 themeHandler.setPrimaryColor(colorPickerPrimaryColor.getValue());
-		    	 System.out.println(colorPickerPrimaryColor.getValue().toString());
-		     }
+		colorPickerPrimaryColor.setOnAction((event) -> {
+		    	 Platform.runLater(() -> {
+			    	 revmoveStylesheets();
+			    	 themeHandler.setPrimaryColor(colorPickerPrimaryColor.getValue());
+			     });
 		});	
 		
+		colorPickerPrimaryTint.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.setPrimaryTint(colorPickerPrimaryTint.getValue());
+		     });
+		});	
+		
+		colorPickerSecondaryColor.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.setSecondaryColor(colorPickerSecondaryColor.getValue());
+		     });
+		});	
+		
+		colorPickerSecondaryTint.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.setSecondaryTint(colorPickerSecondaryTint.getValue());
+		     });
+		});	
 	}
 	
 	public void revmoveStylesheets() {

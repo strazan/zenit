@@ -3,38 +3,38 @@
 }
 
 #spAnchorPane {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 	-fx-padding: 0.0;
 	-fx-background-insets: 0.0, 0.0;
   	-fx-border-width: 0.0;
-  	-fx-background-color: #444;
+  	-fx-background-color: #444444;
 }
 
 #spAnchorPane .button {
 	-fx-background-color: #555;
-	-fx-text-fill: #fff;
+	-fx-text-fill: #ffffff;
 }
 
 #mainAnchorPane {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
 #pnlTextAppearance {
-	-fx-background-color: #444;
-	-fx-text-fill: #444;
+	-fx-background-color: #444444;
+	-fx-text-fill: #444444;
 }
 
 #pnlTextAppearance .label {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
 
 #pnlTextAppearance #lblTxtAppeaSize {
-	-fx-text-fill: #bbb;
+	-fx-text-fill: #bbbbbb;
 }
 #pnlTextAppearance #lblTxtAppeaFont {
-	-fx-text-fill: #bbb;
+	-fx-text-fill: #bbbbbb;
 }
 
 #chcbxNewFont {
@@ -43,7 +43,7 @@
 }
 
 #chcbxNewFont .context-menu {	
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #chcbxNewFont .menu-item:focused {
@@ -51,49 +51,49 @@
 }
 
 #chcbxNewFont .menu-item > .label {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
 
 #chcbxNewFont > .label {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
  
 #fldNewSize {
  	-fx-background-color: rgba(100,100,100,0.4);
- 	-fx-text-fill: #eee;
+ 	-fx-text-fill: #eeeeee;
  }
  
 #sldrNewSize > .track {	
- 	-fx-control-inner-background: #777;
+ 	-fx-control-inner-background: #777777;
  	-fx-background-insets: 0; 
  }
  
  /* Java Home pane */
 #pnlJavaHome {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #pnlJavaHome .label {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
 
 /* Theme pane */
 
 #pnlTheme {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #pnlTheme #lblDarkModeTxt {
-	-fx-text-fill: #222;
+	-fx-text-fill: #222222;
 }
 
 #lblDarkMode {
-	-fx-text-fill: #222;
+	-fx-text-fill: #222222;
 	-fx-font-size: 16px;
 }
 
 #toggleDarkMode .thumb{
-	 -fx-background-color: #888;
+	 -fx-background-color: #888888;
 }
 
 #toggleDarkMode .thumb-area {
@@ -106,38 +106,38 @@
 
 /* Custom CSS pane */
 #pnlCustomCSS {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 #lblAddCustomCssLines {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
 #fldCustomCSSInput {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 	-fx-border-color: rgba(255,255,255,0.4);
 	-fx-text-fill: #009911;
 }
 
 #scrollPaneAddedCSS{
-	  -fx-background-color: #444;
+	  -fx-background-color: #444444;
 	  -fx-border-color: transparent;
 }
 
 #listViewAddedCSS {
-	 -fx-background-color: #444;
+	 -fx-background-color: #444444;
 	 -fx-border-color: transparent;
 }
 #listViewAddedCSS .list-cell { 
-	-fx-background-color: #444; /* 5 */
-	-fx-text-fill: #eee;
+	-fx-background-color: #444444; /* 5 */
+	-fx-text-fill: #eeeeee;
 	
 }
 
 #listViewAddedCSS .list-cell:even {
-	 -fx-background-color: #555;
+	 -fx-background-color: #555555;
 }
 
 #scrollPaneAddedCSS .scroll-pane {
-    -fx-background-color: #444;
+    -fx-background-color: #444444;
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical{
@@ -150,7 +150,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical .thumb {
-    -fx-background-color: #eee;
+    -fx-background-color: #eeeeee;
     -fx-background-radius: 5em;
 }
 
@@ -165,9 +165,8 @@
 }
 
 .lblCSSText {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 }
-
 
 #btnRemoveCSS {
 	-icon-paint: red;
@@ -184,8 +183,8 @@
 }
 
 #btnAddCSSLine {
-	-fx-background-color: #555;
-	-fx-text-fill: #fff;
+	-fx-background-color: #555555;
+	-fx-text-fill: #ffffff;
 }
 
 /*
@@ -194,28 +193,34 @@
  * 
  */
  #pnlCustomTheme {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
  #pnlCustomTheme .color-picker {
  	-fx-background-color: transparent;
+ 	
  }
+ 
+ #pnlCustomTheme .color-picker .color-picker-label{
+
+-fx-text-fill: #eeeeee;
+}
  
  
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #pnlSupport .hyperlink {
-	-fx-text-fill: #eee;
+	-fx-text-fill: #eeeeee;
 	-fx-border-color: transparent;
     -fx-padding: 4 0 4 0;
     -fx-underline: false;
 }
 
 #pnlSupport .hyperlink:hover {
-	-fx-text-fill: #fff;
+	-fx-text-fill: #ffffff;
 }
 
 .paneHeader {

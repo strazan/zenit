@@ -15,7 +15,7 @@
 <?import javafx.scene.text.Font?>
 <?import org.controlsfx.control.ToggleSwitch?>
 
-<fx:root id="mainAnchorPane" fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" stylesheets="@settingspanelstylesheet.css" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root id="mainAnchorPane" fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
     <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
          <children>
@@ -119,14 +119,14 @@
       <AnchorPane id="pnlCustomTheme" fx:id="pnlCustomTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Custom Theme" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
-            <ColorPicker fx:id="colorPickerPrimaryColor" layoutX="366.0" layoutY="116.0" />
-            <ColorPicker layoutX="366.0" layoutY="163.0" />
-            <ColorPicker layoutX="366.0" layoutY="211.0" />
-            <ColorPicker layoutX="366.0" layoutY="258.0" />
-            <Label layoutX="61.0" layoutY="121.0" text="Primary Color" />
-            <Label layoutX="61.0" layoutY="168.0" text="Secondary Color" />
-            <Label layoutX="61.0" layoutY="216.0" text="3" />
-            <Label layoutX="61.0" layoutY="263.0" text="4" />
+            <ColorPicker fx:id="colorPickerPrimaryColor" layoutX="406.0" layoutY="116.0" prefHeight="27.0" prefWidth="102.0" />
+            <ColorPicker fx:id="colorPickerSecondaryColor" layoutX="406.0" layoutY="211.0" prefHeight="27.0" prefWidth="102.0" />
+            <ColorPicker fx:id="colorPickerPrimaryTint" layoutX="406.0" layoutY="163.0" prefHeight="27.0" prefWidth="102.0" />
+            <ColorPicker fx:id="colorPickerSecondaryTint" layoutX="406.0" layoutY="258.0" prefHeight="27.0" prefWidth="102.0" />
+            <Label layoutX="61.0" layoutY="121.0" text="Primary Color" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="216.0" text="Secondary Color" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="168.0" text="Primary Tint" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="263.0" text="Secondary Tint" AnchorPane.leftAnchor="60.0" />
          </children></AnchorPane>
    </children>
 </fx:root>
