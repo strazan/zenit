@@ -165,10 +165,12 @@ public class ProjectMetadataController extends AnchorPane {
 
 		updateLists();
 
-		String JREVersion = metadata.getJREVersion();
+		File JREVersion = new File(metadata.getJREVersion());
+		
+		List<String> JDKs = main.java.zenit.filesystem.jreversions.JREVersions.readString();
 		if (JREVersion != null) {
-			JREVersions.getItems().add(JREVersion);
-			JREVersions.getSelectionModel().select(JREVersion);
+			JREVersions.getItems().addAll(JDKs);
+			JREVersions.getSelectionModel().select(JREVersion.getName());
 		}
 		
 		taProgramArguments.setText("<select a runnable class>");
@@ -266,7 +268,10 @@ public class ProjectMetadataController extends AnchorPane {
 	 */
 	@FXML
 	private void changeJREVersion() {
-		System.out.println("Change JRE version");
+		String JDKName = JREVersions.getSelectionModel().getSelectedItem();
+		String JDK = main.java.zenit.filesystem.jreversions.JREVersions.getFullPathFromName(JDKName);
+		metadata.setJREVersion(JDK);
+		metadata.encode();
 	}
 
 	/**

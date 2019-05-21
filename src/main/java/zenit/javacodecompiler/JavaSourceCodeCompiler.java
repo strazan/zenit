@@ -74,6 +74,7 @@ public class JavaSourceCodeCompiler {
 	 * Class for creating commands for compiling, and redirecting process-streams.
 	 */
 	private class Compile extends Thread {
+		protected String JDKPath = null;
 		protected String sourcepath;
 		protected String directory;
 		protected File runPath;
@@ -114,6 +115,7 @@ public class JavaSourceCodeCompiler {
 		protected void decodeMetadata() {
 			Metadata metadata = new Metadata(metadataFile);
 			
+			JDKPath = metadata.getJREVersion();
 			directory = metadata.getDirectory();
 			sourcepath = metadata.getSourcepath();
 			internalLibraries = metadata.getInternalLibraries();
@@ -129,6 +131,7 @@ public class JavaSourceCodeCompiler {
 		protected Process compile() {
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(file.getPath());
 
 			String command = cb.generateCommand();
@@ -147,6 +150,7 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathInProject());
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
 			cb.setDirectory(directory);
 			cb.setSourcepath(sourcepath);
@@ -253,6 +257,7 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathForRunning(file.getName()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
 			
 			String command = cb.generateCommand();
@@ -267,6 +272,7 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
 
 			cb.setInternalLibraries(internalLibraries);

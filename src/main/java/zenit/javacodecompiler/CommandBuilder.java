@@ -2,12 +2,15 @@ package main.java.zenit.javacodecompiler;
 
 import java.io.File;
 
+import main.java.zenit.filesystem.jreversions.JREVersions;
+
 public class CommandBuilder {
 
 	public static final String RUN = "java";
 	public static final String COMPILE = "javac";
 
 	String tool;
+	String JDK;
 	String directory;
 	String sourcepath;
 	String[] internalLibraries;
@@ -17,6 +20,20 @@ public class CommandBuilder {
 
 	public CommandBuilder(String tool) {
 		this.tool = tool;
+	}
+	
+	public void setJDK(String JDK) {
+		if (JDK != null) {
+			this.JDK = JDK + File.separator + "Contents" + File.separator + "Home" + File.separator
+				+ "bin" + File.separator + tool;
+		} else {
+			this.JDK = JREVersions.getDefaultJDKFile().getPath() + File.separator + "Contents" + 
+					File.separator + "Home" + File.separator + "bin" + File.separator + tool;;
+		}
+		
+		if (this.JDK == null) {
+			this.JDK = tool;
+		}
 	}
 
 	public void setDirectory(String directory) {
@@ -42,6 +59,11 @@ public class CommandBuilder {
 	private void mergeLibraries() {
 		int intLength = 0;
 		int extLength = 0;
+		
+		if (internalLibraries == null && externalLibraries == null) {
+			return;
+		}
+		
 		if (internalLibraries != null) {
 			intLength = internalLibraries.length;
 		}
@@ -59,7 +81,7 @@ public class CommandBuilder {
 	}
 
 	public String generateCommand() {
-		String command = tool;
+		String command = JDK;
 		
 		mergeLibraries();
 		

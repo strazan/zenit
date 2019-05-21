@@ -71,6 +71,9 @@ public class MainController extends VBox {
 	private MenuItem changeWorkspace;
 	
 	@FXML
+	private MenuItem JREVersions;
+	
+	@FXML
 	private CheckMenuItem cmiDarkMode;
 
 	@FXML
@@ -749,5 +752,10 @@ public class MainController extends VBox {
 	public void showProjectProperties(ProjectFile projectFile) {
 		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected());
 		pmc.start();
+	}
+	
+	public void openJREVersions() {
+		JREVersionsController jvc = new JREVersionsController(cmiDarkMode.isSelected());
+		jvc.start();
 	}
 }
