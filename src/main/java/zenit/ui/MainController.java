@@ -30,6 +30,7 @@ import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.settingspanel.SettingsPanelController;
+import main.java.zenit.settingspanel.ThemeCustomizable;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -43,12 +44,13 @@ import main.java.zenit.zencodearea.ZenCodeArea;
  * @author Pontus Laos, Oskar Molander, Alexander Libot
  *
  */
-public class MainController extends VBox {
+public class MainController extends VBox implements ThemeCustomizable {
 	private Stage stage;
 	private FileController fileController;
 	private int zenCodeAreasTextSize;
 	private String zenCodeAreasFontFamily;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
+	private File customThemeCSS;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -103,7 +105,10 @@ public class MainController extends VBox {
 		this.zenCodeAreasTextSize = 12;
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
-
+		
+		// TODO relative path don't work, very not nice, some1 fix.
+		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
+		
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
 
@@ -148,6 +153,7 @@ public class MainController extends VBox {
 			
 			/* TODO REMOVE */
 			openSettingsPanel();
+		//	System.out.println(new File("/customtheme/mainCustomTheme.css").getParent());
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -700,5 +706,12 @@ public class MainController extends VBox {
 				DialogBoxes.errorDialog("Import failed", "Couldn't import project", ex.getMessage());
 			}
 		}
+	}
+	
+	/**
+	 * @return the path to the stages custom theme stylesheet.
+	 */
+	public File getCustomThemeCSS() {
+		return this.customThemeCSS;
 	}
 }

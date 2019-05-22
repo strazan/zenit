@@ -11,8 +11,8 @@
 }
 
 #spAnchorPane .button {
-	-fx-background-color: #555;
-	-fx-text-fill: #ffffff;
+	-fx-background-color: #555555;
+	-fx-text-fill: #FFFFFF;
 }
 
 #mainAnchorPane {
@@ -27,14 +27,14 @@
 }
 
 #pnlTextAppearance .label {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
 
 #pnlTextAppearance #lblTxtAppeaSize {
-	-fx-text-fill: #bbbbbb;
+	-fx-text-fill: #BBBBBB;
 }
 #pnlTextAppearance #lblTxtAppeaFont {
-	-fx-text-fill: #bbbbbb;
+	-fx-text-fill: #BBBBBB;
 }
 
 #chcbxNewFont {
@@ -51,16 +51,16 @@
 }
 
 #chcbxNewFont .menu-item > .label {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
 
 #chcbxNewFont > .label {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
  
 #fldNewSize {
  	-fx-background-color: rgba(100,100,100,0.4);
- 	-fx-text-fill: #eeeeee;
+ 	-fx-text-fill: #EEEEEE;
  }
  
 #sldrNewSize > .track {	
@@ -74,7 +74,7 @@
 }
 
 #pnlJavaHome .label {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
 
 /* Theme pane */
@@ -109,7 +109,7 @@
 	-fx-background-color: #444444;
 }
 #lblAddCustomCssLines {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
 #fldCustomCSSInput {
 	-fx-background-color: #444444;
@@ -128,7 +128,7 @@
 }
 #listViewAddedCSS .list-cell { 
 	-fx-background-color: #444444; /* 5 */
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 	
 }
 
@@ -150,7 +150,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical .thumb {
-    -fx-background-color: #eeeeee;
+    -fx-background-color: #EEEEEE;
     -fx-background-radius: 5em;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .lblCSSText {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 }
 
 #btnRemoveCSS {
@@ -184,7 +184,7 @@
 
 #btnAddCSSLine {
 	-fx-background-color: #555555;
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #FFFFFF;
 }
 
 /*
@@ -203,7 +203,11 @@
  
  #pnlCustomTheme .color-picker .color-picker-label{
 
--fx-text-fill: #eeeeee;
+-fx-text-fill: #EEEEEE;
+}
+
+.lblMainColor {
+	-fx-text-fill: #EEEEEE;
 }
  
  
@@ -213,18 +217,18 @@
 }
 
 #pnlSupport .hyperlink {
-	-fx-text-fill: #eeeeee;
+	-fx-text-fill: #EEEEEE;
 	-fx-border-color: transparent;
     -fx-padding: 4 0 4 0;
     -fx-underline: false;
 }
 
 #pnlSupport .hyperlink:hover {
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #FFFFFF;
 }
 
 .paneHeader {
-	-fx-text-fill: #bbb;
+	-fx-text-fill: #BBBBBB;
 	-fx-font-size: 16px;
 }
 

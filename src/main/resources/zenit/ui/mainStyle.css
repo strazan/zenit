@@ -39,11 +39,11 @@
 
 #menuBar, #menuBar * {
 	-fx-background-color: #444444;
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #EEEEEE;
 }
 
 #menuBar .arrow {
-	-fx-background-color: #ffffff;
+	-fx-background-color: #EEEEEE;
 }
 
 .menu-item:hover, .menu-item:hover > * {
@@ -51,7 +51,7 @@
 }
 
 .menu {
-	-fx-fill: #ffffff;
+	-fx-fill: #EEEEEE;
 }
 
 .menu:hover, .menu:hover > .label {
@@ -59,7 +59,7 @@
 }
 
 #cmiDarkMode:focused:checked > .left-container > .check {
-    -fx-background-color: #ffffff;
+    -fx-background-color: #EEEEEE;
 }
 
 #cmiDarkMode:hover > .left-container {
@@ -79,7 +79,7 @@
 
 #tabPane {
 	-fx-background-color: #444444;
-	-fx-fill: #ffffff;
+	-fx-fill: #EEEEEE;
 	-fx-border-width: 0;
 	-fx-padding: 0;
 }
@@ -91,18 +91,18 @@
 
 #treeView * {
 	-fx-background-color: #444444;
-	-fx-fill: #ffffffaa;
+	-fx-fill: #EEEEEEaa;
 }
 
 #treeView .arrow  {
-	-fx-background-color: #ffffffbb;
+	-fx-background-color: #EEEEEEbb;
 }
 
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: #1e1e1e;
+   -fx-background-color: #1E1E1E;
 }
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: #1e1e1e;
+   -fx-background-color: #1E1E1E;
 }
 
 .split-pane > .split-pane-divider {  
@@ -122,7 +122,7 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #ff0000;
+	-fx-background-color: #FF0000;
  }
  
  #treeView .thumb {
@@ -171,7 +171,7 @@
 }
 
 #tabPane .tab .tab-label {
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #EEEEEE;
 }
 
 #tabPane .tab:selected {
@@ -183,12 +183,12 @@
 }
 
 #consolePane {
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #EEEEEE;
 }
 
 #consolePane .title {
 	-fx-background-color: #333333;
-	-fx-text-fill: #ffffff;
+	-fx-text-fill: #EEEEEE;
 	-fx-border-radius: 0;
 }
 
@@ -199,8 +199,8 @@
 }
 
 #consolePane .content * {
-	-fx-text-fill: #ffffff;
-	-fx-fill: #ffffff;
+	-fx-text-fill: #EEEEEE;
+	-fx-fill: #EEEEEE;
 	-fx-border-width: 0;
 	-fx-padding: 0;
 	-fx-background-color: #444444;
@@ -232,7 +232,7 @@
 
 #HBox, #HBox * {
 	-fx-background-color: #222222;
-	-fx-fill: #cccccc;
+	-fx-fill: #CCCCCC;
 	-fx-border-width: 0;
 }
 

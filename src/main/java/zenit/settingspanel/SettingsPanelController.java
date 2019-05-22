@@ -2,6 +2,8 @@ package main.java.zenit.settingspanel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -42,10 +44,11 @@ import main.java.zenit.zencodearea.ZenCodeArea;
  * @author Sigge Labor
  *
  */
-public class SettingsPanelController extends AnchorPane {
+public class SettingsPanelController extends AnchorPane implements ThemeCustomizable{
 
 	private int oldSize;
 	private String oldFont;
+	private File customThemeCSS;
 	private LinkedList<String> addedCSSLines;
 	
 	private Stage window;
@@ -189,8 +192,13 @@ public class SettingsPanelController extends AnchorPane {
 
 		window.show();
 		
+		this.customThemeCSS = new File("/customtheme/settingspanelCustomTheme.css");
 		
-		themeHandler = new CustomCSSThemeHandler(mainController, this);
+		List<ThemeCustomizable> stages = new  ArrayList<ThemeCustomizable>();
+		stages.add(mainController);
+		stages.add(this);
+	
+		themeHandler = new CustomCSSThemeHandler(stages);
 	}
 	
 	/**
@@ -337,7 +345,7 @@ public class SettingsPanelController extends AnchorPane {
 	/**
 	 * Opens an URL an the computers default browser. The command varies depending on the users
 	 * operating system.
-	 * @param url
+	 * @param url to open
 	 */
 	private void openInBrowser(String url) {
 		Runtime rt = Runtime.getRuntime();
@@ -473,40 +481,49 @@ public class SettingsPanelController extends AnchorPane {
 		listViewAddedCSS.getItems().add(new AnchorPane());
 
 		colorPickerPrimaryColor.setOnAction((event) -> {
-		    	 Platform.runLater(() -> {
-			    	 revmoveStylesheets();
-			    	 themeHandler.setPrimaryColor(colorPickerPrimaryColor.getValue());
+		     Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.changeColor(colorPickerPrimaryColor.getValue(),
+		    		CustomColor.primaryColor);
 			     });
 		});	
 		
 		colorPickerPrimaryTint.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
 		    	 revmoveStylesheets();
-		    	 themeHandler.setPrimaryTint(colorPickerPrimaryTint.getValue());
+		    	 themeHandler.changeColor(colorPickerPrimaryTint.getValue(),
+		    		CustomColor.primaryTint);
 		     });
 		});	
 		
 		colorPickerSecondaryColor.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
 		    	 revmoveStylesheets();
-		    	 themeHandler.setSecondaryColor(colorPickerSecondaryColor.getValue());
+		    	 themeHandler.changeColor(colorPickerSecondaryColor.getValue(),
+				    CustomColor.secondaryColor);
 		     });
 		});	
 		
 		colorPickerSecondaryTint.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
 		    	 revmoveStylesheets();
-		    	 themeHandler.setSecondaryTint(colorPickerSecondaryTint.getValue());
+		    	 themeHandler.changeColor(colorPickerSecondaryTint.getValue(),
+				    CustomColor.secondaryTint);
 		     });
 		});	
 	}
 	
+	/**
+	 * removes all current stylesheets.
+	 */
 	public void revmoveStylesheets() {
 		if(!isCustomTheme) {
 			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
 			var settingsPanelStylesheets = window.getScene().getStylesheets();
 			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-			var settingsPanelDarkMode = getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm();
+			var settingsPanelDarkMode = getClass().getResource(
+				"/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm(
+			);
 			
 			stylesheets.remove(darkMode);
 			settingsPanelStylesheets.remove(settingsPanelDarkMode);
@@ -514,42 +531,18 @@ public class SettingsPanelController extends AnchorPane {
 		}		
 	}
 	
-	
-	//TODO remove I GUESS
-	
-//	private class SetJavaHome extends Thread {
-//		private String directory;
-//		public SetJavaHome(String dir) {
-//			this.directory = dir;
-//			
-//		}
-//		public void run() {
-//	
-//			CommandLine clCompileJavaFile = CommandLine.parse(
-//				"sudo JAVA_HOME=" + directory
-//			);
-//			//System.out.println(selectedDirectory.getAbsolutePath());
-//			CommandLine clCompileJavaF2ile = CommandLine.parse(
-//					"export JAVA_HOME"
-//				);
-//			DefaultExecutor executor = new DefaultExecutor();
-//			try {
-//				
-//				executor.execute(clCompileJavaFile);
-//				executor.execute(clCompileJavaF2ile);
-//				newJavaHome.setText(System.getenv("JAVA_HOME"));
-//				newJavaHome.setStyle("-fx-text-fill: #0B6623;");
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//		}
-//	}
-//	}
-	
 	/**
 	 * 
 	 * @return this stage
 	 */
 	public Stage getStage() {
 		return this.window;
+	}
+	
+	/**
+	 * @return the path to the stages custom theme stylesheet.
+	 */
+	public File getCustomThemeCSS() {
+		return this.customThemeCSS;
 	}
 }

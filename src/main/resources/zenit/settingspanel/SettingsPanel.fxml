@@ -19,7 +19,6 @@
    <children>
     <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
          <children>
-            <Button fx:id="btnJavaHome" layoutY="38.0" minHeight="40.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="40.0" prefWidth="150.0" text="Java home" AnchorPane.bottomAnchor="322.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0" />
             <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="38.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="38.0" prefWidth="84.0" text="Text Appearance" AnchorPane.bottomAnchor="362.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
             <Button fx:id="btnTheme" layoutX="46.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Dark Mode" AnchorPane.bottomAnchor="282.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
                <opaqueInsets>
@@ -123,10 +122,10 @@
             <ColorPicker fx:id="colorPickerSecondaryColor" layoutX="406.0" layoutY="211.0" prefHeight="27.0" prefWidth="102.0" />
             <ColorPicker fx:id="colorPickerPrimaryTint" layoutX="406.0" layoutY="163.0" prefHeight="27.0" prefWidth="102.0" />
             <ColorPicker fx:id="colorPickerSecondaryTint" layoutX="406.0" layoutY="258.0" prefHeight="27.0" prefWidth="102.0" />
-            <Label layoutX="61.0" layoutY="121.0" text="Primary Color" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="216.0" text="Secondary Color" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="168.0" text="Primary Tint" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="263.0" text="Secondary Tint" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="121.0" styleClass="lblMainColor" text="Primary Color" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="216.0" styleClass="lblMainColor" text="Secondary Color" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="168.0" styleClass="lblMainColor" text="Primary Tint" AnchorPane.leftAnchor="60.0" />
+            <Label layoutX="61.0" layoutY="263.0" styleClass="lblMainColor" text="Secondary Tint" AnchorPane.leftAnchor="60.0" />
          </children></AnchorPane>
    </children>
 </fx:root>

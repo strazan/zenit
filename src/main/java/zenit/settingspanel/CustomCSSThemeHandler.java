@@ -14,14 +14,11 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
 
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-
-import main.java.zenit.ui.MainController;
 
 /**
  * A handler for custom css theme.
@@ -30,15 +27,12 @@ import main.java.zenit.ui.MainController;
  */
 public class CustomCSSThemeHandler {
 	
-	private String Color_PRIMARY ;
-	private String Color_PRIMARYTINT;
-	private String Color_SECONDARY ; 
-	private String Color_SECONDARYTINT ; 
+	private String Color_Primary ;
+	private String Color_PrimaryTint;
+	private String Color_Secondary ; 
+	private String Color_SecondaryTint ; 
 
-	private MainController mainC;
-	private SettingsPanelController settingsC;
-	
-	private HashMap<Stage, String> stageMap;
+	private List<ThemeCustomizable> stages;
 	
 	private final String key_Primary = "primary";
 	private final String key_PrimaryTint = "primtint";
@@ -48,18 +42,15 @@ public class CustomCSSThemeHandler {
 	private InputStream input = null;
 	private OutputStream output = null;
 
-	public CustomCSSThemeHandler(HashMap<Stage, String> stageMap) {
-		this.stageMap = stageMap;
-	}
-	public CustomCSSThemeHandler(MainController maincontroller, SettingsPanelController settingcontroller) {
-		this.mainC = maincontroller;
-		this.settingsC = settingcontroller;
-		openStreams();
-		Color_PRIMARY = loadProperty(key_Primary);
-		Color_PRIMARYTINT = loadProperty(key_PrimaryTint);
-		Color_SECONDARY = loadProperty(key_Secondary);
-		Color_SECONDARYTINT = loadProperty(key_SecondaryTint);
-	}			
+	/**
+	 * Constructs a new CustomCSSThemeHandler
+	 * @param customStyleSheets the List containing all ThemeCustomizable (controllers)
+	 * of the application.
+	 */
+	public CustomCSSThemeHandler( List<ThemeCustomizable> customStyleSheets) {
+		this.stages = customStyleSheets;
+		loadAllProperties();
+	}		
 		
 	/**
 	 * Creates new I/O stream to the config.properties file.
@@ -102,123 +93,126 @@ public class CustomCSSThemeHandler {
 	 */
 	private boolean isColorValid(String color) {
 		
-		if((!color.equals(Color_PRIMARY)) && 
-		   (!color.equals(Color_PRIMARYTINT)) &&
-		   (!color.equals(Color_SECONDARY)) &&
-		   (!color.equals(Color_SECONDARYTINT))
+		if((!color.equals(Color_Primary)) && 
+		   (!color.equals(Color_PrimaryTint)) &&
+		   (!color.equals(Color_Secondary)) &&
+		   (!color.equals(Color_SecondaryTint))
 		) {
 			return true;
 		}
 		return false;
 	}
 	
-	public void changeColor(Color color) {
+	/**
+	 * Changes the themes of the application. This method will look for all occurrences of current
+	 * the chosen colorTheme in the StyleSheet and change them to the new picked color.
+	 * @param color new color to apply.
+	 * @param colorTheme which 'group' to change.
+	 */
+	public void changeColor(Color color, CustomColor colorTheme) {
+		
 		String newColor;
 		
 		if(isColorValid(newColor = colorToHex(color))) {
 			openStreams();
-		}
-		
+			
+			for(int i = 0; i < stages.size(); i++) {
+				changeStyleSheet(
+					stages.get(i).getStage(), stages.get(i).getCustomThemeCSS(),
+						getStringFromEnum(colorTheme), newColor
+				);
+			}	
+			storeColor(newColor, colorTheme);
+			closeStreams();
+		}	
 	}
 	
 	/**
-	 * Sets the primary color
-	 * @param newPrimaryColor
+	 * Uses CustomColor enum to get the right Color, in string format.
+	 * 
+	 * @param enumColor
+	 * @return
 	 */
-	public void setPrimaryColor(Color newPrimaryColor) {
-		String newColor; 
+	public String getStringFromEnum(CustomColor enumColor) {
+		String toReturn = "";
 		
-		if(isColorValid(newColor = colorToHex(newPrimaryColor))) {
-			openStreams();
+		switch(enumColor) {
+		case primaryColor:
+			toReturn = Color_Primary;
+			break;
 			
-			Color_PRIMARY = loadProperty(key_Primary);
-			System.out.println(new File(
-					"/customtheme/mainCustomTheme.css").getPath());
+		case primaryTint:
+			toReturn = Color_PrimaryTint;
+			break;
 			
-			changeStyleSheet(mainC.getStage(), new File(
-					"/customtheme/mainCustomTheme.css").getPath(),  
-				Color_PRIMARY, newColor);
-			changeStyleSheet(settingsC.getStage(), new File(
-				"/customtheme/settingspanelCustomTheme.css").getPath(), 
-				Color_PRIMARY, newColor);
+		case secondaryColor:
+			toReturn = Color_Secondary;
+			break;
+		
+		case secondaryTint:
+			toReturn = Color_SecondaryTint;
+			break;			
+		}
+		
+		return toReturn;
+	}
+	
+	/**
+	 * Stores a color to the config.properties file.
+	 * 
+	 * @param color to be stored 
+	 * @param colorTheme
+	 */
+	public void storeColor(String color, CustomColor colorTheme) {
+
+		switch(colorTheme) {
+		case primaryColor:
+			Color_Primary = color;
+			storeProperty(key_Primary, Color_Primary);
+			break;
 			
-			Color_PRIMARY = newColor;
-			storeProperty(key_Primary, Color_PRIMARY);
-			closeStreams();
+		case primaryTint:
+			Color_PrimaryTint = color;
+			storeProperty(key_PrimaryTint, Color_PrimaryTint);
+			break;
+			
+		case secondaryColor:
+			Color_Secondary = color;	
+			storeProperty(key_Secondary, Color_Secondary);
+			break;
+		
+		case secondaryTint:
+			Color_SecondaryTint = color;
+			storeProperty(key_SecondaryTint, Color_SecondaryTint);
+			break;			
 		}
 	}
 	
-	public void setSecondaryColor(Color newSecondaryColor) {
-		String newColor;
-		
-		if(isColorValid(newColor = colorToHex(newSecondaryColor))) {
-
-			openStreams();
-			Color_SECONDARY = loadProperty(key_Secondary);
-			
-			changeStyleSheet(mainC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/mainCustomTheme.css", 
-				Color_SECONDARY, newColor);
-			changeStyleSheet(settingsC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/settingspanelCustomTheme.css", 
-				Color_SECONDARY, newColor);
-			
-			Color_SECONDARY = newColor;
-		
-			storeProperty(key_Secondary, Color_SECONDARY);
-			closeStreams();
-		}
-	}
-	 
-	public void setPrimaryTint(Color newPriamryTint) {
-		String newColor;
-		
-		if(isColorValid(newColor = colorToHex(newPriamryTint))) {
-
-			openStreams();
-			Color_PRIMARYTINT = loadProperty(key_PrimaryTint);
-			
-			changeStyleSheet(mainC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/mainCustomTheme.css", 
-				Color_PRIMARYTINT, newColor);
-			changeStyleSheet(settingsC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/settingspanelCustomTheme.css", 
-				Color_PRIMARYTINT, newColor);
-			
-			Color_PRIMARYTINT = newColor;
-		
-			storeProperty(key_PrimaryTint, Color_PRIMARYTINT);
-			closeStreams();
-		}
+	/**
+	 * Loads all saved properties stored in the config.properties file, and saves them to the
+	 * matching instance variable.
+	 */
+	public void loadAllProperties() {
+		openStreams();
+		Color_Primary = getProperty(key_Primary);
+		closeStreams();
+		openStreams();
+		Color_PrimaryTint = getProperty(key_PrimaryTint);
+		closeStreams();
+		openStreams();
+		Color_Secondary = getProperty(key_Secondary);
+		closeStreams();
+		openStreams();
+		Color_SecondaryTint = getProperty(key_SecondaryTint);
+		closeStreams();
 	}
 	
-	public void setSecondaryTint(Color newSecondaryTint) {
-		String newColor;
-		
-		if(isColorValid(newColor = colorToHex(newSecondaryTint))) {
-
-			openStreams();
-			Color_SECONDARYTINT = loadProperty(key_SecondaryTint);
-			
-			changeStyleSheet(mainC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/mainCustomTheme.css", 
-				Color_SECONDARYTINT, newColor);
-			changeStyleSheet(settingsC.getStage(), 
-				"/Users/siggelabor/Documents/zenit/src/main/resources/zenit/settingspanel/customcss/settingspanelCustomTheme.css", 
-				Color_SECONDARYTINT, newColor);
-			
-			Color_SECONDARYTINT = newColor;
-		
-			storeProperty(key_SecondaryTint, Color_SECONDARYTINT);
-			closeStreams();
-		}
-	}
 	/**
 	 * Gets the stored property of given key.
 	 * @param key to the property
 	 * @return value
 	 */
-	public String loadProperty(String key) {
+	public String getProperty(String key) {
 		
 		Properties prop = new Properties();
 
@@ -245,9 +239,10 @@ public class CustomCSSThemeHandler {
 		Properties prop = new Properties();
 		
 		try {
-			
+			openStreams();
 			prop.setProperty(key, value);
 			prop.store(output, null);
+			closeStreams();
 			
 		} catch (IOException io) {
 			io.printStackTrace();
@@ -268,27 +263,28 @@ public class CustomCSSThemeHandler {
 	 * @param localPath the 'workpace dir'
 	 */
 	public void changeStyleSheet(
-		Stage stage, String customThemeCSSfilepath, String regex, String replacement
+		Stage stage, File customThemeCSSfile, String regex, String replacement
 	) {
+		String fullPath =  System.getProperty("user.dir") + customThemeCSSfile;
 		var stylesheets = stage.getScene().getStylesheets();
-//		if(stylesheets.contains("file:" + customThemeCSSfilepath)) {
-//			stylesheets.remove("file:" + customThemeCSSfilepath);
-//
-//		}
+
+		if(stylesheets.contains("file:" +fullPath)) {
+			stylesheets.remove("file:" +fullPath);
+		}
 		List<String> lines = null;
 		try {
-			lines = Files.readAllLines(Paths.get(customThemeCSSfilepath));
+			lines = Files.readAllLines(Paths.get(fullPath));
+			System.out.println(lines);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		List<String> newLines = new ArrayList<String>();
-	System.out.println(regex);
+	
 		for(int i = 0; i < lines.size(); i++) {
 			String repalcedLine = lines.get(i).replaceAll(regex, replacement);
 			newLines.add(repalcedLine);	
-		}
-		
+		}		
 
 		try {
 			String stringNewStylesheet = "";
@@ -296,14 +292,12 @@ public class CustomCSSThemeHandler {
 				stringNewStylesheet += newLines.get(i) + "\n";
 			}
 
-		    BufferedWriter writer = new BufferedWriter(new FileWriter(customThemeCSSfilepath));
+		    BufferedWriter writer = new BufferedWriter(new FileWriter(fullPath));
 		    writer.write(stringNewStylesheet);
-
 		    writer.close();
 			
 		    stylesheets = stage.getScene().getStylesheets();
-	
-			stylesheets.add("file:" + customThemeCSSfilepath);
+			stylesheets.add("file:" +fullPath);
 		
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
