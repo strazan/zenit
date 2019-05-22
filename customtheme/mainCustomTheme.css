@@ -38,7 +38,7 @@
 }
 
 #menuBar, #menuBar * {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-text-fill: #B31A1A;
 }
 
@@ -78,7 +78,7 @@
 }
 
 #tabPane {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-fill: #B31A1A;
 	-fx-border-width: 0;
 	-fx-padding: 0;
@@ -90,7 +90,7 @@
 }
 
 #treeView * {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-fill: #B31A1Aaa;
 }
 
@@ -122,7 +122,7 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
  }
  
  #treeView .thumb {
@@ -163,7 +163,7 @@
 }
 
 #tabPane .tab {
-	-fx-background-color: #00800088;
+	-fx-background-color: #B3668088;
 }
 
 #tabPane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
@@ -175,11 +175,11 @@
 }
 
 #tabPane .tab:selected {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #tabPane .tab-content-area * {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #consolePane {
@@ -193,9 +193,9 @@
 }
 
 #consolePane .content {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-border-width: 0;
-	-fx-border-color: #008000;
+	-fx-border-color: #B36680;
 }
 
 #consolePane .content * {
@@ -203,7 +203,7 @@
 	-fx-fill: #B31A1A;
 	-fx-border-width: 0;
 	-fx-padding: 0;
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #consolePane .content .thumb {
@@ -211,19 +211,19 @@
 }
 
 #consolePane .content .scroll-bar:vertical, #consolePane .content .corner {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-pref-width: 14;
     -fx-padding: 3;
     -fx-border-width: 0;
-    -fx-border-color: #008000;
+    -fx-border-color: #B36680;
 }
 
 #consolePane .content .scroll-bar:horizontal {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-pref-height: 14;
 	-fx-padding: 3;
 	-fx-border-width: 0;
-	-fx-border-color: #008000;
+	-fx-border-color: #B36680;
 }
 
  #consolePane .content .thumb:hover, #consolePane .content .thumb:pressed {

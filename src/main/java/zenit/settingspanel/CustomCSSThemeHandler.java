@@ -274,7 +274,6 @@ public class CustomCSSThemeHandler {
 		List<String> lines = null;
 		try {
 			lines = Files.readAllLines(Paths.get(fullPath));
-			System.out.println(lines);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

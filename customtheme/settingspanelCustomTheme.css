@@ -3,11 +3,11 @@
 }
 
 #spAnchorPane {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-padding: 0.0;
 	-fx-background-insets: 0.0, 0.0;
   	-fx-border-width: 0.0;
-  	-fx-background-color: #008000;
+  	-fx-background-color: #B36680;
 }
 
 #spAnchorPane .button {
@@ -16,13 +16,13 @@
 }
 
 #mainAnchorPane {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
 #pnlTextAppearance {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-text-fill: #B31A1A;
 }
 
@@ -43,7 +43,7 @@
 }
 
 #chcbxNewFont .context-menu {	
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #chcbxNewFont .menu-item:focused {
@@ -70,7 +70,7 @@
  
  /* Java Home pane */
 #pnlJavaHome {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #pnlJavaHome .label {
@@ -80,7 +80,7 @@
 /* Theme pane */
 
 #pnlTheme {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #pnlTheme #lblDarkModeTxt {
@@ -106,28 +106,28 @@
 
 /* Custom CSS pane */
 #pnlCustomCSS {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 #lblAddCustomCssLines {
 	-fx-text-fill: #B31A1A;
 }
 #fldCustomCSSInput {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 	-fx-border-color: rgba(255,255,255,0.4);
 	-fx-text-fill: #009911;
 }
 
 #scrollPaneAddedCSS{
-	  -fx-background-color: #008000;
+	  -fx-background-color: #B36680;
 	  -fx-border-color: transparent;
 }
 
 #listViewAddedCSS {
-	 -fx-background-color: #008000;
+	 -fx-background-color: #B36680;
 	 -fx-border-color: transparent;
 }
 #listViewAddedCSS .list-cell { 
-	-fx-background-color: #008000; /* 5 */
+	-fx-background-color: #B36680; /* 5 */
 	-fx-text-fill: #B31A1A;
 	
 }
@@ -137,7 +137,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-pane {
-    -fx-background-color: #008000;
+    -fx-background-color: #B36680;
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical{
@@ -193,7 +193,7 @@
  * 
  */
  #pnlCustomTheme {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
  #pnlCustomTheme .color-picker {
@@ -213,7 +213,7 @@
  
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #008000;
+	-fx-background-color: #B36680;
 }
 
 #pnlSupport .hyperlink {
