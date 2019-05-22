@@ -105,8 +105,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 		this.zenCodeAreasTextSize = 12;
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
-		
-		// TODO relative path don't work, very not nice, some1 fix.
 		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
 		
 		try {
@@ -150,11 +148,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
-			
-			/* TODO REMOVE */
-			openSettingsPanel();
-		//	System.out.println(new File("/customtheme/mainCustomTheme.css").getParent());
-
+	
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
