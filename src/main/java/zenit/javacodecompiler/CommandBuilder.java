@@ -2,6 +2,7 @@ package main.java.zenit.javacodecompiler;
 
 import java.io.File;
 
+import main.java.zenit.filesystem.jreversions.JDKVerifier;
 import main.java.zenit.filesystem.jreversions.JREVersions;
 
 public class CommandBuilder {
@@ -23,14 +24,15 @@ public class CommandBuilder {
 	}
 	
 	public void setJDK(String JDK) {
+		//If project has special JDK
 		if (JDK != null) {
-			this.JDK = JDK + File.separator + "Contents" + File.separator + "Home" + File.separator
-				+ "bin" + File.separator + tool;
+			this.JDK = JDKVerifier.getExecutablePath(JDK, tool);
+		//If default JDK is set
 		} else {
-			this.JDK = JREVersions.getDefaultJDKFile().getPath() + File.separator + "Contents" + 
-					File.separator + "Home" + File.separator + "bin" + File.separator + tool;;
+			this.JDK = JDKVerifier.getExecutablePath(JREVersions.getDefaultJDKFile().getPath(), tool);
 		}
 		
+		//If no default JDK is set
 		if (this.JDK == null) {
 			this.JDK = tool;
 		}

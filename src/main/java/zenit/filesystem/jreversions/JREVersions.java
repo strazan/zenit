@@ -11,6 +11,8 @@ import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
+import main.java.zenit.Zenit;
+
 public class JREVersions {
 
 	public static void createNew() {
@@ -97,12 +99,7 @@ public class JREVersions {
 	public static boolean append(File file) {
 		boolean success = false;
 		
-		File java = new File(file.getPath() + File.separator + "Contents" + File.separator + 
-				"Home" + File.separator + "bin" + File.separator + "java");
-		File javac = new File(file.getPath() + File.separator + "Contents" + File.separator + 
-				"Home" + File.separator + "bin" + File.separator + "javac");
-		
-		if (java.exists() && javac.exists()) {
+		if (JDKVerifier.validJDK(file)) {
 			List<File> files = read();
 			files.add(file);
 			
@@ -127,9 +124,13 @@ public class JREVersions {
 	}
 	
 	public static File getJVMDirectory() {
-		String OS = System.getProperty("os.name");
-		if (OS.startsWith("Mac")) {
+		String OS = Zenit.OS;
+		if (OS.equals("Mac OS X")) {
 			return new File("/library/java/javavirtualmachines");
+		} else if (OS.equals("Linux")) {
+			return new File("/usr/lib/jvm");
+		} else if (OS.equals("Windows")) {
+			return new File("C:\\Program Files\\Java\\");
 		}
 		
 		return null;

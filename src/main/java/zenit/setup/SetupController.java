@@ -22,7 +22,6 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import main.java.zenit.Zenit;
 import main.java.zenit.filesystem.WorkspaceHandler;
-import main.java.zenit.filesystem.helpers.JDKHelpers;
 import main.java.zenit.filesystem.jreversions.JREVersions;
 import main.java.zenit.ui.DialogBoxes;
 
@@ -33,6 +32,8 @@ public class SetupController extends AnchorPane {
 	private File workspace = new File("res/workspace/workspace.dat");
 	private File JDK = new File("res/JDK/JDK.dat");
 	private File defaultJDK = new File ("res/JDK/DefaultJDK.dat");
+	
+	private File workspaceFile;
 	
 	private final ToggleGroup tgGroup;
 	
@@ -80,21 +81,21 @@ public class SetupController extends AnchorPane {
 		logo.setImage(new Image(getClass().getResource("/zenit/setup/zenit.png").toExternalForm()));
 		logo.setFitWidth(55);
 		
-		initRadioButtons();
-		
 		if (!JDK.exists()) {
 			JREVersions.createNew();
 		}
 		if (workspace.exists()) {
-			File ws;
+			
 			try {
-				ws = WorkspaceHandler.readWorkspace();
-				workspacePath.setText(ws.getPath());
+				workspaceFile = WorkspaceHandler.readWorkspace();
+				workspacePath.setText(workspaceFile.getPath());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 			
 		}
+		
+		initRadioButtons();
 		
 		updateList();
 	}
@@ -102,7 +103,13 @@ public class SetupController extends AnchorPane {
 	private void initRadioButtons() {
 		rb1.setToggleGroup(tgGroup);
 		rb2.setToggleGroup(tgGroup);
-		rb2.setSelected(true);
+		
+		if (workspaceFile == null) {
+			rb2.setSelected(true);
+		} else {
+			rb1.setSelected(true);
+		}
+		
 		
 		tgGroup.selectedToggleProperty().addListener(new RadioButtonListener());
 	}
@@ -133,7 +140,7 @@ public class SetupController extends AnchorPane {
 	private void browse() {
 		DirectoryChooser dc = new DirectoryChooser();
 		dc.setTitle("Choose a workspace");
-		dc.setInitialDirectory(null);
+		dc.setInitialDirectory(new File(System.getProperty("user.home")));
 		File newWorkspace = dc.showDialog(stage);
 		
 		if (newWorkspace != null) {
@@ -150,9 +157,12 @@ public class SetupController extends AnchorPane {
 		dc.setInitialDirectory(JREVersions.getJVMDirectory());
 		File newJDK = dc.showDialog(stage);
 		
-		if (newJDK != null && JDKHelpers.validJDK(newJDK)) {
-			JREVersions.append(newJDK);
+
+		if (JREVersions.append(newJDK)) {
 			updateList();
+		} else {
+			DialogBoxes.errorDialog("Not a valid JDK folder", "", "The chosen folder is not"
+					+ " a valid JDK folder, must contain a java and javac executable");
 		}
 	}
 	
