@@ -105,12 +105,8 @@ public class CommandBuilder {
 		
 		mergeLibraries();
 		
-		if(tool.equals(RUN)) {
-			if (directory == null)
-				command += " -cp ./bin";
-			else {
-				command += " -cp ./" + directory;
-			}
+		if(tool.equals(RUN) && directory != null) {
+			command += " -cp ./" + directory;
 		}
 		
 		if (libraries != null) {
