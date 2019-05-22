@@ -23,13 +23,13 @@ public class ConsoleRedirect {
 		try {
 		
 			ConsoleAreaOutputStream socat = new ConsoleAreaOutputStream(ta);
-//			ConsoleAreaErrorStream tacos = new ConsoleAreaErrorStream(ta);
+			ConsoleAreaErrorStream tacos = new ConsoleAreaErrorStream(ta);
 
 			PrintStream outPrintStream = new PrintStream(socat);
-//			PrintStream errPrintStream = new PrintStream(tacos);
+			PrintStream errPrintStream = new PrintStream(tacos);
 
 			System.setOut(outPrintStream);
-//			System.setErr(errPrintStream);
+			System.setErr(errPrintStream);
 
 			/* 
 			 * TODO

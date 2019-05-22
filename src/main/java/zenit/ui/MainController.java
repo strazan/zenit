@@ -466,15 +466,17 @@ public class MainController extends VBox {
 			File metadataFile = getMetadataFile(file);
 			saveFile(false);
 		
-		consoleController.newConsole(); //TODO: Maybe but in a better place ?
-		
+		 
+			consoleController.newConsole(null);
+			
 			try {
 				ProcessBuffer buffer = new ProcessBuffer();
 				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
 				compiler.startCompileAndRun();
 				Process process = buffer.get();
+				
 				if (process != null && process.isAlive()) {
-					//TODO Create new console tab from here.
+					
 				}
 				
 			} catch (Exception e) {

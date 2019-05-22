@@ -58,10 +58,9 @@ public class ConsoleController implements Initializable {
 	/*
 	 * These HashMaps are ugly.
 	 */
-//	private HashMap<ConsoleArea, AnchorPane> consoleList = new HashMap<ConsoleArea, AnchorPane>(); 
-	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>();
+	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>(); 
+//	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
 	private ArrayList<Terminal> terminalList = new ArrayList<Terminal>();
-//	private HashMap<Terminal, AnchorPane> terminalList = new HashMap<Terminal, AnchorPane>(); 
 	
 	@FXML 
 	private TabPane consoleTabPane;
@@ -73,10 +72,10 @@ public class ConsoleController implements Initializable {
 	private Button btnConsole;
 
 	@FXML
-	private ChoiceBox<String> consoleChoiceBox; 
+	private ChoiceBox<ConsoleArea> consoleChoiceBox; 
 
 	@FXML
-	private ChoiceBox<String> terminalChoiceBox;
+	private ChoiceBox<Terminal> terminalChoiceBox;
 	
 	@FXML
 	private AnchorPane rootAnchor;
@@ -126,7 +125,6 @@ public class ConsoleController implements Initializable {
 	 */
 	
 
-	
 	public void showConsoleTabs() {
 		
 		btnTerminal.setStyle("");
@@ -157,6 +155,7 @@ public class ConsoleController implements Initializable {
 			createEmptyConsolePane();
 		}
 		
+	
 		
 	}
 	
@@ -220,24 +219,25 @@ public class ConsoleController implements Initializable {
 	 * Creates a new ConsoleArea, adds it to the console AnchorPane and puts it as an option in the
 	 * choiceBox.
 	 */
-	public void newConsole() {
+	
+	public void newConsole(Process process) {
 		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
 		fillAnchor(consoleArea);
 		fillAnchor(consoleAnchorPane);
 		
-		/*
-		 * TODO 
-		 * this should probably be reworked, so that 'ID' isn't used. 
-		 */
+		
 		
 		consoleAnchorPane.getChildren().add(consoleArea);
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
+		// till hashmap
+//		consoleList.put(consoleArea, process);
+		
 		consoleList.add(consoleArea);
-		consoleChoiceBox.getItems().add(consoleArea.getID());
-		consoleChoiceBox.getSelectionModel().select(consoleArea.getID());
+		consoleChoiceBox.getItems().add(consoleArea);
+		consoleChoiceBox.getSelectionModel().select(consoleArea);
 		
 		new ConsoleRedirect(consoleArea);	
 		showConsoleTabs();
@@ -262,8 +262,8 @@ public class ConsoleController implements Initializable {
 		terminalAnchorPane.getChildren().add(terminal);
 		rootAnchor.getChildren().add(terminalAnchorPane);
 		terminalList.add(terminal);
-		terminalChoiceBox.getItems().add(terminal.getId());
-		terminalChoiceBox.getSelectionModel().select(terminal.getId());
+		terminalChoiceBox.getItems().add(terminal);
+		terminalChoiceBox.getSelectionModel().select(terminal);
 		
 		showTerminalTabs();
 		
@@ -321,19 +321,30 @@ public class ConsoleController implements Initializable {
 			
 			if(newValue != null) {
 				for(ConsoleArea ca : consoleList) {
-					if(newValue == ca.getID()) {
+					if(newValue.equals(ca)) {
 						ca.getParent().toFront();
 						activeConsole = ca;
 					}
 				}
 			}
 			
+			//Hashmap
+			
+//			if(newValue != null) {
+//				for(var item : consoleList.entrySet()) {
+//					if(newValue.equals(item.getKey().getID())) {
+//						item.getKey().toFront();
+//						activeConsole = item.getKey();
+//					}
+//				}
+//			}
+			
 		});
 		
 		terminalChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			if(newValue != null) {
 				for(Terminal t : terminalList) {
-					if(newValue == t.getId()) {
+					if(newValue.equals(t)) {
 						t.getParent().toFront();
 						activeTerminal = t;
 						t.onTerminalFxReady(()-> {
@@ -344,12 +355,14 @@ public class ConsoleController implements Initializable {
 			}
 		});
 		
-		newConsole();
+		showConsoleTabs();
+//		newConsole(null);
+		
 		//Console
 		iconCloseConsoleInstance.setOnMouseClicked(e -> {
 				rootAnchor.getChildren().remove(activeConsole.getParent());
 				consoleList.remove(activeConsole);
-				consoleChoiceBox.getItems().remove(activeConsole.getID());
+				consoleChoiceBox.getItems().remove(activeConsole);
 				consoleChoiceBox.getSelectionModel().selectLast();
 
 				if(consoleList.size() == 0) {
@@ -371,7 +384,7 @@ public class ConsoleController implements Initializable {
 			if(terminalList.size() > 1) {
 				rootAnchor.getChildren().remove(activeTerminal.getParent());
 				terminalList.remove(activeTerminal);
-				terminalChoiceBox.getItems().remove(activeTerminal.getId());
+				terminalChoiceBox.getItems().remove(activeTerminal);
 				terminalChoiceBox.getSelectionModel().selectLast();
 			}
 			
@@ -386,7 +399,9 @@ public class ConsoleController implements Initializable {
 			iconCloseTerminalInstance.setIconColor(Paint.valueOf("#666"));
 		});
 		
-		
+		btnNewConsole.setOnMouseClicked(e -> {
+			newConsole(null);
+		});
 		
 	}
 }
