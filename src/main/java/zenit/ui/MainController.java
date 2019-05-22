@@ -29,6 +29,7 @@ import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
+import main.java.zenit.searchinfile.Search;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -45,7 +46,7 @@ import main.java.zenit.zencodearea.ZenCodeArea;
 public class MainController extends VBox {
 	private Stage stage;
 	private FileController fileController;
-	private Search search = new Search();
+	private boolean isDarkMode = false;
 
 	@FXML
 	private TextArea taConsole;
@@ -110,7 +111,7 @@ public class MainController extends VBox {
 
 			initialize();
 			stage.show();
-			KeyboardShortcuts.setupMain(scene, this, search);
+			KeyboardShortcuts.setupMain(scene, this);
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -560,204 +561,14 @@ public class MainController extends VBox {
 		return null;
 	}
 	
-	/**
-	 * The Search class lets you search for a word then either
-	 * highlights it yellow or grey, depending on what background you have,
-	 * or replaces it with another word of your choosing
-	 * 
-	 * @author Fredrik EKlundh
-	 *
-	 */
-	public class Search{
-		private ZenCodeArea zenCodeArea;
+	public void search() {
 		
-		private Scanner txtscan = null;
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		File file = selectedTab.getFile();
 		
-		private List<Integer> line;
-		private List<Integer> wordPos; 
-		private List<Integer> absolutePos;
-		
-		private int numberOfTimes;
-		private int numberOfLines;
-		private int lineLenght;
-		private int i = 0;
-		
-		private String searchWord;
-		private String replaceWord;
-		
-		/**
-		 * Opens a TextInputDialog and let's you type in a word to search for 
-		 * 
-		 * @throws FileNotFoundException
-		 */
-		public void searchInFile() {
-			
-			TextInputDialog dialog = new TextInputDialog("search");
-			dialog.setTitle("Search");
-			dialog.setHeaderText("What are you looking for?");
-
-			line = new ArrayList<>();
-			wordPos = new ArrayList<>();
-			absolutePos = new ArrayList<>();
-			
-			zenCodeArea = getSelectedTab().getZenCodeArea();
-
-			clearZen();
-			
-			searchWord = "";
-			replaceWord = "";
-
-			numberOfTimes = 0;
-			numberOfLines = -1;
-			lineLenght = 0;
-
-			boolean darkMode = cmiDarkMode.isSelected();
-			boolean caseSensetive = false;
-			boolean replace = false;
-			
-			File file = getSelectedTab().getFile();
-		
-			try {
-				txtscan = new Scanner(file);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}
-
-			Optional<String> result = dialog.showAndWait();
-			if (result.isPresent()) {
-				searchWord = result.get();
-				//caseSensetive needs to be change from the panel
-				if (caseSensetive == false) {
-					notCaseSensetive();
-				}else {
-					caseSensetive();   //
-				}
-				
-				
-
-			}
-
-			if (numberOfTimes > 0) {
-				System.out.println("Exsist " + numberOfTimes + " times");  //visa i sökpanelen
-				
-				//replace has to be change from the panel
-				if (replace == false) {
-					
-					for (int i = 0; i < numberOfTimes; i++) {
-						if (darkMode) {
-							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
-							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-							
-						}else {
-							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
-							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-						}
-					}
-				}else {
-					
-					for (int i = 0; i < numberOfTimes; i++) {
-						absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-					}
-					//replace word needs to be set from the panel
-					replaceWord(searchWord, replaceWord, absolutePos);
-				}
-
-				zenCodeArea.moveTo(absolutePos.get(0));
-				zenCodeArea.requestFollowCaret();
-				
-			}
-		}
-
-		/**
-		 * Appends a Char to make the highlight disappear from 
-		 * the highlighted words then removes it again
-		 */
-		private void clearZen() {
-			zenCodeArea.appendText(" ");
-			zenCodeArea.deletePreviousChar();
-		}
-		
-		/**
-		 * Replaces every occurrence of a certain word with another word 
-		 * 
-		 * @param wordBefore
-		 * @param wordAfter
-		 * @param absolutePos
-		 */
-		private void replaceWord(String wordBefore, String wordAfter, List<Integer> absolutePos) {
-			for (int i = absolutePos.size() -1; i >= 0; i--) {
-				zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + wordBefore.length(), wordAfter);
-			}
-		}
-		
-		/**
-		 * Jumps down/to the next occurrence of the highlighted word
-		 */
-		public void jumpDown() {
-			if (i < absolutePos.size()) {
-				i++;
-			}
-			
-			zenCodeArea.moveTo(absolutePos.get(i));
-			zenCodeArea.requestFollowCaret();
-		}
-		
-		/**
-		 * Jumps up/to the previous occurrence of the highlighted word
-		 */
-		public void jumpUp() {
-			if(i > 0) {
-				i--;
-			}
-			
-			zenCodeArea.moveTo(absolutePos.get(i));
-			zenCodeArea.requestFollowCaret();	
-		}
-		
-		/**
-		 * Making the search ignore if it's capital letters or lowercase
-		 */
-		private void notCaseSensetive() {
-			
-			while (txtscan.hasNextLine()) {
-				String str = txtscan.nextLine().toLowerCase();
-				numberOfLines++;
-				lineLenght = 0;
-				while (str.indexOf(searchWord.toLowerCase()) != -1) {
-					numberOfTimes++;
-
-					line.add(numberOfLines);
-
-					wordPos.add(str.indexOf(searchWord.toLowerCase()) + lineLenght);
-
-					lineLenght += str.length() - str.substring(str.indexOf(searchWord.toLowerCase()) + searchWord.length()).length();
-
-					str = str.substring(str.indexOf(searchWord.toLowerCase()) + searchWord.length());
-				}
-			}
-		}
-		
-		/**
-		 * This search makes a different if it's capital letters or lowercase
-		 */
-		private void caseSensetive() {
-			
-			while (txtscan.hasNextLine()) {
-				String str = txtscan.nextLine();
-				numberOfLines++;
-				lineLenght = 0;
-				while (str.indexOf(searchWord) != -1) {
-					numberOfTimes++;
-
-					line.add(numberOfLines);
-
-					wordPos.add(str.indexOf(searchWord) + lineLenght);
-
-					lineLenght += str.length() - str.substring(str.indexOf(searchWord) + searchWord.length()).length();
-
-					str = str.substring(str.indexOf(searchWord) + searchWord.length());
-				}
-			}
+		if (selectedTab != null) {
+			new Search(zenCodeArea, file, isDarkMode);
 		}
 	}
 }
