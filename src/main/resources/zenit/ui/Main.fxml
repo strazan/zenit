@@ -50,8 +50,8 @@
 				</Menu>
 				<Menu mnemonicParsing="false" text="Edit">
 					<items>
-						<MenuItem mnemonicParsing="false" text="Undo" />
-						<MenuItem mnemonicParsing="false" text="Redo" />
+						<MenuItem fx:id="undo" mnemonicParsing="false" onAction="#undo" text="Undo" />
+						<MenuItem fx:id="redo" mnemonicParsing="false" onAction="#redo" text="Redo" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" text="Cut" />
 						<MenuItem mnemonicParsing="false" text="Copy" />

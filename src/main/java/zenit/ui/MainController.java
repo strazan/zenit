@@ -2,6 +2,7 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 
@@ -70,6 +71,12 @@ public class MainController extends VBox {
 	
 	@FXML
 	private CheckMenuItem cmiDarkMode;
+	
+	@FXML
+	private MenuItem undo;
+	
+	@FXML
+	private MenuItem redo;
 
 	@FXML
 	private TabPane tabPane;
@@ -93,6 +100,9 @@ public class MainController extends VBox {
 	
 	private LinkedList<File> deletedFiles = new LinkedList<>();
 	private HashMap<File, String> deletedTexts = new HashMap<>();
+
+	private ArrayList<File> fileHistory = new ArrayList<>();
+	private int historyIndex = -1;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -454,12 +464,17 @@ public class MainController extends VBox {
 	public void deleteFile(File file) {
 		deletedFiles.add(file);
 		deletedTexts.put(file, FileController.readFile(file));
+		
+		fileHistory.add(0, file);
+		historyIndex++;
+		System.out.println(historyIndex);
+		
 		fileController.deleteFile(file);
-		// TODO Remove open tab aswell
+		// TODO Remove open tab as well
 	}
 	
 	/**
-	 * Attempts to undo the latest delete invokation.
+	 * Attempts to undo the latest delete invocation.
 	 */
 	public void undoDeleteFile() {
 		if (!treeView.isFocused()) {
@@ -467,21 +482,20 @@ public class MainController extends VBox {
 			return;
 		}
 		
-		
-		if (deletedFiles.size() > 0) {
-			File file = deletedFiles.removeLast();
+		if (historyIndex >= 0) {
+			File file = fileHistory.get(fileHistory.size() - 1 - historyIndex);
 			
 			if (!file.exists()) {
-				try { file.createNewFile(); }
-				catch (IOException ex) {}
+				try { 
+					file.createNewFile();
+				} catch (IOException ex) {}
 			}
-			String text = deletedTexts.remove(file);
+			
+			String text = deletedTexts.get(file);
+			saveFile(false, file, text);
 
-			System.out.println("File: " + file.getAbsolutePath());
-			System.out.println("Text: " + text);
-			
-			
-			this.saveFile(false, file, text);
+			historyIndex--;
+			System.out.println(historyIndex);
 		}
 	}
 
@@ -499,6 +513,34 @@ public class MainController extends VBox {
 			File newProject = fileController.createProject(projectName);
 			if (newProject != null) {
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), newProject);
+			}
+		}
+	}
+	
+	@FXML
+	public void undo(Event event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab == null ? null : selectedTab.getZenCodeArea();
+		
+		if (treeView.isFocused()) {
+			undoDeleteFile();
+		} else if (zenCodeArea != null && zenCodeArea.isFocused()) {
+			if (zenCodeArea.isUndoAvailable()) {
+				zenCodeArea.undo();
+			}
+		}
+	}
+	
+	@FXML
+	public void redo(Event event) {
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab == null ? null : selectedTab.getZenCodeArea();
+		
+		if (treeView.isFocused()) {
+//			redoDeleteFile();
+		} else if (zenCodeArea != null && zenCodeArea.isFocused()) {
+			if (zenCodeArea.isRedoAvailable()) {
+				zenCodeArea.redo();
 			}
 		}
 	}
