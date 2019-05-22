@@ -721,6 +721,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
+	}
+		
 	
 	public void search() {
 		
