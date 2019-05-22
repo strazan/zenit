@@ -2,6 +2,9 @@ package main.java.zenit.settingspanel;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,20 +12,26 @@ import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
 import org.controlsfx.control.ToggleSwitch;
 
+import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Hyperlink;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Region;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
@@ -30,19 +39,23 @@ import javafx.stage.Stage;
 import main.java.zenit.ui.MainController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
-
 /**
  * Controller class for the NewTextSize window,
  * @author Sigge Labor
  *
  */
-public class SettingsPanelController extends AnchorPane {
+public class SettingsPanelController extends AnchorPane implements ThemeCustomizable{
 
 	private int oldSize;
 	private String oldFont;
-
+	private File customThemeCSS;
+	private LinkedList<String> addedCSSLines;
+	
 	private Stage window;
 	private MainController mainController;
+	private CustomCSSThemeHandler themeHandler;
+	
+	private boolean isCustomTheme = false;
 	
 	private enum OS {	
 		MACOS, WINDOWS, LINUX
@@ -51,6 +64,9 @@ public class SettingsPanelController extends AnchorPane {
 
 	@FXML
 	private TextField fldNewSize;
+	
+	@FXML
+	private TextField fldCSSLineInput;
 
 	@FXML
 	private Slider sldrNewSize;
@@ -86,6 +102,12 @@ public class SettingsPanelController extends AnchorPane {
 	private Button btnTheme;
 	
 	@FXML
+	private Button btnCustomCSS;
+	
+	@FXML
+	private Button btnCustomTheme;
+	
+	@FXML
 	private Hyperlink linkOpenInGitHub;
 	
 	@FXML
@@ -98,6 +120,21 @@ public class SettingsPanelController extends AnchorPane {
 	private ToggleSwitch toggleDarkMode;
 	
 	@FXML
+	private ListView listViewAddedCSS;
+	
+	@FXML
+	private ColorPicker colorPickerPrimaryColor;
+	
+	@FXML
+	private ColorPicker colorPickerPrimaryTint;
+	
+	@FXML
+	private ColorPicker colorPickerSecondaryColor;
+	
+	@FXML
+	private ColorPicker colorPickerSecondaryTint;
+	
+	@FXML
 	private AnchorPane pnlTextAppearance;
 	
 	@FXML
@@ -108,6 +145,14 @@ public class SettingsPanelController extends AnchorPane {
 	
 	@FXML
 	private AnchorPane pnlTheme;
+	
+	@FXML
+	private AnchorPane pnlCustomCSS;
+	
+	@FXML
+	private AnchorPane pnlCustomTheme;
+	
+	
 
 	/**
 	 * constructs a controller for the TextSizeWindow. 
@@ -119,6 +164,8 @@ public class SettingsPanelController extends AnchorPane {
 		
 		oldSize = oldFontSize;
 		oldFont = oldFontFamily;
+		addedCSSLines = new LinkedList<String>();
+		
 		FXMLLoader loader = new FXMLLoader(
 			getClass().getResource("/zenit/settingspanel/SettingsPanel.fxml"
 		));
@@ -142,7 +189,16 @@ public class SettingsPanelController extends AnchorPane {
 		scene.getStylesheets().add(getClass().getResource(
 			"/zenit/settingspanel/settingspanelstylesheet.css").toString(
 		));
+
 		window.show();
+		
+		this.customThemeCSS = new File("/customtheme/settingspanelCustomTheme.css");
+		
+		List<ThemeCustomizable> stages = new  ArrayList<ThemeCustomizable>();
+		stages.add(mainController);
+		stages.add(this);
+	
+		themeHandler = new CustomCSSThemeHandler(stages);
 	}
 	
 	/**
@@ -188,6 +244,12 @@ public class SettingsPanelController extends AnchorPane {
 		else if(e.getSource() == btnTheme) {
 			pnlTheme.toFront();
 		}
+		else if(e.getSource() == btnCustomCSS) {
+			pnlCustomCSS.toFront();
+		}
+		else if(e.getSource() == btnCustomTheme) {
+			pnlCustomTheme.toFront();
+		}
 	}
 	
 	@FXML
@@ -220,8 +282,50 @@ public class SettingsPanelController extends AnchorPane {
 		}
 	}
 	
+	// TODO update the comments below im tired.
+	
 	/**
-	 * Opens a link in default browser. The URL depends on witch button that is clicked.
+	 * Adds the string written in fldCSSLineInput to the setStyle method. till will add the styling
+	 * to the application. 
+	 */
+	@FXML
+	private void addCSSLine() {
+		
+		String CSSLine = fldCSSLineInput.getText();
+		try {
+			Scene mockScene = new Scene(new Region());
+			mockScene.getRoot().setStyle(CSSLine);
+			
+			String allCusomLinesOfCSS = "";
+			addedCSSLines.addFirst(CSSLine);
+			
+			for(int i = 0; i < addedCSSLines.size(); i++) {
+				allCusomLinesOfCSS += addedCSSLines.get(i);
+			}
+			this.window.getScene().getRoot().setStyle(allCusomLinesOfCSS);
+			
+			updateCustomCSSListView();
+		}
+		
+		catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/**
+	 * Updates the listViewAddedCSS to show the correct lines. 
+	 */
+	@SuppressWarnings("unchecked")
+	private void updateCustomCSSListView() {
+		listViewAddedCSS.getItems().clear();
+		
+		for(int i = 0; i < addedCSSLines.size(); i++) {
+			listViewAddedCSS.getItems().add(new CustomCSSListItem(addedCSSLines.get(i)));
+		}
+	}
+	
+	/**
+	 * Calls the openInBrowser method. The URL depends on which button that is clicked.
 	 * @param e
 	 */
 	@FXML
@@ -239,8 +343,9 @@ public class SettingsPanelController extends AnchorPane {
 	}
 	
 	/**
-	 * Opens an URL an the computers default browser.
-	 * @param url
+	 * Opens an URL an the computers default browser. The command varies depending on the users
+	 * operating system.
+	 * @param url to open
 	 */
 	private void openInBrowser(String url) {
 		Runtime rt = Runtime.getRuntime();
@@ -372,35 +477,72 @@ public class SettingsPanelController extends AnchorPane {
 				darkModeChanged(toggleDarkMode.isSelected());
 			}
         });
+		
+		listViewAddedCSS.getItems().add(new AnchorPane());
+
+		colorPickerPrimaryColor.setOnAction((event) -> {
+		     Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.changeColor(colorPickerPrimaryColor.getValue(),
+		    		CustomColor.primaryColor);
+			     });
+		});	
+		
+		colorPickerPrimaryTint.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.changeColor(colorPickerPrimaryTint.getValue(),
+		    		CustomColor.primaryTint);
+		     });
+		});	
+		
+		colorPickerSecondaryColor.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.changeColor(colorPickerSecondaryColor.getValue(),
+				    CustomColor.secondaryColor);
+		     });
+		});	
+		
+		colorPickerSecondaryTint.setOnAction((event) -> {
+	    	 Platform.runLater(() -> {
+		    	 revmoveStylesheets();
+		    	 themeHandler.changeColor(colorPickerSecondaryTint.getValue(),
+				    CustomColor.secondaryTint);
+		     });
+		});	
 	}
 	
-	//TODO remove I GUESS
+	/**
+	 * removes all current stylesheets.
+	 */
+	public void revmoveStylesheets() {
+		if(!isCustomTheme) {
+			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
+			var settingsPanelStylesheets = window.getScene().getStylesheets();
+			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+			var settingsPanelDarkMode = getClass().getResource(
+				"/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm(
+			);
+			
+			stylesheets.remove(darkMode);
+			settingsPanelStylesheets.remove(settingsPanelDarkMode);
+			isCustomTheme = true;
+		}		
+	}
 	
-//	private class SetJavaHome extends Thread {
-//		private String directory;
-//		public SetJavaHome(String dir) {
-//			this.directory = dir;
-//			
-//		}
-//		public void run() {
-//	
-//			CommandLine clCompileJavaFile = CommandLine.parse(
-//				"sudo JAVA_HOME=" + directory
-//			);
-//			//System.out.println(selectedDirectory.getAbsolutePath());
-//			CommandLine clCompileJavaF2ile = CommandLine.parse(
-//					"export JAVA_HOME"
-//				);
-//			DefaultExecutor executor = new DefaultExecutor();
-//			try {
-//				
-//				executor.execute(clCompileJavaFile);
-//				executor.execute(clCompileJavaF2ile);
-//				newJavaHome.setText(System.getenv("JAVA_HOME"));
-//				newJavaHome.setStyle("-fx-text-fill: #0B6623;");
-//			} catch (IOException e) {
-//				e.printStackTrace();
-//		}
-//	}
-//	}
+	/**
+	 * 
+	 * @return this stage
+	 */
+	public Stage getStage() {
+		return this.window;
+	}
+	
+	/**
+	 * @return the path to the stages custom theme stylesheet.
+	 */
+	public File getCustomThemeCSS() {
+		return this.customThemeCSS;
+	}
 }

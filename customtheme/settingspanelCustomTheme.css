@@ -3,38 +3,38 @@
 }
 
 #spAnchorPane {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 	-fx-padding: 0.0;
 	-fx-background-insets: 0.0, 0.0;
   	-fx-border-width: 0.0;
-  	-fx-background-color: #444444;
+  	-fx-background-color: #008000;
 }
 
 #spAnchorPane .button {
-	-fx-background-color: #555555;
-	-fx-text-fill: #FFFFFF;
+	-fx-background-color: #CCCC66;
+	-fx-text-fill: #B31A1A;
 }
 
 #mainAnchorPane {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
 #pnlTextAppearance {
-	-fx-background-color: #444444;
-	-fx-text-fill: #444444;
+	-fx-background-color: #008000;
+	-fx-text-fill: #B31A1A;
 }
 
 #pnlTextAppearance .label {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
 
 #pnlTextAppearance #lblTxtAppeaSize {
-	-fx-text-fill: #BBBBBB;
+	-fx-text-fill: #008080;
 }
 #pnlTextAppearance #lblTxtAppeaFont {
-	-fx-text-fill: #BBBBBB;
+	-fx-text-fill: #008080;
 }
 
 #chcbxNewFont {
@@ -43,7 +43,7 @@
 }
 
 #chcbxNewFont .context-menu {	
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 
 #chcbxNewFont .menu-item:focused {
@@ -51,16 +51,16 @@
 }
 
 #chcbxNewFont .menu-item > .label {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
 
 #chcbxNewFont > .label {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
  
 #fldNewSize {
  	-fx-background-color: rgba(100,100,100,0.4);
- 	-fx-text-fill: #EEEEEE;
+ 	-fx-text-fill: #B31A1A;
  }
  
 #sldrNewSize > .track {	
@@ -70,17 +70,17 @@
  
  /* Java Home pane */
 #pnlJavaHome {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 
 #pnlJavaHome .label {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
 
 /* Theme pane */
 
 #pnlTheme {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 
 #pnlTheme #lblDarkModeTxt {
@@ -106,38 +106,38 @@
 
 /* Custom CSS pane */
 #pnlCustomCSS {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 #lblAddCustomCssLines {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
 #fldCustomCSSInput {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 	-fx-border-color: rgba(255,255,255,0.4);
 	-fx-text-fill: #009911;
 }
 
 #scrollPaneAddedCSS{
-	  -fx-background-color: #444444;
+	  -fx-background-color: #008000;
 	  -fx-border-color: transparent;
 }
 
 #listViewAddedCSS {
-	 -fx-background-color: #444444;
+	 -fx-background-color: #008000;
 	 -fx-border-color: transparent;
 }
 #listViewAddedCSS .list-cell { 
-	-fx-background-color: #444444; /* 5 */
-	-fx-text-fill: #EEEEEE;
+	-fx-background-color: #008000; /* 5 */
+	-fx-text-fill: #B31A1A;
 	
 }
 
 #listViewAddedCSS .list-cell:even {
-	 -fx-background-color: #555555;
+	 -fx-background-color: #CCCC66;
 }
 
 #scrollPaneAddedCSS .scroll-pane {
-    -fx-background-color: #444444;
+    -fx-background-color: #008000;
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical{
@@ -150,7 +150,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical .thumb {
-    -fx-background-color: #EEEEEE;
+    -fx-background-color: #B31A1A;
     -fx-background-radius: 5em;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .lblCSSText {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
 
 #btnRemoveCSS {
@@ -183,7 +183,7 @@
 }
 
 #btnAddCSSLine {
-	-fx-background-color: #555555;
+	-fx-background-color: #CCCC66;
 	-fx-text-fill: #FFFFFF;
 }
 
@@ -193,7 +193,7 @@
  * 
  */
  #pnlCustomTheme {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 
  #pnlCustomTheme .color-picker {
@@ -203,21 +203,21 @@
  
  #pnlCustomTheme .color-picker .color-picker-label{
 
--fx-text-fill: #EEEEEE;
+-fx-text-fill: #B31A1A;
 }
 
 .lblMainColor {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 }
  
  
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #444444;
+	-fx-background-color: #008000;
 }
 
 #pnlSupport .hyperlink {
-	-fx-text-fill: #EEEEEE;
+	-fx-text-fill: #B31A1A;
 	-fx-border-color: transparent;
     -fx-padding: 4 0 4 0;
     -fx-underline: false;
@@ -228,7 +228,7 @@
 }
 
 .paneHeader {
-	-fx-text-fill: #BBBBBB;
+	-fx-text-fill: #008080;
 	-fx-font-size: 16px;
 }
 
