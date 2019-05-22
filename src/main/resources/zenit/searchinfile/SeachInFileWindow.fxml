@@ -5,10 +5,10 @@
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 
-<AnchorPane minHeight="50.0" minWidth="200.0" prefHeight="80.0" prefWidth="350.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+<fx:root minHeight="50.0" minWidth="200.0" prefHeight="80.0" prefWidth="350.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField prefHeight="40.0" prefWidth="187.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="45.0" />
-      <TextField AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0" />
+      <TextField fx:id="fldInputField" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="200.0" AnchorPane.topAnchor="5.0" />
       <Button layoutX="207.0" layoutY="4.0" maxHeight="40.0" maxWidth="40.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="U" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="5.0" />
       <Button layoutX="258.0" layoutY="4.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="N" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="5.0" />
       <Button layoutX="301.0" layoutY="6.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="38.0" text="esc" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
@@ -16,4 +16,4 @@
       <Label alignment="CENTER" contentDisplay="CENTER" layoutX="168.0" layoutY="9.0" prefHeight="29.0" prefWidth="34.0" text="1/1" textAlignment="CENTER" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="5.0" />
       <Button layoutX="263.0" layoutY="61.0" mnemonicParsing="false" text="all" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="45.0" />
    </children>
-</AnchorPane>
+</fx:root>

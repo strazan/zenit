@@ -88,7 +88,7 @@ public class Search {
 		}
 
 		if (numberOfTimes > 0) {
-			System.out.println("Exsist " + numberOfTimes + " times");  //visa i sökpanelen
+			System.out.println("Exsist " + numberOfTimes + " times");  //visa i sï¿½kpanelen
 			
 			//replace has to be change from the panel
 			if (replace == false) {
