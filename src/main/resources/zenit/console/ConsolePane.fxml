@@ -56,7 +56,7 @@
                <cursor>
                   <Cursor fx:constant="HAND" />
                </cursor></Button>
-            <Button id="btn" fx:id="btnClose" layoutX="676.0" layoutY="4.0" mnemonicParsing="false" style="-fx-font-size:14px;" stylesheets="@consoleStyle.css" text="X" AnchorPane.rightAnchor="0.0">
+            <Button id="btn" fx:id="btnClose" layoutX="676.0" layoutY="4.0" mnemonicParsing="false" style="-fx-font-size:14px;" onMouseClicked="#closeComponent" stylesheets="@consoleStyle.css" text="X" AnchorPane.rightAnchor="0.0">
 	           	<cursor>
                   <Cursor fx:constant="HAND" /> 
                </cursor>

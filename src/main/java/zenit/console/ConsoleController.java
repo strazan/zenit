@@ -20,11 +20,15 @@ import com.kodedu.terminalfx.TerminalBuilder;
 import com.kodedu.terminalfx.TerminalTab;
 import com.kodedu.terminalfx.config.TerminalConfig;
 
+import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -37,6 +41,7 @@ import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import main.java.zenit.ConsoleRedirect;
 import main.java.zenit.console.helpers.ConsoleHelpers;
+import main.java.zenit.ui.MainController;
 
 /**
  * The controller class for ConsoleArea
@@ -75,6 +80,9 @@ public class ConsoleController implements Initializable {
 	
 	@FXML
 	private AnchorPane rootAnchor;
+	
+	@FXML
+	private AnchorPane rootNode;
 
 	@FXML
 	private Button btnNewTerminal;
@@ -104,11 +112,20 @@ public class ConsoleController implements Initializable {
 	
 	private AnchorPane noConsolePane;
 		
+	private MainController mainController;
+	
+	public void setMainController(MainController mainController) {
+		this.mainController = mainController;
+	}
+	
+	
+	
 	/**
 	 * Shows the choiceBox with console areas, and sets the choiceBox with terminal tabs to not 
 	 * visible. Also sets text color of the labels.
 	 */
 	
+
 	
 	public void showConsoleTabs() {
 		
@@ -237,8 +254,8 @@ public class ConsoleController implements Initializable {
 		terminal.setId("Terminal ("+terminalList.size()+")");
 		terminalAnchorPane = new AnchorPane();
 		terminalAnchorPane.setStyle("-fx-background-color:black");
-		terminal.setMinSize(400, 300);
-
+		
+		terminal.setMinHeight(5);
 		fillAnchor(terminal);
 		fillAnchor(terminalAnchorPane);
 		
@@ -249,6 +266,7 @@ public class ConsoleController implements Initializable {
 		terminalChoiceBox.getSelectionModel().select(terminal.getId());
 		
 		showTerminalTabs();
+		
 	}
 	
 	private TerminalConfig createTerminalConfig() {
@@ -286,9 +304,12 @@ public class ConsoleController implements Initializable {
 	 */
 	public void clearConsole() {
 		activeConsole.clear();
-		
 	}
 	
+	
+	public void closeComponent() {
+		mainController.closeConsoleComponent();
+	}
 	
 	/**
 	 * Performs initialization steps.

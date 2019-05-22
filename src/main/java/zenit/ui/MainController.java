@@ -12,6 +12,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -47,6 +48,9 @@ public class MainController extends VBox {
 
 	@FXML
 	private AnchorPane consolePane;
+		
+	@FXML
+	private SplitPane splitPane;
 
 	@FXML
 	private MenuItem newFile;
@@ -156,6 +160,7 @@ public class MainController extends VBox {
 		btnRun.setPickOnBounds(true);
 		btnRun.setOnAction(event -> compileAndRun());
 		initTree();
+		consoleController.setMainController(this);
 	}
 	
 	/**
@@ -686,4 +691,23 @@ public class MainController extends VBox {
 			}
 		}
 	}
+	
+	
+	public void closeConsoleComponent() {
+		consolePane.setMinHeight(0.0);
+		consolePane.setVisible(false);
+		consolePane.setDisable(true);
+		
+		splitPane.setDividerPosition(0, 1.0);
+		splitPane.resize(splitPane.getWidth() + 1, splitPane.getHeight() + 1);
+	}
+	
+	public void openConsoleComponent() {
+		consolePane.setMinHeight(34.0);
+		consolePane.setVisible(true);
+		consolePane.setDisable(false);
+		splitPane.setDividerPosition(0, 0.85);
+		splitPane.resize(splitPane.getWidth() + 1 , splitPane.getHeight() + 1);
+	}
+	
 }
