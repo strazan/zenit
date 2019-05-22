@@ -88,7 +88,7 @@ public class Search {
 		}
 
 		if (numberOfTimes > 0) {
-			System.out.println("Exsist " + numberOfTimes + " times");  //visa i sökpanelen
+			System.out.println("Exsist " + numberOfTimes + " times");  //visa i sï¿½kpanelen
 			
 			//replace has to be change from the panel
 			if (replace == false) {
@@ -144,8 +144,11 @@ public class Search {
 	 * Jumps down/to the next occurrence of the highlighted word
 	 */
 	public void jumpDown() {
-		if (i < absolutePos.size()) {
+		if (i < absolutePos.size() - 1) {
 			i++;
+			
+		}else {
+			i = 0;
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i));
@@ -158,6 +161,9 @@ public class Search {
 	public void jumpUp() {
 		if(i > 0) {
 			i--;
+			
+		}else {
+			i = absolutePos.size() - 1;
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i));
