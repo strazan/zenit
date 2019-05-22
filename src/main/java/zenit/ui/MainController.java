@@ -38,6 +38,7 @@ import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.settingspanel.SettingsPanelController;
 import main.java.zenit.settingspanel.ThemeCustomizable;
+import main.java.zenit.searchinfile.Search;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
@@ -58,6 +59,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private String zenCodeAreasFontFamily;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
+	private boolean isDarkMode = false;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -719,5 +721,15 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
+	
+	public void search() {
+		
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		File file = selectedTab.getFile();
+		
+		if (selectedTab != null) {
+			new Search(zenCodeArea, file, isDarkMode);
+		}
 	}
 }
