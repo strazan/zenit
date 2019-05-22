@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
+import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
@@ -215,6 +216,7 @@ public class JavaSourceCodeCompiler {
 	 */
 	private class CompileAndRun extends Compile {
 		
+		@Override
 		public void run() {
 			Process process;
 			if (metadataFile != null) {
@@ -277,13 +279,24 @@ public class JavaSourceCodeCompiler {
 
 			cb.setInternalLibraries(internalLibraries);
 			cb.setExternalLibraries(externalLibraries);
+			cb.setDirectory(directory);
 			
+			Metadata metadata = new Metadata(metadataFile);
+			RunnableClass rc = metadata.containRunnableClass(runPath.getPath());
+			
+			if (rc != null) {
+				cb.setProgramArguments(rc.getPaArguments());
+				cb.setVMArguments(rc.getVmArguments());
+			}
+					
 			String command = cb.generateCommand();
-
-			// Creates new directory folder, bin-folder
-			File binFile = new File(projectFile.getPath() + File.separator + "bin");
 			
-			Process process = executeCommand(command, binFile);
+			System.out.println(command);
+			
+			// Creates new directory folder, bin-folder
+//			File binFile = new File(projectFile.getPath() + File.separator + "bin");
+			
+			Process process = executeCommand(command, projectFile);
 
 			// Runs command
 			redirectStreams(process);

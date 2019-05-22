@@ -10,7 +10,7 @@ res/workspace/workspace.dat
 
 #JDK files
 res/JDK/DefaultJDK.dat
-res/JDK/JDK.dat
+res/jdk/jdk.dat
 
 /bin/
 .classpath

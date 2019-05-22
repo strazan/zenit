@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 
+import main.java.zenit.filesystem.jreversions.JREVersions;
 import main.java.zenit.filesystem.metadata.Metadata;
 
 /**
@@ -13,7 +14,7 @@ import main.java.zenit.filesystem.metadata.Metadata;
  */
 public class MetadataFileHandler extends FileHandler {
 	
-	public final static String LATEST_VERSION = "2.1.0";
+	public final static String LATEST_VERSION = "2.2.1";
 	
 	/**
 	 * Tries to create a new .metadata file in project folder.
@@ -34,7 +35,10 @@ public class MetadataFileHandler extends FileHandler {
 		metadata.setVersion(LATEST_VERSION);
 		metadata.setDirectory("bin");
 		metadata.setSourcepath("src");
-		metadata.setJREVersion(null);
+		File JDK = JREVersions.getDefaultJDKFile();
+		if (JDK != null) {
+			metadata.setJREVersion(JDK.getPath());
+		}
 		metadata.setRunnableClasses(null);
 		metadata.setInternalLibraries(null);
 		metadata.setExternalLibraries(null);
@@ -62,8 +66,9 @@ public class MetadataFileHandler extends FileHandler {
 		if (metadata.getSourcepath() == null) {
 			metadata.setSourcepath("src");
 		}
-		if (metadata.getJREVersion() == null) {
-			metadata.setJREVersion("unknown");
+		if (metadata.getJREVersion() == null || metadata.getJREVersion().equals("unknown")) {
+			String JRE = JREVersions.getDefaultJDKFile().getPath();
+			metadata.setJREVersion(JRE);
 		}
 		if (metadata.getRunnableClasses() == null) {
 			metadata.setRunnableClasses(null);

@@ -1,6 +1,7 @@
 package main.java.zenit.javacodecompiler;
 
 import java.io.File;
+import java.util.regex.Matcher;
 
 import main.java.zenit.filesystem.jreversions.JDKVerifier;
 import main.java.zenit.filesystem.jreversions.JREVersions;
@@ -18,6 +19,8 @@ public class CommandBuilder {
 	String[] externalLibraries;
 	String[] libraries;
 	String runPath;
+	String programArguments;
+	String VMArguments;
 
 	public CommandBuilder(String tool) {
 		this.tool = tool;
@@ -42,7 +45,7 @@ public class CommandBuilder {
 	}
 
 	public void setDirectory(String directory) {
-		this.directory = "-d " + directory;
+		this.directory = directory;
 	}
 
 	public void setSourcepath(String sourcepath) {
@@ -59,6 +62,14 @@ public class CommandBuilder {
 
 	public void setRunPath(String runPath) {
 		this.runPath = runPath;
+	}
+	
+	public void setProgramArguments(String programArguments) {
+		this.programArguments = programArguments;
+	}
+	
+	public void setVMArguments(String VMArguments) {
+		this.VMArguments = VMArguments;
 	}
 	
 	private void mergeLibraries() {
@@ -88,7 +99,19 @@ public class CommandBuilder {
 	public String generateCommand() {
 		String command = JDK;
 		
+		if (VMArguments != null) {
+			command += " " + VMArguments;
+		}
+		
 		mergeLibraries();
+		
+		if(tool.equals(RUN)) {
+			if (directory == null)
+				command += " -cp ./bin";
+			else {
+				command += " -cp ./" + directory;
+			}
+		}
 		
 		if (libraries != null) {
 			if (tool.equals(COMPILE)) {
@@ -98,19 +121,16 @@ public class CommandBuilder {
 						command += ":" + libraries[i];
 					}
 				}
-			} else if (tool.equals(RUN) ) {
-				command += " -cp \".." + File.separator + libraries[0];
-				if (libraries.length > 1) {
-					for (int i = 1; i < libraries.length; i++) {
-						command += ":.." + File.separator + libraries[i];
-					}
+			} else if (tool.equals(RUN)) {
+				for (int i = 0; i < libraries.length; i++) {
+					command += ":." + File.separator + libraries[i];
 				}
-				command += ":.\"";
+				command += ":.";
 			}
-		} 
+		}
 
-		if (directory != null) {
-			command += " " + directory;
+		if (directory != null && tool.equals(COMPILE)) {
+			command += " -d " + directory;
 		}
 		if (sourcepath != null) {
 			command += " " + sourcepath;
@@ -118,6 +138,10 @@ public class CommandBuilder {
 
 		if (runPath != null) {
 			command += " " + runPath;
+		}
+		
+		if (programArguments != null) {
+			command += " " + programArguments;
 		}
 
 		return command;

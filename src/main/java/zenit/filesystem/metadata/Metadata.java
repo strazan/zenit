@@ -125,6 +125,35 @@ public class Metadata {
 	public void setRunnableClasses(RunnableClass[] runnableClasses) {
 		this.runnableClasses = runnableClasses;
 	}
+	
+	public boolean addRunnableClass(RunnableClass runnableClass) {
+		if (runnableClasses != null) {
+			RunnableClass[] temp = new RunnableClass[runnableClasses.length + 1];
+			for (int i = 0; i < runnableClasses.length; i++) {
+				if (runnableClasses[i].getPath().equals(runnableClass.getPath())) {
+					return false;
+				} else {
+					temp[i] = runnableClasses[i];
+				}
+			}
+
+			temp[temp.length - 1] = runnableClass;
+			runnableClasses = temp;
+		}
+
+		return true;
+	}
+	
+	public RunnableClass containRunnableClass(String classPath) {
+		if (runnableClasses != null) {
+			for (int i = 0; i < runnableClasses.length; i++) {
+				if ((runnableClasses[i].getPath()).equals(classPath + ".java")) {
+					return runnableClasses[i];
+				}
+			}
+		}
+		return null;
+	}
 
 	/**
 	 * Returns a string array with internal library paths

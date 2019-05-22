@@ -3,6 +3,7 @@ package main.java.zenit.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+import java.util.regex.Matcher;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -25,7 +26,9 @@ import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
+import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
@@ -496,12 +499,26 @@ public class MainController extends VBox {
 		
 			try {
 				ProcessBuffer buffer = new ProcessBuffer();
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
+						false, buffer, this);
 				compiler.startCompileAndRun();
 				Process process = buffer.get();
-				if (process != null && process.isAlive()) {
+				
+				if (process != null && metadataFile != null) {
+					//If process compiled, add to RunnableClass
+					ProjectFile projectFile = new ProjectFile(metadataFile.getParent());
+					String src = projectFile.getSrc().getPath();
+					String filePath = file.getPath().replaceAll(Matcher.quoteReplacement(src + 
+							File.separator), "");
+					RunnableClass rc = new RunnableClass(filePath);
+					Metadata metadata = new Metadata(metadataFile);
+					if (metadata.addRunnableClass(rc)) {
+						metadata.encode();
+					}
 					
-					//TODO Create new console tab from here.
+					if (process.isAlive()) {
+						//TODO Create new console tab from here.
+					}
 				}
 				
 			} catch (Exception e) {

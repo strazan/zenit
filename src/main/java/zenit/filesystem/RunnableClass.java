@@ -1,5 +1,7 @@
 package main.java.zenit.filesystem;
 
+import java.io.File;
+
 /**
  * Abstract data type containing data about a runnable class.
  * Mainly used by {main.java.zenit.filesystem.Metadata Metadata} class.
@@ -23,6 +25,14 @@ public class RunnableClass {
 		this.path = path;
 		this.paArguments = paArguments;
 		this.vmArguments = vmArguments;
+	}
+	
+	public RunnableClass(String path) {
+		this(path, "", "");
+	}
+	
+	public RunnableClass(File file) {
+		this(file.getPath());
 	}
 	
 	/**
