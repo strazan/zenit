@@ -8,7 +8,6 @@ import javafx.scene.input.KeyCodeCombination;
 import javafx.scene.input.KeyCombination;
 import javafx.scene.input.KeyCombination.Modifier;
 import javafx.scene.input.KeyEvent;
-import main.java.zenit.ui.MainController.Search;
 
 /**
  * Static methods for interacting with a scene's accelerators.
