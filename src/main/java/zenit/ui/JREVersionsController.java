@@ -107,7 +107,9 @@ public class JREVersionsController extends AnchorPane {
 		File selectedFile = null;
 		
 		if (selected != null && selected.endsWith(" [default]")) {
-			selected = selected.replaceAll(" [default]", "");
+			DialogBoxes.errorDialog("Can't remove default JDK", "", "Can't remove the default"
+					+ "JDK, choose another default JDK to remove this one");
+			return;
 		}
 		
 		if (selected != null) {

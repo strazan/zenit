@@ -4,6 +4,16 @@
 	-fx-border-width: 0;
 }
 
+#setup-header {
+	 -fx-background-color:
+	/* 241,211,79
+	 137,161,208 */
+        linear-gradient(from 0% 50% to 100% 50%, rgb(241, 211, 79) 0%, rgb(137,161,208));
+
+  /*   -fx-background-insets: 0,1,4,5,6;
+    -fx-background-radius: 9,8,5,4,3; */
+}
+
 #anchor {
 	-fx-background-color: #444;
 }

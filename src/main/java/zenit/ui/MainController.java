@@ -21,6 +21,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
@@ -131,7 +132,7 @@ public class MainController extends VBox {
 
 			scene.getStylesheets().add(getClass().getResource("/zenit/ui/keywords.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setTitle("Zenit");
+			stage.setTitle("Zenit - " + workspace.getPath());
 
 			initialize();
 			stage.show();
@@ -499,6 +500,7 @@ public class MainController extends VBox {
 				compiler.startCompileAndRun();
 				Process process = buffer.get();
 				if (process != null && process.isAlive()) {
+					
 					//TODO Create new console tab from here.
 				}
 				
@@ -644,17 +646,22 @@ public class MainController extends VBox {
 	@FXML
 	public void changeWorkspace() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		directoryChooser.setTitle("Select new workspace folder");
 		File workspace = directoryChooser.showDialog(stage);
 		if (workspace != null) {
+			stage.close();
 			boolean success = fileController.changeWorkspace(workspace);
-			if (success) {
-				stage.close();
+			if (success) {	
 				try {
-					new TestUI().start(stage);
-				} catch (IOException ex) {
+//					new TestUI().start(stage);
+					new Zenit().start(stage);
+				} catch (Exception ex) {
 					System.err.println("MainController.changeWorkspace: IOException: " + ex.getMessage());
 				}
+			} else {
+				stage.show();
+				DialogBoxes.errorDialog("Can't change workspace", "", "");
 			}
 		}
 	}
