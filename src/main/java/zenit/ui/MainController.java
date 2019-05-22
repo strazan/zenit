@@ -1,8 +1,13 @@
 package main.java.zenit.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -15,6 +20,8 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -106,7 +113,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
 		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
-		
+
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
 
@@ -148,7 +155,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
-	
+
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -173,6 +180,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	/**
 	 * Creates a new SettingsPanel.
+	 * 
 	 * @author Sigge Labor
 	 */
 	public void openSettingsPanel() {
@@ -181,6 +189,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	/**
 	 * Sets the zenCodeAreasTextSize to a new value.
+	 * 
 	 * @author Sigge Labor
 	 */
 	public synchronized void setFontSize(int newFontSize) {
@@ -190,21 +199,24 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	/**
 	 * Sets the zenCodeAreasFontFamily to a new value.
+	 * 
 	 * @author Sigge Labor.
 	 */
 	public synchronized void setFontFamily(String newFontFamily) {
 		zenCodeAreasFontFamily = newFontFamily;
 		updateZenCodeAreasAppearance();
 	}
-	
+
 	/**
-	 * Updates the appearance (text size and font family) of all active ZenCodeAreas.
+	 * Updates the appearance (text size and font family) of all active
+	 * ZenCodeAreas.
+	 * 
 	 * @author Sigge Labor.
 	 */
 	public void updateZenCodeAreasAppearance() {
 		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
 			activeZenCodeAreas.get(i).updateAppearance(zenCodeAreasFontFamily, zenCodeAreasTextSize);
-		}	
+		}
 	}
 
 	/**
@@ -701,7 +713,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			}
 		}
 	}
-	
+
 	/**
 	 * @return the path to the stages custom theme stylesheet.
 	 */
