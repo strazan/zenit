@@ -36,7 +36,7 @@ public class ConsoleArea extends InlineCssTextArea {
 		
 		// TODO maybe remove this one and add to main.css
 //		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
-		this.setEditable(false);
+//		this.setEditable(false);
 		setStyle("-fx-background-color:#444");
 	}
 	
