@@ -361,4 +361,19 @@ public class FileController {
 	public String changeSourcepath(File directory, ProjectFile projectFile, boolean internal) {
 		return MetadataFileHandler.changeSourcepath(directory, projectFile, internal);
 	}
+	
+	public boolean containMainMethod(File classFile) {
+		String content;
+		try {
+			content = JavaFileHandler.readFile(classFile);
+			if (content.contains("public static void main(String[] args")) {
+				return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
 }

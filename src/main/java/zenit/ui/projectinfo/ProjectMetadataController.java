@@ -11,10 +11,14 @@ import javafx.scene.control.ComboBox;
 import javafx.scene.control.ListView;
 import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
@@ -46,6 +50,10 @@ public class ProjectMetadataController extends AnchorPane {
 	
 	private FileChooser.ExtensionFilter libraryFilter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
 
+	@FXML
+	private ImageView logo;
+	@FXML
+	private Text title;
 	@FXML
 	private ListView<String> directoryPathList;
 	@FXML
@@ -105,8 +113,8 @@ public class ProjectMetadataController extends AnchorPane {
 			//set up stage
 			propertyStage = new Stage();
 			propertyStage.setResizable(false);
-			propertyStage.setTitle(projectFile.getName() + " metadata preferences");
 			propertyStage.setScene(scene);
+			propertyStage.initStyle(StageStyle.UNDECORATED);
 			
 			//gets metadata file
 			File metadataFile = projectFile.getMetadata();
@@ -154,6 +162,12 @@ public class ProjectMetadataController extends AnchorPane {
 	 * Initializes variables with data from metadata-file
 	 */
 	private void initialize() {
+		
+		title.setText(projectFile.getName() + " settings");
+		
+		logo.setImage(new Image(getClass().getResource("/zenit/setup/zenit.png").toExternalForm()));
+		logo.setFitWidth(55);
+		
 		String directory = metadata.getDirectory();
 		if (directory != null) {
 			updateText(directoryPathList, directory);
@@ -198,6 +212,7 @@ public class ProjectMetadataController extends AnchorPane {
 			externalLibrariesList.getSelectionModel().setSelectionMode(SelectionMode.MULTIPLE);
 		}
 		
+		metadata = new Metadata(metadata.getMetadataFile());
 		runnableClasses = metadata.getRunnableClasses();
 		if (runnableClasses != null) {
 			runnableClassesList.getItems().clear();
@@ -427,7 +442,8 @@ public class ProjectMetadataController extends AnchorPane {
 	
 	@FXML
 	private void addRunnableClass() {
-
+		new ProjectRunnableClassesController(projectFile, darkmode, fileController).start();
+		updateLists();
 	}
 	
 	@FXML
@@ -439,6 +455,11 @@ public class ProjectMetadataController extends AnchorPane {
 			metadata.encode();
 			updateLists();
 		}
+	}
+	
+	@FXML
+	private void close() {
+		propertyStage.close();
 	}
 	
 	//Help classes
