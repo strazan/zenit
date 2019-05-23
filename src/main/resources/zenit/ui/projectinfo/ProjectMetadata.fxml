@@ -60,8 +60,8 @@
                         <Text layoutX="33.0" layoutY="23.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Runnable classes" />
                         <Button fx:id="save" layoutX="245.0" layoutY="473.0" mnemonicParsing="false" onAction="#save" text="Save" />
                         <Button fx:id="run" layoutX="304.0" layoutY="473.0" mnemonicParsing="false" onAction="#run" text="Run" />
-                        <Button layoutX="34.0" layoutY="124.0" mnemonicParsing="false" text="Add runnable class" />
-                        <Button layoutX="186.0" layoutY="124.0" mnemonicParsing="false" text="Remove runnable class" />
+                        <Button layoutX="34.0" layoutY="124.0" mnemonicParsing="false" onAction="#addRunnableClass" text="Add runnable class" />
+                        <Button layoutX="186.0" layoutY="124.0" mnemonicParsing="false" onAction="#removeRunnableClass" text="Remove runnable class" />
                      </children></AnchorPane>
             </content>
           </Tab>

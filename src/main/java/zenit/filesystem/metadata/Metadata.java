@@ -144,6 +144,26 @@ public class Metadata {
 		return true;
 	}
 	
+	public boolean removeRunnableClass(String runnableClassPath) {
+		if (runnableClasses != null) {
+			RunnableClass[] temp = new RunnableClass[runnableClasses.length-1];
+			int counter = 0;
+			for (int i = 0; i < runnableClasses.length; i++) {
+				if (!runnableClasses[i].getPath().equals(runnableClassPath)) {
+					if (counter != temp.length) {
+						temp[counter++] = runnableClasses[i];
+					} else {
+						return false;
+					}
+				}
+			}
+			
+			runnableClasses = temp;
+		}
+
+		return true;
+	}
+	
 	public RunnableClass containRunnableClass(String classPath) {
 		if (runnableClasses != null) {
 			for (int i = 0; i < runnableClasses.length; i++) {

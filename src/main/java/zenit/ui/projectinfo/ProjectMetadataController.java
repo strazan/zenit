@@ -200,6 +200,7 @@ public class ProjectMetadataController extends AnchorPane {
 		
 		runnableClasses = metadata.getRunnableClasses();
 		if (runnableClasses != null) {
+			runnableClassesList.getItems().clear();
 			for (RunnableClass runnableClass : runnableClasses) {
 				runnableClassesList.getItems().add(runnableClass.getPath());
 			}
@@ -422,6 +423,22 @@ public class ProjectMetadataController extends AnchorPane {
 	@FXML
 	private void argumentsChanged() {
 		taUpdated = true;
+	}
+	
+	@FXML
+	private void addRunnableClass() {
+
+	}
+	
+	@FXML
+	private void removeRunnableClass() {
+		String selected = runnableClassesList.getSelectionModel().getSelectedItem();
+		
+		if (selected != null) {
+			metadata.removeRunnableClass(selected);
+			metadata.encode();
+			updateLists();
+		}
 	}
 	
 	//Help classes
