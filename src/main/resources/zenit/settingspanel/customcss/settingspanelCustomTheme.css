@@ -1,0 +1,234 @@
+.root {
+	-fx-border-color: transparent;
+}
+
+#spAnchorPane {
+	-fx-background-color: #000080;
+	-fx-padding: 0.0;
+	-fx-background-insets: 0.0, 0.0;
+  	-fx-border-width: 0.0;
+  	-fx-background-color: #000080;
+}
+
+#spAnchorPane .button {
+	-fx-background-color: #FF0000;
+	-fx-text-fill: #1A4D4D;
+}
+
+#mainAnchorPane {
+	-fx-background-color: #000080;
+		-fx-border-width: 0.0;
+}
+
+/* Text Appearance pane */
+#pnlTextAppearance {
+	-fx-background-color: #000080;
+	-fx-text-fill: #99CC99;
+}
+
+#pnlTextAppearance .label {
+	-fx-text-fill: #1A4D4D;
+}
+
+#pnlTextAppearance #lblTxtAppeaSize {
+	-fx-text-fill: #99CC99;
+}
+#pnlTextAppearance #lblTxtAppeaFont {
+	-fx-text-fill: #99CC99;
+}
+
+#chcbxNewFont {
+	-fx-background-color: rgba(255,255,255,0.1);
+	-fx-mark-color: black;
+}
+
+#chcbxNewFont .context-menu {	
+	-fx-background-color: #000080;
+}
+
+#chcbxNewFont .menu-item:focused {
+	-fx-background-color: rgba(100,100,100,0.4);
+}
+
+#chcbxNewFont .menu-item > .label {
+	-fx-text-fill: #1A4D4D;
+}
+
+#chcbxNewFont > .label {
+	-fx-text-fill: #1A4D4D;
+}
+ 
+#fldNewSize {
+ 	-fx-background-color: rgba(100,100,100,0.4);
+ 	-fx-text-fill: #1A4D4D;
+ }
+ 
+#sldrNewSize > .track {	
+ 	-fx-control-inner-background: #777777;
+ 	-fx-background-insets: 0; 
+ }
+ 
+ /* Java Home pane */
+#pnlJavaHome {
+	-fx-background-color: #000080;
+}
+
+#pnlJavaHome .label {
+	-fx-text-fill: #1A4D4D;
+}
+
+/* Theme pane */
+
+#pnlTheme {
+	-fx-background-color: #000080;
+}
+
+#pnlTheme #lblDarkModeTxt {
+	-fx-text-fill: #222222;
+}
+
+#lblDarkMode {
+	-fx-text-fill: #222222;
+	-fx-font-size: 16px;
+}
+
+#toggleDarkMode .thumb{
+	 -fx-background-color: #888888;
+}
+
+#toggleDarkMode .thumb-area {
+    -fx-background-color: purple;
+}
+
+#toggleDarkMode:selected .thumb-area {
+    -fx-background-color: orange;
+}
+
+/* Custom CSS pane */
+#pnlCustomCSS {
+	-fx-background-color: #000080;
+}
+#lblAddCustomCssLines {
+	-fx-text-fill: #1A4D4D;
+}
+#fldCustomCSSInput {
+	-fx-background-color: #000080;
+	-fx-border-color: rgba(255,255,255,0.4);
+	-fx-text-fill: #009911;
+}
+
+#scrollPaneAddedCSS{
+	  -fx-background-color: #000080;
+	  -fx-border-color: transparent;
+}
+
+#listViewAddedCSS {
+	 -fx-background-color: #000080;
+	 -fx-border-color: transparent;
+}
+#listViewAddedCSS .list-cell { 
+	-fx-background-color: #000080; /* 5 */
+	-fx-text-fill: #1A4D4D;
+	
+}
+
+#listViewAddedCSS .list-cell:even {
+	 -fx-background-color: #4D804D;
+}
+
+#scrollPaneAddedCSS .scroll-pane {
+    -fx-background-color: #000080;
+}
+
+#scrollPaneAddedCSS .scroll-bar:vertical{
+    -fx-background-color:transparent;
+}
+#scrollPaneAddedCSS .scroll-bar:vertical .track {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-background-radius: 0em;
+}
+
+#scrollPaneAddedCSS .scroll-bar:vertical .thumb {
+    -fx-background-color: #1A4D4D;
+    -fx-background-radius: 5em;
+}
+
+#scrollPaneAddedCSS .increment-button,#scrollPaneAddedCSS .decrement-button {
+	 -fx-background-color: transparent;
+	
+}
+
+#scrollPaneAddedCSS  .scroll-bar .increment-arrow,
+#scrollPaneAddedCSS  .scroll-bar .decrement-arrow {	
+	
+}
+
+.lblCSSText {
+	-fx-text-fill: #1A4D4D;
+}
+
+#btnRemoveCSS {
+	-icon-paint: red;
+    -fx-background-color: -icon-paint;
+    -size: 15;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+
+    -fx-shape: "M 100 100 L 200 200 L 100 200 L 200 100 Z";
+    
+    -fx-shape: "M 100 300 L 200 200 L 100 200 L 200 100 Z";
+}
+
+#btnAddCSSLine {
+	-fx-background-color: #4D804D;
+	-fx-text-fill: #1A4D1A;
+}
+
+/*
+ * 
+ * Customm Theme pane
+ * 
+ */
+ #pnlCustomTheme {
+	-fx-background-color: #000080;
+}
+
+ #pnlCustomTheme .color-picker {
+ 	-fx-background-color: transparent;
+ 	
+ }
+ 
+ #pnlCustomTheme .color-picker .color-picker-label{
+
+-fx-text-fill: #1A4D4D;
+}
+
+.lblMainColor {
+	-fx-text-fill: #CCCCCC;
+}
+ 
+ 
+/* Support pane */
+#pnlSupport {
+	-fx-background-color: #000080;
+}
+
+#pnlSupport .hyperlink {
+	-fx-text-fill: #1A4D4D;
+	-fx-border-color: transparent;
+    -fx-padding: 4 0 4 0;
+    -fx-underline: false;
+}
+
+#pnlSupport .hyperlink:hover {
+	-fx-text-fill: #1A4D1A;
+}
+
+.paneHeader {
+	-fx-text-fill: #bbb;
+	-fx-font-size: 16px;
+}
+

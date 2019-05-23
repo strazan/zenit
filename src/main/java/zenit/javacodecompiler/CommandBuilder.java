@@ -133,6 +133,9 @@ public class CommandBuilder {
 		}
 
 		if (runPath != null) {
+			if (tool.equals(RUN)) {
+				runPath = runPath.replaceAll(Matcher.quoteReplacement(File.separator), "/");
+			}
 			command += " " + runPath;
 		}
 		

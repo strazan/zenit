@@ -63,7 +63,16 @@ public class ProjectHandler extends FolderHandler {
 		
 		if (success) {
 			copyFolder(source, target);
-			MetadataFileHandler.createMetadataFile(target);
+			File[] files = target.listFiles();
+			boolean metadataMissing = true;
+			for (File file : files) {
+				if (file.getName().equals(".metadata")) {
+					metadataMissing = false;
+				}
+			}
+			if (metadataMissing) {
+				MetadataFileHandler.createMetadataFile(target);
+			}
 			return target;
 		} else {
 			throw new IOException("Couldn't copy file");

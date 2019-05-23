@@ -157,7 +157,7 @@ public class JavaSourceCodeCompiler {
 			cb.setSourcepath(sourcepath);
 			cb.setInternalLibraries(internalLibraries);
 			cb.setExternalLibraries(externalLibraries);
-
+			
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
 			redirectStreams(process);
@@ -266,7 +266,6 @@ public class JavaSourceCodeCompiler {
 			
 			Process process = executeCommand(command, file.getParentFile());
 			redirectStreams(process);
-			
 			return process;
 		}
 		
@@ -292,7 +291,7 @@ public class JavaSourceCodeCompiler {
 			String command = cb.generateCommand();
 			
 			Process process = executeCommand(command, projectFile);
-
+			
 			// Runs command
 			redirectStreams(process);
 			
