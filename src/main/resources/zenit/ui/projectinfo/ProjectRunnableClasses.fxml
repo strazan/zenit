@@ -16,7 +16,7 @@
             <AnchorPane id="setup-header" prefHeight="74.0" prefWidth="343.0">
                <children>
                   <ImageView fx:id="logo" fitHeight="60.0" fitWidth="60.0" layoutX="263.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
-                  <Text layoutX="15.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Runnable Classes">
+                  <Text fill="#515151" layoutX="15.0" layoutY="47.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Runnable Classes">
                      <font>
                         <Font name="Rockwell" size="26.0" />
                      </font>

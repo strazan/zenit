@@ -17,7 +17,7 @@
    <children>
       <AnchorPane id="setup-header" prefHeight="65.0" prefWidth="381.0">
          <children>
-            <Text fx:id="title" layoutX="14.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
+            <Text fx:id="title" fill="#515151" layoutX="14.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                <font>
                   <Font name="Rockwell" size="18.0" />
                </font>
