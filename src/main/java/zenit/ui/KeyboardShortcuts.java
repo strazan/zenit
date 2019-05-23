@@ -62,7 +62,7 @@ public final class KeyboardShortcuts {
 		scene.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
 			if (controller.getSelectedFileTreeItem() != null) {
 				if (event.getCode() == KeyCode.DELETE) {
-					controller.foo();
+					controller.deleteFileFromTreeView();
 				}
 			}
 		});

@@ -167,7 +167,7 @@ public class MainController extends VBox {
 		return (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
 	}
 	
-	public void foo() {
+	public void deleteFileFromTreeView() {
 		var selectedItem = getSelectedFileTreeItem();
 		deleteFile(selectedItem.getFile());
 		selectedItem.getParent().getChildren().remove(selectedItem);
@@ -498,6 +498,29 @@ public class MainController extends VBox {
 			System.out.println(historyIndex);
 		}
 	}
+	
+	public void redoDeleteFile() {
+		if (!treeView.isFocused()) {
+			System.out.println("not focused");
+			return;
+		}
+		
+		if (historyIndex >= 0) {
+			System.out.println("index: " + historyIndex);
+			
+			File file = fileHistory.get(historyIndex);
+			
+			if (file.exists()) {
+				System.out.println("file exists: " + file.getAbsolutePath());
+				
+				this.deleteFile(file);
+			} else {
+				System.out.println("file does not exist");
+			}
+		} else {
+			System.out.println("illegal history index: " + historyIndex);
+		}
+	}
 
 	/**
 	 * Opens an input dialog to choose project name and then creates a new project
@@ -537,7 +560,7 @@ public class MainController extends VBox {
 		ZenCodeArea zenCodeArea = selectedTab == null ? null : selectedTab.getZenCodeArea();
 		
 		if (treeView.isFocused()) {
-//			redoDeleteFile();
+			redoDeleteFile();
 		} else if (zenCodeArea != null && zenCodeArea.isFocused()) {
 			if (zenCodeArea.isRedoAvailable()) {
 				zenCodeArea.redo();
