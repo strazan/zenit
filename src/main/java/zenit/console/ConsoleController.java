@@ -58,8 +58,8 @@ public class ConsoleController implements Initializable {
 	/*
 	 * These HashMaps are ugly.
 	 */
-	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>(); 
-//	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
+//	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>(); 
+	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
 	private ArrayList<Terminal> terminalList = new ArrayList<Terminal>();
 	
 	@FXML 
@@ -233,9 +233,8 @@ public class ConsoleController implements Initializable {
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
 		// till hashmap
-//		consoleList.put(consoleArea, process);
+		consoleList.put(consoleArea, process);
 		
-		consoleList.add(consoleArea);
 		consoleChoiceBox.getItems().add(consoleArea);
 		consoleChoiceBox.getSelectionModel().select(consoleArea);
 		
@@ -319,25 +318,15 @@ public class ConsoleController implements Initializable {
 
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			
+				
 			if(newValue != null) {
-				for(ConsoleArea ca : consoleList) {
-					if(newValue.equals(ca)) {
-						ca.getParent().toFront();
-						activeConsole = ca;
+				for(var item : consoleList.entrySet()) {
+					if(newValue.equals(item.getKey())) {
+						item.getKey().getParent().toFront();
+						activeConsole = item.getKey();
 					}
 				}
 			}
-			
-			//Hashmap
-			
-//			if(newValue != null) {
-//				for(var item : consoleList.entrySet()) {
-//					if(newValue.equals(item.getKey().getID())) {
-//						item.getKey().toFront();
-//						activeConsole = item.getKey();
-//					}
-//				}
-//			}
 			
 		});
 		
