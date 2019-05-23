@@ -100,6 +100,8 @@ public class MainController extends VBox {
 	
 	@FXML
 	private Label statusBarRightLabel;
+		
+	private Process process;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
@@ -165,6 +167,7 @@ public class MainController extends VBox {
 
 		btnRun.setPickOnBounds(true);
 		btnRun.setOnAction(event -> compileAndRun());
+		btnStop.setOnAction(event -> terminate());
 		initTree();
 	}
 	
@@ -500,7 +503,7 @@ public class MainController extends VBox {
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
 					false, buffer, this);
 			compiler.startCompileAndRun();
-			Process process = buffer.get();
+			process = buffer.get();
 			
 			if (process != null && metadataFile != null) {
 				//If process compiled, add to RunnableClass
@@ -796,5 +799,13 @@ public class MainController extends VBox {
 	public void openJREVersions() {
 		JREVersionsController jvc = new JREVersionsController(cmiDarkMode.isSelected());
 		jvc.start();
+	}
+	
+	private void terminate() {
+		if (process != null && process.isAlive()) {
+			process.destroy();
+			System.out.println("Process terminated");
+		}
+		
 	}
 }
