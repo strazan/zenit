@@ -36,8 +36,7 @@ public class FileTab extends Tab {
 	/**
 	 * Constructs a new FileTab without a file, setting the title to "Untitled".
 	 */
-	public FileTab(MainController mc) {
-	public FileTab(ZenCodeArea zenCodeArea) {
+	public FileTab(ZenCodeArea zenCodeArea, MainController mc) {
 		this.zenCodeArea = zenCodeArea;
 		this.mc = mc;
 		initialTitle = "Untitled";

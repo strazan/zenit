@@ -1,15 +1,11 @@
 package main.java.zenit.ui;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -23,8 +19,6 @@ import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -133,11 +127,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
-			
-			 * TODO Test if you like this idea. Saves and opens a local File-instance of
-			 * your selected workspace. Only prompts when unset and can be changed from
-			 * within gui Alex
-			 */
 			
 			File workspace = null;
 
@@ -664,8 +653,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @return The new Tab.
 	 */
 	public FileTab addTab() {
-		FileTab tab = new FileTab(this);
-		FileTab tab = new FileTab(createNewZenCodeArea());
+		FileTab tab = new FileTab(createNewZenCodeArea(), this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 
@@ -1060,7 +1048,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param projectFile Project to open settings for
 	 */
 	public void showProjectProperties(ProjectFile projectFile) {
-		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected(), this);
+		pmc = new ProjectMetadataController(fileController, projectFile, true, this);
 		pmc.start();
 	}
 	

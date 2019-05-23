@@ -40,9 +40,6 @@
 						<MenuItem mnemonicParsing="false" onAction="#openSettingsPanel" text="Settings" />
                         <MenuItem fx:id="JREVersions" mnemonicParsing="false" onAction="#openJREVersions" text="JRE Versions" />
 						<MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
-							</items>
-						</Menu>
-                  <MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
 						<MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" text="Quit" />
