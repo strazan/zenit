@@ -2,6 +2,10 @@ package main.java.zenit.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.LinkedList;
+import java.util.ArrayList;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -11,6 +15,7 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.Tab;
@@ -21,19 +26,26 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.ProjectFile;
+import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
+import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.javacodecompiler.DebugError;
 import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
-import main.java.zenit.textsizewindow.TextSizeController;
+import main.java.zenit.settingspanel.SettingsPanelController;
+import main.java.zenit.settingspanel.ThemeCustomizable;
+import main.java.zenit.searchinfile.Search;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.ui.FileTab;
+import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
@@ -42,9 +54,16 @@ import main.java.zenit.zencodearea.ZenCodeArea;
  * @author Pontus Laos, Oskar Molander, Alexander Libot
  *
  */
-public class MainController extends VBox {
+public class MainController extends VBox implements ThemeCustomizable {
 	private Stage stage;
 	private FileController fileController;
+	private ProjectMetadataController pmc;
+	private int zenCodeAreasTextSize;
+	private String zenCodeAreasFontFamily;
+	private String activeStylesheet;
+	private LinkedList<ZenCodeArea> activeZenCodeAreas;
+	private File customThemeCSS;
+	private boolean isDarkMode = false;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -63,12 +82,15 @@ public class MainController extends VBox {
 
 	@FXML
 	private MenuItem saveFile;
-	
+
 	@FXML
 	private MenuItem importProject;
 
 	@FXML
 	private MenuItem changeWorkspace;
+
+	@FXML
+	private MenuItem JREVersions;
 	
 	@FXML
 	private CheckMenuItem cmiDarkMode;
@@ -84,31 +106,34 @@ public class MainController extends VBox {
 
 	@FXML
 	private Button btnStop;
-	
+
 	@FXML
 	private ConsoleController consoleController;
 
+	@FXML
 	private Label statusBarLeftLabel;
-	
+
 	@FXML
 	private Label statusBarRightLabel;
+		
+	private Process process;
 
 	/**
-	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads it. 
+	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
+	 * it.
 	 */
 	public MainController(Stage s) {
 		this.stage = s;
+		this.zenCodeAreasTextSize = 12;
+		this.zenCodeAreasFontFamily = "Menlo";
+		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
+		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
+
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
-
-			/*
-			 * TODO Test if you like this idea. Saves and opens a local File-instance of your 
-			 * selected workspace. Only prompts when unset and can be changed from within gui
-			 * Alex
-			 */
 			
 			File workspace = null;
-			
+
 			try {
 				workspace = WorkspaceHandler.readWorkspace();
 			} catch (IOException ex) {
@@ -116,10 +141,10 @@ public class MainController extends VBox {
 				directoryChooser.setTitle("Select new workspace folder");
 				workspace = directoryChooser.showDialog(stage);
 			}
-			
+
 			FileController fileController = new FileController(workspace);
 			setFileController(fileController);
-			
+
 			if (workspace != null) {
 				// TODO: Log this
 				fileController.changeWorkspace(workspace);
@@ -134,11 +159,14 @@ public class MainController extends VBox {
 
 			scene.getStylesheets().add(getClass().getResource("/zenit/ui/keywords.css").toExternalForm());
 			stage.setScene(scene);
-			stage.setTitle("Zenit");
+			stage.setTitle("Zenit - " + workspace.getPath());
 
 			initialize();
+			
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
+
+			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -156,21 +184,69 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
+		
+		statusBarLeftLabel.setText("");
+		statusBarRightLabel.setText("");
 
 		btnRun.setPickOnBounds(true);
 		btnRun.setOnAction(event -> compileAndRun());
+		btnStop.setOnAction(event -> terminate());
 		initTree();
 		consoleController.setMainController(this);
 	}
-	
+
 	/**
-	 * If the open tab contains a ZenCodeArea, create a new TextSizeController.
+	 * Creates a new SettingsPanel.
+	 * 
+	 * @author Sigge Labor
 	 */
-	public void setTextSize() {
-		FileTab selectedTab = getSelectedTab();
-		if (selectedTab != null && selectedTab.getZenCodeArea() != null) {
-			new TextSizeController(selectedTab.getZenCodeArea());
+	public void openSettingsPanel() {
+		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);
+	}
+
+	/**
+	 * Sets the zenCodeAreasTextSize to a new value.
+	 * 
+	 * @author Sigge Labor
+	 */
+	public synchronized void setFontSize(int newFontSize) {
+		zenCodeAreasTextSize = newFontSize;
+		updateZenCodeAreasAppearance();
+	}
+
+	/**
+	 * Sets the zenCodeAreasFontFamily to a new value.
+	 * 
+	 * @author Sigge Labor.
+	 */
+	public synchronized void setFontFamily(String newFontFamily) {
+		zenCodeAreasFontFamily = newFontFamily;
+		updateZenCodeAreasAppearance();
+	}
+
+	/**
+	 * Updates the appearance (text size and font family) of all active
+	 * ZenCodeAreas.
+	 * 
+	 * @author Sigge Labor.
+	 */
+	public void updateZenCodeAreasAppearance() {
+		for (int i = 0; i < activeZenCodeAreas.size(); i++) {
+			activeZenCodeAreas.get(i).updateAppearance(zenCodeAreasFontFamily, zenCodeAreasTextSize);
 		}
+	}
+
+	/**
+	 * @return the stage
+	 */
+	public Stage getStage() {
+		return stage;
+	}
+
+	public ZenCodeArea createNewZenCodeArea() {
+		ZenCodeArea zenCodeArea = new ZenCodeArea(zenCodeAreasTextSize, zenCodeAreasFontFamily);
+		activeZenCodeAreas.add(zenCodeArea);
+		return zenCodeArea;
 	}
 
 	/**
@@ -198,7 +274,7 @@ public class MainController extends VBox {
 	/**
 	 * Input name from dialog box and creates a new file in specified parent folder.
 	 * 
-	 * @param parent   The parent folder of the file to be created.
+	 * @param parent The parent folder of the file to be created.
 	 * @param typeCode The type of code snippet that should be implemented in the
 	 *                 file. Use constants from
 	 *                 {@link main.java.zenit.filesystem.helpers.CodeSnippets
@@ -219,49 +295,52 @@ public class MainController extends VBox {
 		}
 		return file;
 	}
-	
+
 	/**
 	 * If a tab is open, attempt to call its shortcutsTrigger-method.
 	 */
 	public void shortcutsTrigger() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.shortcutsTrigger();
 		}
 	}
-	
+
 	/**
 	 * If a tab is open, attempt to call its commentShortcutsTrigger-method.
 	 */
 	public void commentsShortcutsTrigger() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.commentsShortcutsTrigger();
-		}	
+		}
 	}
-	
+
 	public void navigateToCorrectTabIndex() {
 		FileTab selectedTab = getSelectedTab();
-		
+
 		if (selectedTab != null) {
 			selectedTab.navigateToCorrectTabIndex();
 		}
 	}
-	
+
 	/**
-	 * Grabs the text from the currently selected Tab and writes it to the currently
-	 * selected file. If no file selected, opens a file chooser for selection of
-	 * file to overwrite.
-	 * 
-	 * @param event
+	 * Runs {@link #saveFile(boolean)} with parameter true.
 	 */
 	@FXML
 	public boolean saveFile(Event event) {
 		return saveFile(true);
 	}
-	
+
+	/**
+	 * Grabs the text from the currently selected Tab and writes it to the currently
+	 * selected file. If no file selected, opens a file chooser for selection of
+	 * file to overwrite.
+	 * @param backgroundCompile {@code true} if code should compile in background upon save
+	 * @return {@code true} if written to file, otherwise {@code false}
+	 */
 	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
 		File file = tab.getFile();
@@ -274,7 +353,7 @@ public class MainController extends VBox {
 
 		if (didWrite) {
 			tab.update(file);
-			
+
 			if (backgroundCompile) {
 				backgroundCompiling(file);
 			}
@@ -284,9 +363,10 @@ public class MainController extends VBox {
 
 		return didWrite;
 	}
-	
+
 	/**
 	 * Compiles a file in the background.
+	 * 
 	 * @param file
 	 */
 	private void backgroundCompiling(File file) {
@@ -302,12 +382,16 @@ public class MainController extends VBox {
 			e.printStackTrace();
 		}
 	}
-	
+
+	/**
+	 * Collects errors from buffer and displays them in code area
+	 * @param buffer Buffer to collect errors from
+	 */
 	public void errorHandler(DebugErrorBuffer buffer) {
 		DebugError error;
 		while (!buffer.isEmpty()) {
 			error = buffer.get();
-			
+
 			getSelectedTab().setStyle(error.getRow(), error.getColumn(), "underline");
 		}
 	}
@@ -368,14 +452,37 @@ public class MainController extends VBox {
 	 */
 	public void openFile(File file) {
 		if (file != null && getTabFromFile(file) == null) {
+
+			if (supportedFileFormat(file)) {
 			
 			FileTab selectedTab = addTab();
 			selectedTab.setFile(file, true);
 
 			selectedTab.setText(file.getName());
+			} else {
+				String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
+				DialogBoxes.errorDialog("Not supported", "File type not supported by Zenit", 
+						"The file type " + fileType + " is not yet supported by this application.");
+			}
 		} else if (file != null && getTabFromFile(file) != null) { // Tab already open
 			tabPane.getSelectionModel().select(getTabFromFile(file));
 		}
+	}
+	
+	/**
+	 * Checks if the file format of the file parameter is supported.
+	 * @param file File to check
+	 * @return {@code true} if file format is supported, otherwise {@code false}
+	 */
+	private boolean supportedFileFormat(File file) {
+		String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
+		
+		switch (fileType) {
+		case ".java":
+		case ".txt": break;
+		default: return false;
+		}
+		return true;
 	}
 
 	/**
@@ -389,7 +496,8 @@ public class MainController extends VBox {
 		File newFile = null;
 		int prefixPosition = file.getName().lastIndexOf('.');
 
-		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0, prefixPosition);
+		String newName = DialogBoxes.inputDialog(null, "New name", "Rename file", "Enter a new name", file.getName(), 0,
+				prefixPosition);
 		if (newName != null) {
 			newFile = fileController.renameFile(file, newName);
 			var tabs = tabPane.getTabs();
@@ -436,6 +544,7 @@ public class MainController extends VBox {
 	/**
 	 * Opens an input dialog to choose package name and then creates a new package
 	 * with that name in the selected folder (usually src).
+	 * 
 	 * @param parent Folder to create package in.
 	 * @return The created package if created, otherwise null.
 	 */
@@ -455,6 +564,45 @@ public class MainController extends VBox {
 		}
 		return null;
 	}
+	
+	public void compileAndRun(File file) {
+		File metadataFile = getMetadataFile(file);
+	
+		 
+			consoleController.newConsole(null);
+	
+		try {
+			ProcessBuffer buffer = new ProcessBuffer();
+			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
+					false, buffer, this);
+			compiler.startCompileAndRun();
+			process = buffer.get();
+			
+			if (process != null && metadataFile != null) {
+				//If process compiled, add to RunnableClass
+				ProjectFile projectFile = new ProjectFile(metadataFile.getParent());
+				String src = projectFile.getSrc().getPath();
+				String filePath = file.getPath().replaceAll(Matcher.quoteReplacement(src + 
+						File.separator), "");
+				RunnableClass rc = new RunnableClass(filePath);
+				Metadata metadata = new Metadata(metadataFile);
+				if (metadata.addRunnableClass(rc)) {
+					metadata.encode();
+				}
+				
+				if (process.isAlive()) {
+					// TODO Create new console tab from here.
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			// TODO: handle exception
+		}
+	
+	
+	}
 
 	/**
 	 * If the file of the current tab is a .java file if will be compiled, into the
@@ -463,81 +611,27 @@ public class MainController extends VBox {
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
-			File metadataFile = getMetadataFile(file);
 			saveFile(false);
-		
-		 
-			consoleController.newConsole(null);
-			
-			try {
-				ProcessBuffer buffer = new ProcessBuffer();
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, false, buffer, this);
-				compiler.startCompileAndRun();
-				Process process = buffer.get();
-				
-				if (process != null && process.isAlive()) {
-					
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-
-				// TODO: handle exception
-			}
-		
+			compileAndRun(file);
 		}
+			
 	}
-	
+
 	public void updateStatusLeft(String text) {
 		statusBarLeftLabel.setText(text);
 	}
-	
+
 	public void updateStatusRight(String text) {
 		statusBarRightLabel.setText(text);
 	}
-	
-	/**
-	 * Switches between dark- and light mode depending on what is selected in the application's
-	 * 'Dark Mode'-checkbox.
-	 * @param event
-	 * @author Pontus Laos
-	 */
-	@FXML
-	private void darkModeChanged(Event event) {
-		boolean isDarkMode = cmiDarkMode.isSelected();
-		var stylesheets = stage.getScene().getStylesheets();
-		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-		var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
-		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
-		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
-		
-		if (isDarkMode) {
-			if (stylesheets.contains(lightMode)) {
-				stylesheets.remove(lightMode);
-			}
-			
-			if (stylesheets.contains(lightModeKeywords)) {
-				stylesheets.remove(lightModeKeywords);
-			}
-			
-			stylesheets.add(darkMode);
-			stylesheets.add(darkModeKeywords);
-		} else {
-			if (stylesheets.contains(darkMode)) {
-				stylesheets.remove(darkMode);
-			}
-			
-			if (stylesheets.contains(darkModeKeywords)) {
-				stylesheets.remove(darkModeKeywords);
-			}
-			
-			stylesheets.add(lightMode);
-			stylesheets.add(lightModeKeywords);
-		}
-	}
 
 	/**
+		
+		if (pmc != null) {
+			pmc.ifDarkModeChanged(isDarkMode);
+		}
 	 * Finds the metadata file for the project of a file.
+	 * 
 	 * @param file File within project to find metadata file in.
 	 * @return The found metadata file, null if not found.
 	 */
@@ -565,12 +659,14 @@ public class MainController extends VBox {
 	 * @return The new Tab.
 	 */
 	public FileTab addTab() {
-		FileTab tab = new FileTab();
+		FileTab tab = new FileTab(createNewZenCodeArea(), this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 
 		var selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(tab);
+		
+		updateStatusRight("");
 
 		return tab;
 	}
@@ -609,6 +705,8 @@ public class MainController extends VBox {
 		} else {
 			tabPane.getTabs().remove(selectedTab);
 		}
+		
+		updateStatusRight("");
 	}
 
 	/**
@@ -617,17 +715,22 @@ public class MainController extends VBox {
 	@FXML
 	public void changeWorkspace() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
+		directoryChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 		directoryChooser.setTitle("Select new workspace folder");
 		File workspace = directoryChooser.showDialog(stage);
 		if (workspace != null) {
+			stage.close();
 			boolean success = fileController.changeWorkspace(workspace);
-			if (success) {
-				stage.close();
+			if (success) {	
 				try {
-					new TestUI().start(stage);
-				} catch (IOException ex) {
+//					new TestUI().start(stage);
+					new Zenit().start(stage);
+				} catch (Exception ex) {
 					System.err.println("MainController.changeWorkspace: IOException: " + ex.getMessage());
 				}
+			} else {
+				stage.show();
+				DialogBoxes.errorDialog("Can't change workspace", "", "");
 			}
 		}
 	}
@@ -669,29 +772,303 @@ public class MainController extends VBox {
 
 		return null;
 	}
-	
+
 	/**
-	 * Tries to import a folder.
-	 * Displays a directory chooser and copies the selected folder into the current workspace
-	 * using {@link main.java.zenit.filesystem.FileController#importProject(File) importProject(File)}
-	 * Displays an error or information dialog to display the result.
+	 * Tries to import a folder. Displays a directory chooser and copies the
+	 * selected folder into the current workspace using
+	 * {@link main.java.zenit.filesystem.FileController#importProject(File)
+	 * importProject(File)} Displays an error or information dialog to display the
+	 * result.
 	 */
 	@FXML
 	public void importProject() {
 		DirectoryChooser directoryChooser = new DirectoryChooser();
 		directoryChooser.setTitle("Select project to import");
 		File source = directoryChooser.showDialog(stage);
-		
+
 		if (source != null) {
 			try {
 				File target = fileController.importProject(source);
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), target);
 				DialogBoxes.informationDialog("Import complete", "Project is imported to workspace");
 			} catch (IOException ex) {
-				DialogBoxes.errorDialog("Import failed", "Couldn't import project", 
-						ex.getMessage());
+				DialogBoxes.errorDialog("Import failed", "Couldn't import project", ex.getMessage());
 			}
 		}
+	}
+
+	/**
+	 * @return the path to the stages custom theme stylesheet.
+	 */
+	public File getCustomThemeCSS() {
+		return this.customThemeCSS;
+	}
+
+	public void search() {
+
+		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		File file = selectedTab.getFile();
+
+		if (selectedTab != null) {
+			new Search(zenCodeArea, file, isDarkMode);
+		}
+	}
+
+
+
+	@Override
+	public String getActiveStylesheet() {
+		// TODO Auto-generated method stub
+		return activeStylesheet;
+	}
+	
+	/** 
+	 * If there isn't a comment at the start of the line the method comments 
+	 * and if there is a comment the method removes it.
+	 * 
+	 * @author Fredrik Eklundh
+	 */
+	public void commentAndUncomment() {
+
+		ZenCodeArea zenCodeArea = getSelectedTab().getZenCodeArea();
+		
+		int caretPos = zenCodeArea.getCaretPosition();
+		
+		int caretColumn = zenCodeArea.getCaretColumn();
+		
+		int length = zenCodeArea.getLength();
+		
+		int whereToReplaceFirstLine = caretPos - caretColumn;
+		
+		int rowNumber = zenCodeArea.getCurrentParagraph();
+		
+		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
+		
+		List<Integer> whereToReplaceList = new ArrayList<>();
+		
+		IndexRange zen = zenCodeArea.getSelection();
+		
+		int endOfSelection = zen.getEnd();
+		
+		int startOfSelection = zen.getStart();
+		
+		boolean topDown = true;
+		
+		int n = 1;
+		
+		int whereToReplace = whereToReplaceFirstLine;
+		
+		whereToReplaceList.add(whereToReplaceFirstLine);
+		
+		//If the selection starts at least one row above the end of the selection 
+		if (caretPos == endOfSelection && whereToReplaceFirstLine > startOfSelection) {
+			topDown = true;
+			do {
+				
+				whereToReplace = whereToReplace - 1 - zenCodeArea.getParagraphLength(rowNumber - n);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while (whereToReplace > startOfSelection);
+		}
+		
+		//If the selection starts at least one row below the end of the selection 
+		if (caretPos == startOfSelection && whereToReplace + paragraphLength < endOfSelection) {
+			topDown = false;
+			do {
+				
+				whereToReplace = whereToReplace + 1 + zenCodeArea.getParagraphLength(rowNumber + n - 1);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while (whereToReplace + zenCodeArea.getParagraphLength(rowNumber + n - 1) < endOfSelection);
+
+		}
+
+		boolean[] addComment = new boolean[whereToReplaceList.size()];
+		
+		//Comment or uncomment from the top and down then moves the caret to the "new" right position
+		if (topDown == true) {
+			
+			int stepsToMove = 0;
+			
+			for (int i = 0; i < n; i++) {
+				whereToReplace = whereToReplaceList.get(i);
+				
+				if (caretPos > length - 3) {
+					zenCodeArea.insertText(caretPos, "	  ");
+				}
+				
+				if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						stepsToMove = stepsToMove - 2;
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						addComment[i] = false;
+					}
+					
+				}else if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+						if (whereToReplace == caretPos) {
+							
+						}else if (whereToReplace + 1 == caretPos) {
+							stepsToMove--;
+							
+						}else {
+							stepsToMove = stepsToMove - 2;
+						}
+					
+					}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("    ")) {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.insertText(whereToReplace, "//");
+						stepsToMove = stepsToMove + 2;
+						addComment[i] = true;
+					}		
+				}	
+			}
+			
+			if(whereToReplaceList.size() < 2) {
+				zenCodeArea.moveTo(caretPos + stepsToMove);
+				
+			}else if (addComment[0] && addComment[n - 1]) {
+				zenCodeArea.selectRange(startOfSelection + 2, endOfSelection + stepsToMove);
+
+			}else if (addComment[0] && addComment[n - 1] == false) {
+				zenCodeArea.selectRange(startOfSelection + 2, endOfSelection + stepsToMove);
+				
+			}else if (addComment[0] == false && addComment[n - 1]) {
+				zenCodeArea.selectRange(startOfSelection - 2, endOfSelection + stepsToMove + 2);
+				
+			}else {
+				zenCodeArea.selectRange(startOfSelection - 2, endOfSelection + stepsToMove);
+			}
+		}	
+		//Comment or uncomment from below and up
+		if (topDown == false) {
+			
+			for (int i = whereToReplaceList.size() - 1; i >= 0; i--) {
+				whereToReplace = whereToReplaceList.get(i);
+				
+				if (caretPos > length - 3) {
+					zenCodeArea.insertText(caretPos, "	  ");
+					zenCodeArea.moveTo(caretPos);
+				}
+				
+				if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						zenCodeArea.moveTo(caretPos);
+						addComment[i] = false;
+					}
+					
+				}else if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+						if (whereToReplace == caretPos) {
+							zenCodeArea.moveTo(caretPos);
+							
+						}else if (whereToReplace + 1 == caretPos) {
+							zenCodeArea.moveTo(caretPos - 1);
+							
+						}else {
+							zenCodeArea.moveTo(caretPos - 2);
+						}
+							
+					}else {
+						zenCodeArea.insertText(whereToReplace, "//");
+						zenCodeArea.moveTo(caretPos + 2);
+						addComment[i] = true;
+					}		
+				}	
+
+			if (addComment[0] && addComment[whereToReplaceList.size() - 1]) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) + 2,
+				rowNumber, caretColumn + 2);
+				
+			}else if(addComment[0] && addComment[whereToReplaceList.size() - 1] == false) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) - 2,
+				rowNumber, caretColumn + 2);
+				
+			}else if(addComment[0] == false && addComment[whereToReplaceList.size() - 1]) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) + 2,
+				rowNumber, caretColumn - 2);
+				
+			}else {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) - 2,
+				rowNumber, caretColumn - 2);
+				}
+			}	
+		}
+	}
+	
+	/**
+	 * Let's user choose .jar and .zip files and adds them to projects lib-folder and creates 
+	 * build paths. Show dialog box if import failed or not.
+	 * @param projectFile Project to import jar-files to
+	 */
+	public void chooseAndImportLibraries(ProjectFile projectFile) {
+		FileChooser fileChooser = new FileChooser();
+		fileChooser.setTitle("Select jar file to import");
+		
+		FileChooser.ExtensionFilter filter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
+		fileChooser.getExtensionFilters().add(filter);
+
+		List<File> jarFiles = fileChooser.showOpenMultipleDialog(stage);
+		
+		if (jarFiles != null) {
+			boolean success = fileController.addInternalLibraries(jarFiles, projectFile);
+			if (success) {
+				DialogBoxes.informationDialog("Import complete", "Jar file(s) have successfully been imported to workspace");
+			} else {
+				DialogBoxes.errorDialog("Import failed", "Couldn't import jar file(s)", "An error occured while trying to import jar file(s)");
+			}
+		}
+	}
+	
+	/**
+	 * Opens up the project settings for specified project
+	 * @param projectFile Project to open settings for
+	 */
+	public void showProjectProperties(ProjectFile projectFile) {
+		pmc = new ProjectMetadataController(fileController, projectFile, true, this);
+		pmc.start();
+	}
+	
+	public void openJREVersions() {
+		JREVersionsController jvc = new JREVersionsController(cmiDarkMode.isSelected());
+		jvc.start();
+	}
+	
+	private void terminate() {
+		if (process != null && process.isAlive()) {
+			process.destroy();
+			System.out.println("Process terminated");
+		}
+		
 	}
 	
 	

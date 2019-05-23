@@ -5,8 +5,10 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.List;
 
 import main.java.zenit.filesystem.helpers.CodeSnippets;
+import main.java.zenit.filesystem.metadata.Metadata;
 
 /**
  * Class for controlling and manipulating the file system of a project.
@@ -263,12 +265,115 @@ public class FileController {
 	 * @return The copied File
 	 */
 	public File importProject(File source) throws IOException {
-//		try {
 			File target = ProjectHandler.importProject(source, workspace);
 			return target;
-//		} catch (IOException e) {
-//			System.err.println(e.getMessage());
-//			return null;
-//		}
+	}
+	
+	//Library methods
+	
+	/**
+	 * Tries to copy the files in parameter to project's lib-folder (creates one if it doesn't 
+	 * already exist). Adds the build paths to metadata-file. Uses 
+	 * {@link ProjectHandler#addInternalLibraries(List, ProjectFile)}.
+	 * @param internalLibraryFiles Files to copy and create build paths to. File path should
+	 * exclude project file path. Correct path: {@code lib/library.jar}
+	 * @param projectFile The project the files should be copied to, must have a metadata-file.
+	 * @return {@code true} if imported successfully, otherwise {@code false}. Note that files can
+	 * be copied and still return {@code false}
+	 */
+	public boolean addInternalLibraries(List<File> internalLibraryFiles, ProjectFile projectFile) {
+		try {
+			return ProjectHandler.addInternalLibraries(internalLibraryFiles, projectFile);
+		} catch (IOException e) {
+			return false;
+		}
+	}
+	
+	/**
+	 * Tries to remove the files in parameter from project's lib-folder. Removes the build paths
+	 * from metadata-file. Uses {@link ProjectHandler#removeInternalLibraries(List, ProjectFile)}.
+	 * @param internalLibraryPaths Files to remove, file path should exclude project file path.
+	 * Correct path: {@code lib/library.jar}
+	 * @param projectFile The project the files should be removed from, must have a metadata-file.
+	 * @return {@code true} if removed successfully, otherwise {@code false}. Note that files can
+	 * be removed and still return {@code false}
+	 */
+	public boolean removeInternalLibraries(List<String> internalLibraryPaths, ProjectFile projectFile) {
+		return ProjectHandler.removeInternalLibraries(internalLibraryPaths, projectFile);
+	}
+	
+	/**
+	 * Tries to add build paths for files in parameter to project's metadata file. Uses
+	 * {@link ProjectHandler#addExternalLibraries(List, ProjectFile)}. 
+	 * @param externalLibraryFiles Files to add, the file paths should contain the full file path
+	 * from root.
+	 * @param projectFile The project to which build paths should be made to. Project must have a
+	 * metadata-file.
+	 * @return {@code true} if build paths added successfully, otherwise {@code false}.
+	 */
+	public boolean addExternalLibraries(List<File> externalLibraryFiles, ProjectFile projectFile) {
+		return ProjectHandler.addExternalLibraries(externalLibraryFiles, projectFile);
+	}
+	
+	/**
+	 * Tries to remove build paths for files in parameter from project's metadata file. Uses
+	 * {@link ProjectHandler#removeExternalLibraries(List, ProjectFile)}.
+	 * @param externalLibraryPaths Files to remove, the file path should contain the full file path
+	 * from root.
+	 * @param projectFile The project to which build paths should be removed from. Project must
+	 * have a metadata-file.
+	 * @return {@code true} if build paths removed successfully, otherwise {@code false}.
+	 */
+	public boolean removeExternalLibraries(List<String> externalLibraryPaths, 
+			ProjectFile projectFile) {
+		return ProjectHandler.removeExternalLibraries(externalLibraryPaths, projectFile);
+	}
+	
+	//Metadata
+	
+	/**
+	 * Updates metadata file to the latest version
+	 * @param metadataFile The metadata-file to update
+	 * @return The updated metadata-file
+	 */
+	public Metadata updateMetadata(File metadataFile) {
+		return MetadataFileHandler.updateMetadata(metadataFile);
+	}
+	
+	/**
+	 * Changes the compile directory to directory parameter in project.
+	 * @param directory New directory
+	 * @param projectFile Project to change directory in
+	 * @param internal {@code true} if directory path should be internal, otherwise {@code false}
+	 * @return The new directory path
+	 */
+	public String changeDirectory(File directory, ProjectFile projectFile, boolean internal) {
+		return MetadataFileHandler.changeDirectory(directory, projectFile, internal);
+	}
+	
+	/**
+	 * Changes the compile directory to directory parameter in project.
+	 * @param directory New source path directory
+	 * @param projectFile Project to change source path directory in
+	 * @param internal {@code true} if source path should be internal, otherwise {@code false}
+	 * @return The new source path
+	 */
+	public String changeSourcepath(File directory, ProjectFile projectFile, boolean internal) {
+		return MetadataFileHandler.changeSourcepath(directory, projectFile, internal);
+	}
+	
+	public boolean containMainMethod(File classFile) {
+		String content;
+		try {
+			content = JavaFileHandler.readFile(classFile);
+			if (content.contains("public static void main(String[] args")) {
+				return true;
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return false;
 	}
 }

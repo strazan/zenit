@@ -1,0 +1,241 @@
+.root {
+	-fx-focus-color: transparent;
+	-fx-border-width: 0;
+}
+
+#btnRun{
+	/* TODO: Add styling and icons*/
+	-fx-background-color:transparent;
+}
+
+#iconRun:hover {
+	-fx-opacity: 0.5;
+}
+
+
+#btnStop{
+	-fx-background-color:transparent;
+}
+
+#iconStop:hover {
+	-fx-opacity: 0.5;
+}
+
+#btnClearConsole {
+	-fx-background-color: transparent;
+}
+
+#btnClearConsole > *:hover {
+	-fx-fill: #996699;
+	-fx-cursor: hand;
+}
+
+#menuBar {
+	-fx-border-color: #000;
+	-fx-border-width: 0 0 1px 0;
+	-fx-border-style: solid;
+	-fx-use-system-menu-bar: true;
+}
+
+#menuBar, #menuBar * {
+	-fx-background-color: #FF8080;
+	-fx-text-fill: #8099FF;
+}
+
+#menuBar .arrow {
+	-fx-background-color: #8099FF;
+}
+
+.menu-item:hover, .menu-item:hover > * {
+	-fx-background-color: #996699 !important;
+}
+
+.menu {
+	-fx-fill: #8099FF;
+}
+
+.menu:hover, .menu:hover > .label {
+	-fx-background-color: #996699 !important;
+}
+
+#cmiDarkMode:focused:checked > .left-container > .check {
+    -fx-background-color: #8099FF;
+}
+
+#cmiDarkMode:hover > .left-container {
+	-fx-background-color: #996699 !important;
+}
+
+#splitPane {
+	-fx-background-color: #999999;
+	-fx-border-width: 0;
+	-fx-padding: 0;
+}
+
+#textEditorScrollPane {
+	-fx-border-width: 0;
+	-fx-padding: 0;
+}
+
+#tabPane {
+	-fx-background-color: #FF8080;
+	-fx-fill: #8099FF;
+	-fx-border-width: 0;
+	-fx-padding: 0;
+}
+
+#treeView {
+	-fx-border-width: 0;
+	-fx-padding: 0;
+}
+
+#treeView * {
+	-fx-background-color: #FF8080;
+	-fx-fill: #8099FFaa;
+}
+
+#treeView .arrow  {
+	-fx-background-color: #8099FFbb;
+}
+
+.split-pane:horizontal > .split-pane-divider {
+   -fx-background-color: #1e1e1e;
+}
+.split-pane:vertical > .split-pane-divider {
+   -fx-background-color: #1e1e1e;
+}
+
+.split-pane > .split-pane-divider {  
+    -fx-padding: 0.05em;
+    -fx-border: none;
+} 
+
+.split-pane {
+    -fx-background-insets: 0, 0;
+    -fx-padding: 0;
+ }
+ 
+ .split-pane > * > .split-pane {
+    -fx-background-insets: 0, 0;
+    -fx-padding: 0;
+ }
+ 
+ 
+ .tree-cell:hover {
+	-fx-background-color: #ff0000;
+ }
+ 
+ #treeView .thumb {
+ 	-fx-background-color: #EEEEEEAA;
+ }
+ 
+ #treeView .thumb:hover, #treeView .thumb:pressed {
+ 	-fx-background-color: #EEEEEE;
+ }
+ 
+ #treeView .increment-button, #treeView .decrement-button {
+ 	-fx-background-color: transparent;
+	-fx-background-radius: 0em;
+	-fx-padding:0 0 10 0;
+ }
+ 
+ .scroll-bar:vertical .increment-arrow, .decrement-arrow {
+ 	-fx-shape: "";
+ 	-fx-padding: 0;
+ }
+ 
+ .scroll-bar:horizontal .increment-arrow, .decrement-arrow {
+ 	-fx-shape: "";
+ 	-fx-padding: 0;
+ }
+ 
+ .scroll-bar:vertical {
+    -fx-pref-width: 14;
+    -fx-padding: 3;
+}
+
+#tabPane .tab-header-area .tab-header-background {
+	-fx-background-color: #FF8080;
+}
+
+#tabPane * {
+	-fx-border: 0;
+}
+
+#tabPane .tab {
+	-fx-background-color: #FF808088;
+}
+
+#tabPane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
+    -fx-border-color: transparent;
+}
+
+#tabPane .tab .tab-label {
+	-fx-text-fill: #8099FF;
+}
+
+#tabPane .tab:selected {
+	-fx-background-color: #FF8080;
+}
+
+#tabPane .tab-content-area * {
+	-fx-background-color: #FF8080;
+}
+
+#consolePane {
+	-fx-text-fill: #8099FF;
+}
+
+#consolePane .title {
+	-fx-background-color: #FF8080;
+	-fx-text-fill: #8099FF;
+	-fx-border-radius: 0;
+}
+
+#consolePane .content {
+	-fx-background-color: #FF8080;
+	-fx-border-width: 0;
+	-fx-border-color: #FF8080;
+}
+
+#consolePane .content * {
+	-fx-text-fill: #8099FF;
+	-fx-fill: #8099FF;
+	-fx-border-width: 0;
+	-fx-padding: 0;
+	-fx-background-color: #FF8080;
+}
+
+#consolePane .content .thumb {
+	-fx-background-color: #EEEEEEAA;
+}
+
+#consolePane .content .scroll-bar:vertical, #consolePane .content .corner {
+	-fx-background-color: #FF8080;
+	-fx-pref-width: 14;
+    -fx-padding: 3;
+    -fx-border-width: 0;
+    -fx-border-color: #FF8080;
+}
+
+#consolePane .content .scroll-bar:horizontal {
+	-fx-background-color: #FF8080;
+	-fx-pref-height: 14;
+	-fx-padding: 3;
+	-fx-border-width: 0;
+	-fx-border-color: #FF8080;
+}
+
+ #consolePane .content .thumb:hover, #consolePane .content .thumb:pressed {
+ 	-fx-background-color: #EEEEEE;
+ }
+
+#HBox, #HBox * {
+	-fx-background-color: #222222;
+	-fx-fill: #cccccc;
+	-fx-border-width: 0;
+}
+
+/* #iconRun{
+	-fx-icon-color: rgb(0,200,0);
+} */

@@ -1,12 +1,11 @@
 package main.java.zenit.javacodecompiler;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
+import main.java.zenit.filesystem.RunnableClass;
+import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
 
 /**
@@ -28,7 +27,7 @@ import main.java.zenit.ui.MainController;
 public class JavaSourceCodeCompiler {
 	
 	protected File file;
-	protected File metadata;
+	protected File metadataFile;
 	protected boolean inBackground;
 	protected Buffer<?> buffer;
 	protected MainController cont;
@@ -52,7 +51,7 @@ public class JavaSourceCodeCompiler {
 	 */
 	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont) {
 		this.file = file;
-		this.metadata = metadata;
+		this.metadataFile = metadata;
 		this.inBackground = inBackground;
 		this.buffer = buffer;
 		this.cont = cont;
@@ -76,10 +75,13 @@ public class JavaSourceCodeCompiler {
 	 * Class for creating commands for compiling, and redirecting process-streams.
 	 */
 	private class Compile extends Thread {
-		protected File sourcepath;
-		protected File directory;
+		protected String JDKPath = null;
+		protected String sourcepath;
+		protected String directory;
 		protected File runPath;
 		protected File projectFile;
+		protected String[] internalLibraries;
+		protected String[] externalLibraries;
 
 		/**
 		 * Only to be called via {@link Thread#start()}.
@@ -87,7 +89,7 @@ public class JavaSourceCodeCompiler {
 		 * If no metadata is provided, runs {@link #compile()}.
 		 */
 		public void run() {
-			if (metadata != null) {
+			if (metadataFile != null) {
 				decodeMetadata();
 				createProjectPath();
 				compileInPackage();
@@ -105,27 +107,20 @@ public class JavaSourceCodeCompiler {
 		 * Creates a path to the project file using metadata-file.
 		 */
 		protected void createProjectPath() {
-			projectFile = metadata.getParentFile();
+			projectFile = metadataFile.getParentFile();
 		}
 
 		/**
 		 * Decodes the metadata-file to create directory and sourcepath.
-		 * TODO Add libraries
 		 */
 		protected void decodeMetadata() {
-			try (BufferedReader br = new BufferedReader(new FileReader(metadata))) {
-				String line = br.readLine();
-				while (line != null) {
-					if (line.equals("DIRECTORY")) {
-						directory = new File(br.readLine());
-					} else if (line.equals("SOURCEPATH")) {
-						sourcepath = new File (br.readLine());
-					}
-					line = br.readLine();
-				}
-			} catch (IOException ex) {
-				System.err.println(ex.getMessage());
-			}
+			Metadata metadata = new Metadata(metadataFile);
+			
+			JDKPath = metadata.getJREVersion();
+			directory = metadata.getDirectory();
+			sourcepath = metadata.getSourcepath();
+			internalLibraries = metadata.getInternalLibraries();
+			externalLibraries = metadata.getExternalLibraries();	
 		}
 
 		/**
@@ -137,6 +132,7 @@ public class JavaSourceCodeCompiler {
 		protected Process compile() {
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(file.getPath());
 
 			String command = cb.generateCommand();
@@ -155,9 +151,12 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathInProject());
 
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.COMPILE);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
-			cb.setDirectory(directory.getPath());
-			cb.setSourcepath(sourcepath.getPath());
+			cb.setDirectory(directory);
+			cb.setSourcepath(sourcepath);
+			cb.setInternalLibraries(internalLibraries);
+			cb.setExternalLibraries(externalLibraries);
 			
 			String command = cb.generateCommand();
 			Process process = executeCommand(command, projectFile);
@@ -188,7 +187,7 @@ public class JavaSourceCodeCompiler {
 		 * @return Modified run path.
 		 */
 		protected String createRunPathInProject() {
-			File projectFile = metadata.getParentFile();
+			File projectFile = metadataFile.getParentFile();
 			String runPath = file.getPath();
 			String projectPath = projectFile.getPath();
 
@@ -217,9 +216,10 @@ public class JavaSourceCodeCompiler {
 	 */
 	private class CompileAndRun extends Compile {
 		
+		@Override
 		public void run() {
 			Process process;
-			if (metadata != null) {
+			if (metadataFile != null) {
 				decodeMetadata();
 				createProjectPath();
 				process = compileInPackage();
@@ -259,6 +259,7 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathForRunning(file.getName()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
 			
 			String command = cb.generateCommand();
@@ -272,13 +273,24 @@ public class JavaSourceCodeCompiler {
 			runPath = new File(createRunPathForRunning(super.runPath.getPath()));
 			
 			CommandBuilder cb = new CommandBuilder(CommandBuilder.RUN);
+			cb.setJDK(JDKPath);
 			cb.setRunPath(runPath.getPath());
-			String command = cb.generateCommand();
 
-			// Creates new directory folder, bin-folder
-			File binFile = new File(projectFile.getPath() + File.separator + "bin");
+			cb.setInternalLibraries(internalLibraries);
+			cb.setExternalLibraries(externalLibraries);
+			cb.setDirectory(directory);
 			
-			Process process = executeCommand(command, binFile);
+			Metadata metadata = new Metadata(metadataFile);
+			RunnableClass rc = metadata.containRunnableClass(runPath.getPath());
+			
+			if (rc != null) {
+				cb.setProgramArguments(rc.getPaArguments());
+				cb.setVMArguments(rc.getVmArguments());
+			}
+					
+			String command = cb.generateCommand();
+			
+			Process process = executeCommand(command, projectFile);
 			
 			// Runs command
 			redirectStreams(process);
@@ -290,6 +302,7 @@ public class JavaSourceCodeCompiler {
 			String newRunPath;
 			newRunPath = runPath.replaceAll(Matcher.quoteReplacement("src" + File.separator), "");
 			newRunPath = newRunPath.replaceAll(".java", "");
+			
 			return newRunPath;
 		}	
 	}

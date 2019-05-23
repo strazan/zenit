@@ -7,6 +7,11 @@ bin/*
 
 #Workspace file
 res/workspace/workspace.dat
+
+#JDK files
+res/JDK/DefaultJDK.dat
+res/jdk/jdk.dat
+
 /bin/
 .classpath
 target/classes/zenit/ui/actionButtons.css

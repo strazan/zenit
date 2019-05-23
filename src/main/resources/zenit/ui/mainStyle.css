@@ -26,7 +26,7 @@
 }
 
 #btnClearConsole > *:hover {
-	-fx-fill: #666;
+	-fx-fill: #666666;
 	-fx-cursor: hand;
 }
 
@@ -38,36 +38,36 @@
 }
 
 #menuBar, #menuBar * {
-	-fx-background-color: #444;
-	-fx-text-fill: #fff;
+	-fx-background-color: #444444;
+	-fx-text-fill: #EEEEEE;
 }
 
 #menuBar .arrow {
-	-fx-background-color: #fff;
+	-fx-background-color: #EEEEEE;
 }
 
 .menu-item:hover, .menu-item:hover > * {
-	-fx-background-color: #555 !important;
+	-fx-background-color: #555555 !important;
 }
 
 .menu {
-	-fx-fill: #fff;
+	-fx-fill: #EEEEEE;
 }
 
 .menu:hover, .menu:hover > .label {
-	-fx-background-color: #555 !important;
+	-fx-background-color: #555555 !important;
 }
 
 #cmiDarkMode:focused:checked > .left-container > .check {
-    -fx-background-color: #fff;
+    -fx-background-color: #EEEEEE;
 }
 
 #cmiDarkMode:hover > .left-container {
-	-fx-background-color: #555 !important;
+	-fx-background-color: #555555 !important;
 }
 
 #splitPane {
-	-fx-background-color: #999;
+	-fx-background-color: #999999;
 	-fx-border-width: 0;
 	-fx-padding: 0;
 }
@@ -78,8 +78,8 @@
 }
 
 #tabPane {
-	-fx-background-color: #444;
-	-fx-fill: #fff;
+	-fx-background-color: #444444;
+	-fx-fill: #EEEEEE;
 	-fx-border-width: 0;
 	-fx-padding: 0;
 }
@@ -90,20 +90,20 @@
 }
 
 #treeView * {
-	-fx-background-color: #444;
-	-fx-fill: #fffa;
+	-fx-background-color: #444444;
+	-fx-fill: #EEEEEEaa;
 }
 
 #treeView .arrow  {
-	-fx-background-color: #fffb;
+	-fx-background-color: #EEEEEEbb;
 }
 
 .split-pane:horizontal > .split-pane-divider {
-   -fx-background-color: #1e1e1e;
+   -fx-background-color: #1E1E1E;
   
 }
 .split-pane:vertical > .split-pane-divider {
-   -fx-background-color: #1e1e1e;
+   -fx-background-color: #1E1E1E;
 }
 
 .split-pane > .split-pane-divider {  
@@ -123,7 +123,7 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #ff0000;
+	-fx-background-color: #FF0000;
  }
  
  #treeView .thumb {
@@ -131,7 +131,7 @@
  }
  
  #treeView .thumb:hover, #treeView .thumb:pressed {
- 	-fx-background-color: #EEE;
+ 	-fx-background-color: #EEEEEE;
  }
  
  #treeView .increment-button, #treeView .decrement-button {
@@ -156,7 +156,7 @@
 }
 
 #tabPane .tab-header-area .tab-header-background {
-	-fx-background-color: #333;
+	-fx-background-color: #333333;
 }
 
 #tabPane * {
@@ -172,39 +172,39 @@
 }
 
 #tabPane .tab .tab-label {
-	-fx-text-fill: #fff;
+	-fx-text-fill: #EEEEEE;
 }
 
 #tabPane .tab:selected {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #tabPane .tab-content-area * {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #consolePane {
-	-fx-text-fill: #fff;
+	-fx-text-fill: #EEEEEE;
 }
 
 #consolePane .title {
-	-fx-background-color: #333;
-	-fx-text-fill: #fff;
+	-fx-background-color: #333333;
+	-fx-text-fill: #EEEEEE;
 	-fx-border-radius: 0;
 }
 
 #consolePane .content {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 	-fx-border-width: 0;
-	-fx-border-color: #444;
+	-fx-border-color: #444444;
 }
 
 #consolePane .content * {
-	-fx-text-fill: #fff;
-	-fx-fill: #fff;
+	-fx-text-fill: #EEEEEE;
+	-fx-fill: #EEEEEE;
 	-fx-border-width: 0;
 	-fx-padding: 0;
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 }
 
 #consolePane .content .thumb {
@@ -212,28 +212,28 @@
 }
 
 #consolePane .content .scroll-bar:vertical, #consolePane .content .corner {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 	-fx-pref-width: 14;
     -fx-padding: 3;
     -fx-border-width: 0;
-    -fx-border-color: #444;
+    -fx-border-color: #444444;
 }
 
 #consolePane .content .scroll-bar:horizontal {
-	-fx-background-color: #444;
+	-fx-background-color: #444444;
 	-fx-pref-height: 14;
 	-fx-padding: 3;
 	-fx-border-width: 0;
-	-fx-border-color: #444;
+	-fx-border-color: #444444;
 }
 
  #consolePane .content .thumb:hover, #consolePane .content .thumb:pressed {
- 	-fx-background-color: #EEE;
+ 	-fx-background-color: #EEEEEE;
  }
 
 #HBox, #HBox * {
-	-fx-background-color: #222;
-	-fx-fill: #ccc;
+	-fx-background-color: #222222;
+	-fx-fill: #CCCCCC;
 	-fx-border-width: 0;
 }
 
