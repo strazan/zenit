@@ -737,8 +737,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
-}
-
 	@Override
 	public String getActiveStylesheet() {
 		// TODO Auto-generated method stub
