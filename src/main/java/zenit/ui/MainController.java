@@ -1053,7 +1053,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 	
 	public void openJREVersions() {
-		JREVersionsController jvc = new JREVersionsController(cmiDarkMode.isSelected());
+		JREVersionsController jvc = new JREVersionsController(true);
 		jvc.start();
 	}
 	
