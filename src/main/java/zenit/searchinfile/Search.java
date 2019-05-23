@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
 
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -25,17 +26,23 @@ public class Search {
 	
 	private Scanner txtscan = null;
 	
-	private List<Integer> line;
-	private List<Integer> wordPos; 
-	private List<Integer> absolutePos;
+	private File file;
 	
-	private int numberOfTimes;
-	private int numberOfLines;
-	private int lineLenght;
+	private List<Integer> line = new ArrayList<>();
+	private List<Integer> wordPos = new ArrayList<>();  
+	private List<Integer> absolutePos = new ArrayList<>();
+	
+	private int numberOfTimes = 0;
+	private int numberOfLines = -1;
+	private int lineLenght = 0;
 	private int i = 0;
 	
-	private String searchWord;
-	private String replaceWord;
+	private String searchWord = "";
+	private String replaceWord = "";
+	
+	private boolean isDarkMode;	
+	private boolean caseSensetive = false;
+	private boolean replace = false;
 	
 	
 	/**
@@ -45,47 +52,40 @@ public class Search {
 	 */
 	public Search(ZenCodeArea zenCodeArea, File file, boolean isDarkMode) {
 		
+		new SearchInFileController(this);
+		
 		TextInputDialog dialog = new TextInputDialog("search");
 		dialog.setTitle("Search");
 		dialog.setHeaderText("What are you looking for?");
-
-		line = new ArrayList<>();
-		wordPos = new ArrayList<>();
-		absolutePos = new ArrayList<>();
 		
 		this.zenCodeArea = zenCodeArea;
+		this.file = file;
+		this.isDarkMode = isDarkMode;
 		
 		clearZen();
-		
-		searchWord = "";
-		replaceWord = "";
-
-		numberOfTimes = 0;
-		numberOfLines = -1;
-		lineLenght = 0;
-
-		boolean caseSensetive = false;
-		boolean replace = false;
+	}
 	
+//	private void searchInFile(Label occurrences) {
+	public void searchInFile(String word) {
+		clearZen();
+		
 		try {
 			txtscan = new Scanner(file);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
 
-		Optional<String> result = dialog.showAndWait();
-		if (result.isPresent()) {
-			searchWord = result.get();
+//		Optional<String> result = dialog.showAndWait();
+//		if (result.isPresent()) {
+//			searchWord = result.get();
 			//caseSensetive needs to be change from the panel
+			searchWord = word;
 			if (caseSensetive == false) {
 				notCaseSensetive();
 			}else {
 				caseSensetive();   //
 			}
-			
-			
-
-		}
+		
 
 		if (numberOfTimes > 0) {
 			System.out.println("Exsist " + numberOfTimes + " times");  //visa i s�kpanelen

@@ -723,7 +723,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return this.customThemeCSS;
 	}
 		
-	
+	/**
+	 * Opens the search panel if there is a selected tab.
+	 */
 	public void search() {
 		
 		FileTab selectedTab = getSelectedTab();
@@ -732,6 +734,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 		if (selectedTab != null) {
 			new Search(zenCodeArea, file, isDarkMode);
+			
 		}
 	}
 }
