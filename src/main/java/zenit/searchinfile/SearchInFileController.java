@@ -39,6 +39,10 @@ public class SearchInFileController extends AnchorPane {
 	private Label lblOccurrences;
 
 	private Search search;
+	
+	int occurrences = 0;
+	
+	Stage window;
 
 	public SearchInFileController(Search search) {
 
@@ -55,7 +59,7 @@ public class SearchInFileController extends AnchorPane {
 			e.printStackTrace();
 		}
 
-		Stage window = new Stage();
+		window = new Stage();
 		Scene scene = new Scene(this);
 
 		window.initStyle(StageStyle.UNDECORATED);
@@ -71,15 +75,56 @@ public class SearchInFileController extends AnchorPane {
 
 		window.show();
 		
+		
 		this.search = search;
-//		initialize();
+
 	}
 
 	private void initialize() {
+		
 		fldInputField.textProperty().addListener((observable, oldValue, newValue) -> {
+		search.clearZen();
+		System.out.println("clear");
+		occurrences = search.searchInFile(newValue);
+		if(occurrences < 1) {
+			if(fldInputField.getText().length() > 0) {
+				lblOccurrences.setText("0/" + occurrences);
+			}else {
+//				lblOccurrences.setText("0/" + occurrences);		vet inte vad som är snyggast
+				lblOccurrences.setText("");
+			}
 
-		search.searchInFile(newValue);
+		}else {
+			lblOccurrences.setText("1/" + occurrences);
+		}});
+		
+		btnReplaceAll.setPickOnBounds(true);
+		btnReplaceAll.setOnAction(event -> 
+		search.replaceAll(fldReplaceWord.getText()));
+		
+		btnReplaceOne.setPickOnBounds(true);
+		btnReplaceOne.setOnAction(event -> 
+		search.replaceOne(fldReplaceWord.getText()));
+		
+		btnUp.setPickOnBounds(true);
+		btnUp.setOnAction(event ->{
+		int i = search.jumpUp();
+		i++;
+		lblOccurrences.setText(i + "/" + occurrences);
 		});
+		
+		btnDown.setPickOnBounds(true);
+		btnDown.setOnAction(event -> {
+		int i = search.jumpDown();
+		i++;
+		lblOccurrences.setText(i + "/" + occurrences);
+		
+		});
+		
+		btnEsc.setPickOnBounds(true);
+		btnEsc.setOnAction(event -> window.close());
+		
+		
 	}
 
 }

@@ -13,7 +13,7 @@
       <Button fx:id="btnDown" layoutX="258.0" layoutY="4.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="40.0" text="N" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="5.0" />
       <Button fx:id="btnEsc" layoutX="301.0" layoutY="6.0" mnemonicParsing="false" prefHeight="40.0" prefWidth="38.0" text="esc" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="300.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
       <Button fx:id="btnReplaceOne" layoutX="201.0" layoutY="62.0" mnemonicParsing="false" text="1" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="210.0" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="45.0" />
-      <Label  fx:id="lblOccurrences" alignment="CENTER" contentDisplay="CENTER" layoutX="168.0" layoutY="9.0" prefHeight="29.0" prefWidth="34.0" text="1/1" textAlignment="CENTER" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="5.0" />
+      <Label  fx:id="lblOccurrences" alignment="CENTER" contentDisplay="CENTER" layoutX="168.0" layoutY="9.0" prefHeight="29.0" prefWidth="34.0" text="" textAlignment="CENTER" AnchorPane.bottomAnchor="45.0" AnchorPane.leftAnchor="160.0" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="5.0" />
       <Button fx:id="btnReplaceAll" layoutX="263.0" layoutY="61.0" mnemonicParsing="false" text="all" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="255.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="45.0" />
    </children>
 </fx:root>

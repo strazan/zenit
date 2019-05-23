@@ -4,11 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.Scanner;
 
 import javafx.scene.control.Label;
-import javafx.scene.control.TextInputDialog;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
@@ -28,9 +26,9 @@ public class Search {
 	
 	private File file;
 	
-	private List<Integer> line = new ArrayList<>();
-	private List<Integer> wordPos = new ArrayList<>();  
-	private List<Integer> absolutePos = new ArrayList<>();
+	private List<Integer> line;
+	private List<Integer> wordPos; 
+	private List<Integer> absolutePos;
 	
 	private int numberOfTimes = 0;
 	private int numberOfLines = -1;
@@ -38,12 +36,9 @@ public class Search {
 	private int i = 0;
 	
 	private String searchWord = "";
-	private String replaceWord = "";
 	
 	private boolean isDarkMode;	
-	private boolean caseSensetive = false;
-	private boolean replace = false;
-	
+	private boolean caseSensetive = false;	
 	
 	/**
 	 * Opens a TextInputDialog and let's you type in a word to search for 
@@ -54,67 +49,60 @@ public class Search {
 		
 		new SearchInFileController(this);
 		
-		TextInputDialog dialog = new TextInputDialog("search");
-		dialog.setTitle("Search");
-		dialog.setHeaderText("What are you looking for?");
-		
 		this.zenCodeArea = zenCodeArea;
 		this.file = file;
 		this.isDarkMode = isDarkMode;
 		
-		clearZen();
+
 	}
 	
-//	private void searchInFile(Label occurrences) {
-	public void searchInFile(String word) {
-		clearZen();
+	public int searchInFile(String word) {
+//		clearZen();
 		
-		try {
-			txtscan = new Scanner(file);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-
-//		Optional<String> result = dialog.showAndWait();
-//		if (result.isPresent()) {
-//			searchWord = result.get();
-			//caseSensetive needs to be change from the panel
-			searchWord = word;
-			if (caseSensetive == false) {
-				notCaseSensetive();
-			}else {
-				caseSensetive();   //
-			}
+		line = new ArrayList<>();
+		wordPos = new ArrayList<>();
+		absolutePos = new ArrayList<>();
 		
-
-		if (numberOfTimes > 0) {
-			System.out.println("Exsist " + numberOfTimes + " times");  //visa i s�kpanelen
+		numberOfTimes = 0;
+		numberOfLines = -1;
+		lineLenght = 0;
+		i = 0;
+		
+		if(word.length() < 1) {
+			return 0;
+		}else {
 			
-			//replace has to be change from the panel
-			if (replace == false) {
-				
-				for (int i = 0; i < numberOfTimes; i++) {
-					if (isDarkMode) {
-						zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
-						absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-						
-					}else {
-						zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
-						absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+			try {
+				txtscan = new Scanner(file);
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			}	
+			
+				//caseSensetive needs to be change from the panel
+				searchWord = word;
+				if (caseSensetive == false) {
+					notCaseSensetive();
+				}else {
+					caseSensetive();   
+				}
+
+			if (numberOfTimes > 0) {
+					
+					for (int i = 0; i < numberOfTimes; i++) {
+						if (isDarkMode) {
+							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
+							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+							
+							
+						}else {
+							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
+							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+						}
 					}
-				}
-			}else {
-				
-				for (int i = 0; i < numberOfTimes; i++) {
-					absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-				}
-				//replace word needs to be set from the panel
-				replaceWord(searchWord, replaceWord, absolutePos);
+				zenCodeArea.moveTo(absolutePos.get(0));
+				zenCodeArea.requestFollowCaret();
 			}
-
-			zenCodeArea.moveTo(absolutePos.get(0));
-			zenCodeArea.requestFollowCaret();
-			
+			return numberOfTimes;
 		}
 	}
 
@@ -122,46 +110,64 @@ public class Search {
 	 * Appends a Char to make the highlight disappear from 
 	 * the highlighted words then removes it again
 	 */
-	private void clearZen() {
+	public void clearZen() {
 		zenCodeArea.appendText(" ");
 		zenCodeArea.deletePreviousChar();
 	}
 	
 	/**
-	 * Replaces every occurrence of a certain word with another word 
+	 * Replaces every occurrence of a certain word with another word.
+	 * 
+	 * @param wordBefore
+	 * @param wordAfter
+	 * @param absolutePos
+	 */	
+	public void replaceAll(String wordAfter) {
+		for (int i = absolutePos.size() -1; i >= 0; i--) {
+			zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + searchWord.length(), wordAfter);
+		}
+	}
+	
+	/**
+	 * Replaces a single word with another word.
 	 * 
 	 * @param wordBefore
 	 * @param wordAfter
 	 * @param absolutePos
 	 */
-	private void replaceWord(String wordBefore, String wordAfter, List<Integer> absolutePos) {
-		for (int i = absolutePos.size() -1; i >= 0; i--) {
-			zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + wordBefore.length(), wordAfter);
-		}
+	public void replaceOne(String wordAfter) {
+		zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + searchWord.length(), wordAfter);
 	}
 	
 	/**
 	 * Jumps down/to the next occurrence of the highlighted word
 	 */
-	public void jumpDown() {
-		if (i < absolutePos.size()) {
+	public int jumpDown() {
+		if (i < absolutePos.size() - 1) {
 			i++;
+		}else {
+			i = 0;
+			
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i));
 		zenCodeArea.requestFollowCaret();
+		return i;
 	}
 	
 	/**
 	 * Jumps up/to the previous occurrence of the highlighted word
 	 */
-	public void jumpUp() {
+	public int jumpUp() {
 		if(i > 0) {
 			i--;
+		}else {
+			i = absolutePos.size() - 1;
 		}
 		
 		zenCodeArea.moveTo(absolutePos.get(i));
 		zenCodeArea.requestFollowCaret();	
+		return i;
 	}
 	
 	/**

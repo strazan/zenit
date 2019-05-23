@@ -59,7 +59,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private String zenCodeAreasFontFamily;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
-	private boolean isDarkMode = false;
+	private boolean isDarkMode = true;
 
 	@FXML
 	private AnchorPane consolePane;
