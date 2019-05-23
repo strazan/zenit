@@ -278,10 +278,6 @@ public class FileTab extends Tab {
 		return hasChanged;
 	}
 		
-	public ZenCodeArea getZenCodeArea() {
-		return zenCodeArea;
-		
-	}
 	/**
 	 * Shows a confirm dialog and performs a corresponding action to whether the user 
 	 * chose OK, Cancel, or No.
@@ -313,5 +309,9 @@ public class FileTab extends Tab {
 		});
 		
 		return wrapper.response;
+	}
+	
+	public ZenCodeArea getZenCodeArea() {
+		return zenCodeArea;
 	}
 }
