@@ -40,9 +40,9 @@ public class SearchInFileController extends AnchorPane {
 
 	private Search search;
 	
-	int occurrences = 0;
+	private int occurrences = 0;
 	
-	Stage window;
+	private Stage window;
 
 	public SearchInFileController(Search search) {
 
@@ -71,7 +71,7 @@ public class SearchInFileController extends AnchorPane {
 		
 		initialize();
 		scene.getStylesheets()
-				.add(getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toString());
+				.add(getClass().getResource("/zenit/searchinfile/searchInFileDarkMode.css").toExternalForm());
 
 		window.show();
 		
@@ -79,13 +79,13 @@ public class SearchInFileController extends AnchorPane {
 		this.search = search;
 
 	}
-
-	private void initialize() {
+	
+	private void makeNewSearch(String searchWord) {
 		
-		fldInputField.textProperty().addListener((observable, oldValue, newValue) -> {
 		search.clearZen();
-		System.out.println("clear");
-		occurrences = search.searchInFile(newValue);
+		
+		occurrences = search.searchInFile(searchWord);
+//		System.out.println("clear");
 		if(occurrences < 1) {
 			if(fldInputField.getText().length() > 0) {
 				lblOccurrences.setText("0/" + occurrences);
@@ -96,35 +96,39 @@ public class SearchInFileController extends AnchorPane {
 
 		}else {
 			lblOccurrences.setText("1/" + occurrences);
-		}});
+		}	
+	}
+
+	private void initialize() {
+		
+		fldInputField.textProperty().addListener((observable, oldValue, newValue) -> {	
+			makeNewSearch(newValue);
+		});
 		
 		btnReplaceAll.setPickOnBounds(true);
 		btnReplaceAll.setOnAction(event -> 
-		search.replaceAll(fldReplaceWord.getText()));
+			search.replaceAll(fldReplaceWord.getText()));
 		
 		btnReplaceOne.setPickOnBounds(true);
 		btnReplaceOne.setOnAction(event -> 
-		search.replaceOne(fldReplaceWord.getText()));
+			search.replaceOne(fldReplaceWord.getText()));
 		
 		btnUp.setPickOnBounds(true);
 		btnUp.setOnAction(event ->{
-		int i = search.jumpUp();
-		i++;
-		lblOccurrences.setText(i + "/" + occurrences);
+			int i = search.jumpUp();
+			i++;
+			lblOccurrences.setText(i + "/" + occurrences);
 		});
 		
 		btnDown.setPickOnBounds(true);
 		btnDown.setOnAction(event -> {
-		int i = search.jumpDown();
-		i++;
-		lblOccurrences.setText(i + "/" + occurrences);
+			int i = search.jumpDown();
+			i++;
+			lblOccurrences.setText(i + "/" + occurrences);
 		
 		});
 		
 		btnEsc.setPickOnBounds(true);
 		btnEsc.setOnAction(event -> window.close());
-		
-		
 	}
-
 }
