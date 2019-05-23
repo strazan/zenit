@@ -489,6 +489,44 @@ public class MainController extends VBox {
 		}
 		return null;
 	}
+	
+	public void compileAndRun(File file) {
+		File metadataFile = getMetadataFile(file);
+	
+		consoleController.newConsole(); //TODO: Maybe but in a better place ?
+	
+		try {
+			ProcessBuffer buffer = new ProcessBuffer();
+			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
+					false, buffer, this);
+			compiler.startCompileAndRun();
+			Process process = buffer.get();
+			
+			if (process != null && metadataFile != null) {
+				//If process compiled, add to RunnableClass
+				ProjectFile projectFile = new ProjectFile(metadataFile.getParent());
+				String src = projectFile.getSrc().getPath();
+				String filePath = file.getPath().replaceAll(Matcher.quoteReplacement(src + 
+						File.separator), "");
+				RunnableClass rc = new RunnableClass(filePath);
+				Metadata metadata = new Metadata(metadataFile);
+				if (metadata.addRunnableClass(rc)) {
+					metadata.encode();
+				}
+				
+				if (process.isAlive()) {
+					//TODO Create new console tab from here.
+				}
+			}
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+
+			// TODO: handle exception
+		}
+	
+	
+	}
 
 	/**
 	 * If the file of the current tab is a .java file if will be compiled, into the
@@ -497,42 +535,10 @@ public class MainController extends VBox {
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
-			File metadataFile = getMetadataFile(file);
 			saveFile(false);
-		
-		consoleController.newConsole(); //TODO: Maybe but in a better place ?
-		
-			try {
-				ProcessBuffer buffer = new ProcessBuffer();
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
-						false, buffer, this);
-				compiler.startCompileAndRun();
-				Process process = buffer.get();
-				
-				if (process != null && metadataFile != null) {
-					//If process compiled, add to RunnableClass
-					ProjectFile projectFile = new ProjectFile(metadataFile.getParent());
-					String src = projectFile.getSrc().getPath();
-					String filePath = file.getPath().replaceAll(Matcher.quoteReplacement(src + 
-							File.separator), "");
-					RunnableClass rc = new RunnableClass(filePath);
-					Metadata metadata = new Metadata(metadataFile);
-					if (metadata.addRunnableClass(rc)) {
-						metadata.encode();
-					}
-					
-					if (process.isAlive()) {
-						//TODO Create new console tab from here.
-					}
-				}
-				
-			} catch (Exception e) {
-				e.printStackTrace();
-
-				// TODO: handle exception
-			}
-		
+			compileAndRun(file);
 		}
+			
 	}
 	
 	public void updateStatusLeft(String text) {
@@ -783,7 +789,7 @@ public class MainController extends VBox {
 	 * @param projectFile Project to open settings for
 	 */
 	public void showProjectProperties(ProjectFile projectFile) {
-		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected());
+		pmc = new ProjectMetadataController(fileController, projectFile, this.cmiDarkMode.isSelected(), this);
 		pmc.start();
 	}
 	

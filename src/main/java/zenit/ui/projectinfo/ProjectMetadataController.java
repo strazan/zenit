@@ -25,6 +25,7 @@ import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.filesystem.metadata.MetadataVerifier;
 import main.java.zenit.ui.DialogBoxes;
+import main.java.zenit.ui.MainController;
 
 /**
  * Window containing run and compile information about a project. Also ability to modify that
@@ -38,6 +39,7 @@ public class ProjectMetadataController extends AnchorPane {
 	private Stage propertyStage;
 
 	private FileController fileController;
+	private MainController mc;
 
 	private ProjectFile projectFile;
 	private Metadata metadata;
@@ -92,10 +94,11 @@ public class ProjectMetadataController extends AnchorPane {
 	 * @param projectFile The project to display information about
 	 * @param darkmode {@code true} if dark mode is enabled
 	 */
-	public ProjectMetadataController(FileController fc, ProjectFile projectFile, boolean darkmode) {
+	public ProjectMetadataController(FileController fc, ProjectFile projectFile, boolean darkmode, MainController mc) {
 		this.projectFile = projectFile;
 		fileController = fc;
 		this.darkmode = darkmode;
+		this.mc = mc;
 	}
 	
 	/**
@@ -397,7 +400,15 @@ public class ProjectMetadataController extends AnchorPane {
 	 */
 	@FXML
 	private void run() {
-		System.out.println("run");
+		String runClass = getSelectedRunnableClass().getPath();
+		String srcPath = projectFile.getSrc().getPath() + File.separator;
+		
+		if (runClass != null && srcPath != null) {
+			File runFile = new File(srcPath + runClass);
+			mc.compileAndRun(runFile);
+		}
+		
+		
 	}
 	
 	/**

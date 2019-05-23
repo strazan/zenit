@@ -291,11 +291,6 @@ public class JavaSourceCodeCompiler {
 					
 			String command = cb.generateCommand();
 			
-			System.out.println(command);
-			
-			// Creates new directory folder, bin-folder
-//			File binFile = new File(projectFile.getPath() + File.separator + "bin");
-			
 			Process process = executeCommand(command, projectFile);
 
 			// Runs command
