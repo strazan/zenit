@@ -9,6 +9,7 @@
 <?import javafx.scene.control.ListView?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.control.Slider?>
+<?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.shape.Line?>
@@ -17,33 +18,6 @@
 
 <fx:root id="mainAnchorPane" fx:id="mainAnchorPane" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="750.0" type="AnchorPane" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-    <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
-         <children>
-            <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="38.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="38.0" prefWidth="84.0" text="Text Appearance" AnchorPane.bottomAnchor="362.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Button fx:id="btnTheme" layoutX="46.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Dark Mode" AnchorPane.bottomAnchor="282.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
-               <opaqueInsets>
-                  <Insets />
-               </opaqueInsets></Button>
-            <Button fx:id="btnSupport" layoutX="8.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
-            <Button fx:id="btnCustomCSS" layoutX="46.0" layoutY="129.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom CSS" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
-            <Button id="pnlCusomTheme" fx:id="btnCustomTheme" layoutX="46.0" layoutY="162.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom Theme" AnchorPane.bottomAnchor="202.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0" />
-         </children>
-      </AnchorPane>
-      <AnchorPane id="pnlSupport" fx:id="pnlSupport" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-         <children>
-            <Hyperlink fx:id="linkOpenInGitHub" layoutX="89.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" prefHeight="25.0" prefWidth="106.0" text="Open in github" />
-            <Hyperlink fx:id="linkSubmitIssue" layoutX="248.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Submit an issue" />
-            <Label id="lblGitHub" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="GitHub" AnchorPane.leftAnchor="20.0" />
-            <Hyperlink fx:id="linkDownloadSource" layoutX="401.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Download source code" />
-            <Line endX="550.0" layoutY="87.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="86.5" />
-            <Label id="lblDocumentation" layoutX="14.0" layoutY="96.0" styleClass="paneHeader" text="Documentation" AnchorPane.leftAnchor="20.0" />
-            <Hyperlink layoutX="254.0" layoutY="128.0" text="zenit.github.io" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="254.0" />
-            <Line endX="550.0" layoutX="50.0" layoutY="181.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
-            <Label id="lblThanksTo" layoutX="14.0" layoutY="189.0" styleClass="paneHeader" text="Thanks to" AnchorPane.leftAnchor="20.0" />
-            <Label layoutX="50.0" layoutY="233.0" text="RichTextFX" />
-            <Label layoutX="161.0" layoutY="233.0" text="Label" />
-         </children>
-      </AnchorPane>
       <AnchorPane id="pnlTextAppearance" fx:id="pnlTextAppearance" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <AnchorPane layoutY="162.0" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="200.0" prefWidth="450.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
@@ -72,6 +46,23 @@
             <Line endX="500.0" stroke="#363636" AnchorPane.bottomAnchor="199.0" AnchorPane.leftAnchor="50.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0" />
          </children>
       </AnchorPane>
+      <AnchorPane id="pnlCustomCSS" fx:id="pnlCustomCSS" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label id="lblAddCustomCssLines" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="57.0" prefHeight="19.0" prefWidth="223.0" text="Add custom CSS to zenit" AnchorPane.leftAnchor="188.0" AnchorPane.rightAnchor="187.0">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <Label layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Custom CSS" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
+            <ScrollPane id="scrollPaneAddedCSS" hbarPolicy="NEVER" layoutY="200.0" pannable="true" prefHeight="200.0" prefWidth="598.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
+               <content>
+                  <ListView id="listViewAddedCSS" fx:id="listViewAddedCSS" prefHeight="211.0" prefWidth="600.0" />
+               </content>
+            </ScrollPane>
+            <Button id="btnAddCSSLine" fx:id="btnAddCSSLine" layoutX="520.0" layoutY="209.0" mnemonicParsing="false" onAction="#addCSSLine" text="Add" />
+            <TextArea id="textAreaCustomCSSInput" fx:id="textAreaCustomCSSInput" layoutX="96.0" layoutY="79.0" prefHeight="157.0" prefWidth="408.0" />
+         </children>
+      </AnchorPane>
       <AnchorPane id="pnlJavaHome" fx:id="pnlJavaHome" prefHeight="400.0" prefWidth="467.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Button layoutX="367.0" layoutY="187.0" mnemonicParsing="false" onAction="#setNewJavaHome" text="Choose dir" />
@@ -86,33 +77,31 @@
             <Label layoutX="14.0" layoutY="23.0" styleClass="paneHeader" text="Java Home" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
          </children>
       </AnchorPane>
-      <AnchorPane id="pnlTheme" fx:id="pnlTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <AnchorPane id="pnlSupport" fx:id="pnlSupport" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <Label fx:id="lblTheme" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Theme" AnchorPane.leftAnchor="20.0" />
-            <ToggleSwitch id="toggleDarkMode" fx:id="toggleDarkMode" alignment="CENTER" contentDisplay="CENTER" layoutX="274.0" layoutY="169.0" prefHeight="27.0" prefWidth="54.0" textAlignment="CENTER" AnchorPane.leftAnchor="274.0" AnchorPane.rightAnchor="270.0">
-               <font>
-                  <Font size="20.0" />
-               </font>
-            </ToggleSwitch>
-            <Label id="lblDarkMode" alignment="CENTER" layoutX="258.0" layoutY="119.0" prefHeight="20.0" prefWidth="85.0" text="DarkMode" textAlignment="CENTER" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="255.0" />
-            <Label id="lblDarkModeTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="231.0" text="If you don't use dark mode, you don't really deserve to use zenit" AnchorPane.leftAnchor="104.0" AnchorPane.rightAnchor="100.5" />
+            <Hyperlink fx:id="linkOpenInGitHub" layoutX="89.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" prefHeight="25.0" prefWidth="106.0" text="Open in github" />
+            <Hyperlink fx:id="linkSubmitIssue" layoutX="248.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Submit an issue" />
+            <Label id="lblGitHub" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="GitHub" AnchorPane.leftAnchor="20.0" />
+            <Hyperlink fx:id="linkDownloadSource" layoutX="401.0" layoutY="40.0" onAction="#openLinkInBrowserEvent" text="Download source code" />
+            <Line endX="550.0" layoutY="87.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="86.5" />
+            <Label id="lblDocumentation" layoutX="14.0" layoutY="96.0" styleClass="paneHeader" text="Documentation" AnchorPane.leftAnchor="20.0" />
+            <Hyperlink layoutX="254.0" layoutY="128.0" text="zenit.github.io" AnchorPane.leftAnchor="254.0" AnchorPane.rightAnchor="254.0" />
+            <Line endX="550.0" layoutX="50.0" layoutY="181.0" startX="30.0" stroke="#363636" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" />
+            <Label id="lblThanksTo" layoutX="14.0" layoutY="189.0" styleClass="paneHeader" text="Thanks to" AnchorPane.leftAnchor="20.0" />
+            <Label layoutX="50.0" layoutY="233.0" text="RichTextFX" />
+            <Label layoutX="161.0" layoutY="233.0" text="Label" />
          </children>
       </AnchorPane>
-      <AnchorPane id="pnlCustomCSS" fx:id="pnlCustomCSS" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+    <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
          <children>
-            <Label id="lblAddCustomCssLines" alignment="CENTER" contentDisplay="CENTER" layoutX="188.0" layoutY="84.0" prefHeight="19.0" prefWidth="223.0" text="Add custom CSS lines to zenit" AnchorPane.leftAnchor="188.0" AnchorPane.rightAnchor="187.0">
-               <font>
-                  <Font size="15.0" />
-               </font>
-            </Label>
-            <Label layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Custom CSS" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
-            <TextField id="fldCustomCSSInput" fx:id="fldCSSLineInput" layoutX="188.0" layoutY="120.0" prefHeight="27.0" prefWidth="223.0" />
-            <ScrollPane id="scrollPaneAddedCSS" hbarPolicy="NEVER" layoutY="200.0" pannable="true" prefHeight="200.0" prefWidth="598.0" vbarPolicy="ALWAYS" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
-               <content>
-                  <ListView id="listViewAddedCSS" fx:id="listViewAddedCSS" prefHeight="211.0" prefWidth="600.0" />
-               </content>
-            </ScrollPane>
-            <Button id="btnAddCSSLine" fx:id="btnAddCSSLine" layoutX="420.0" layoutY="121.0" mnemonicParsing="false" onAction="#addCSSLine" text="Add" />
+            <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="38.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="38.0" prefWidth="84.0" text="Text Appearance" AnchorPane.bottomAnchor="362.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Button fx:id="btnTheme" layoutY="40.0" mnemonicParsing="false" onAction="#panelToFront" text="Dark Mode" AnchorPane.bottomAnchor="322.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets></Button>
+            <Button fx:id="btnSupport" layoutX="8.0" layoutY="320.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="80.0" prefWidth="150.0" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
+            <Button fx:id="btnCustomCSS" layoutY="80.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom CSS" AnchorPane.bottomAnchor="282.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+            <Button id="pnlCusomTheme" fx:id="btnCustomTheme" layoutY="120.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom Theme" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
          </children>
       </AnchorPane>
       <AnchorPane id="pnlCustomTheme" fx:id="pnlCustomTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
@@ -129,5 +118,17 @@
             <Label layoutX="76.0" layoutY="88.0" prefHeight="17.0" prefWidth="167.0" styleClass="lblMainColor" text="Toggel Custom Theme" AnchorPane.leftAnchor="76.0" />
             <ToggleSwitch id="toggleSwitchCustomTheme" fx:id="toggleSwitchCustomTheme" layoutX="469.0" layoutY="86.0" AnchorPane.rightAnchor="76.0" />
          </children></AnchorPane>
+      <AnchorPane id="pnlTheme" fx:id="pnlTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Label fx:id="lblTheme" layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Theme" AnchorPane.leftAnchor="20.0" />
+            <ToggleSwitch id="toggleDarkMode" fx:id="toggleDarkMode" alignment="CENTER" contentDisplay="CENTER" layoutX="274.0" layoutY="169.0" prefHeight="27.0" prefWidth="54.0" textAlignment="CENTER" AnchorPane.leftAnchor="274.0" AnchorPane.rightAnchor="270.0">
+               <font>
+                  <Font size="20.0" />
+               </font>
+            </ToggleSwitch>
+            <Label id="lblDarkMode" alignment="CENTER" layoutX="258.0" layoutY="119.0" prefHeight="20.0" prefWidth="85.0" styleClass="lblMainColor" text="DarkMode" textAlignment="CENTER" AnchorPane.leftAnchor="258.0" AnchorPane.rightAnchor="255.0" />
+            <Label id="lblDarkModeTxt" alignment="CENTER" contentDisplay="CENTER" layoutX="104.0" layoutY="231.0" styleClass="lblMainColor" text="If you don't use dark mode, you don't really deserve to use zenit" AnchorPane.leftAnchor="104.0" AnchorPane.rightAnchor="100.5" />
+         </children>
+      </AnchorPane>
    </children>
 </fx:root>

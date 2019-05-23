@@ -163,6 +163,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+			openSettingsPanel();
 
 		} catch (Exception e) {
 			e.printStackTrace();

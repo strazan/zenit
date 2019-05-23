@@ -49,8 +49,8 @@ public class CustomCSSThemeHandler {
 	 * @param customStyleSheets the List containing all ThemeCustomizable (controllers)
 	 * of the application.
 	 */
-	public CustomCSSThemeHandler( List<ThemeCustomizable> customStyleSheets) {
-		this.stages = customStyleSheets;
+	public CustomCSSThemeHandler( List<ThemeCustomizable> stages) {
+		this.stages = stages;
 		loadAllProperties();
 	}		
 		
@@ -315,7 +315,7 @@ public class CustomCSSThemeHandler {
 	 */
 	public void toggleCustomTheme(boolean isToggled) {	
 		if(isToggled) {		
-			updateDefaultStylesheets(true);
+			updateDefaultStylesheets(isToggled);
 			for(int i = 0; i < stages.size(); i++) {
 				String fullPath = "file:" + System.getProperty("user.dir") + 
 					stages.get(i).getCustomThemeCSS();	
@@ -332,7 +332,7 @@ public class CustomCSSThemeHandler {
 					stylesheets.remove(fullPath);
 				}
 			}
-			updateDefaultStylesheets(false);
+			updateDefaultStylesheets(isToggled);
 		}	
 		isCustomThemeToggled = isToggled;
 	}
