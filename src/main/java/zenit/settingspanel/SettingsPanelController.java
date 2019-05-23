@@ -50,12 +50,19 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	private String oldFont;
 	private File customThemeCSS;
 	private LinkedList<String> addedCSSLines;
+	private List<ThemeCustomizable> stages;
 	
 	private Stage window;
 	private MainController mainController;
 	private CustomCSSThemeHandler themeHandler;
 	
 	private boolean isCustomTheme = false;
+	private boolean isDarkMode;
+
+	private String settingsPanelDarkMode = getClass().getResource(
+		"/zenit/settingspanel/settingspanelDarkMode.css").toExternalForm();
+	private String settingsPanelLightMode = getClass().getResource(
+		"/zenit/settingspanel/settingspanelLightMode.css").toExternalForm();
 	
 	private enum OS {	
 		MACOS, WINDOWS, LINUX
@@ -118,6 +125,9 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	
 	@FXML
 	private ToggleSwitch toggleDarkMode;
+	
+	@FXML
+	private ToggleSwitch toggleSwitchCustomTheme;
 	
 	@FXML
 	private ListView listViewAddedCSS;
@@ -187,14 +197,14 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		window.setTitle("preferences");
 		initialize();
 		scene.getStylesheets().add(getClass().getResource(
-			"/zenit/settingspanel/settingspanelstylesheet.css").toString(
+			"/zenit/settingspanel/settingspanelDarkMode.css").toString(
 		));
 
 		window.show();
 		
 		this.customThemeCSS = new File("/customtheme/settingspanelCustomTheme.css");
 		
-		List<ThemeCustomizable> stages = new  ArrayList<ThemeCustomizable>();
+		stages = new  ArrayList<ThemeCustomizable>();
 		stages.add(mainController);
 		stages.add(this);
 	
@@ -390,35 +400,35 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	 * @author Pontus Laos, Sigge Labor
 	 */
 	private void darkModeChanged(boolean isDarkMode) {
-		
-		var stylesheets = this.mainController.getStage().getScene().getStylesheets();
-		var settingsPanelStylesheets = window.getScene().getStylesheets();
-		
-		var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-		var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
-		var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
-		var settingsPanelDarkMode = getClass().getResource("/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm();
-		var settingsPanelLightMode = getClass().getResource("/zenit/settingspanel/settingspanelLightMode.css").toExternalForm();
-		
-		if (isDarkMode) {
-			stylesheets.add(darkMode);
-			settingsPanelStylesheets.remove(settingsPanelLightMode);
-			settingsPanelStylesheets.add(settingsPanelDarkMode);
+		if(!isCustomTheme) {
+			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
+			var settingsPanelStylesheets = window.getScene().getStylesheets();
 			
-			if (stylesheets.contains(lightModeKeywords)) {
-				stylesheets.remove(lightModeKeywords);
+			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+			var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
+			var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
+		
+			if (isDarkMode) {
+				stylesheets.add(darkMode);
+				settingsPanelStylesheets.remove(settingsPanelLightMode);
+				settingsPanelStylesheets.add(settingsPanelDarkMode);
+				
+				if (stylesheets.contains(lightModeKeywords)) {
+					stylesheets.remove(lightModeKeywords);
+				}
+				stylesheets.add(darkModeKeywords);
+			} else {
+				stylesheets.remove(darkMode);
+				settingsPanelStylesheets.remove(settingsPanelDarkMode);
+				settingsPanelStylesheets.add(settingsPanelLightMode);
+				
+				if (stylesheets.contains(darkModeKeywords)) {
+					stylesheets.remove(darkModeKeywords);
+				}
+				stylesheets.add(lightModeKeywords);
 			}
-			stylesheets.add(darkModeKeywords);
-		} else {
-			stylesheets.remove(darkMode);
-			settingsPanelStylesheets.remove(settingsPanelDarkMode);
-			settingsPanelStylesheets.add(settingsPanelLightMode);
-			
-			if (stylesheets.contains(darkModeKeywords)) {
-				stylesheets.remove(darkModeKeywords);
-			}
-			stylesheets.add(lightModeKeywords);
 		}
+		this.isDarkMode = isDarkMode;
 	}
 
 	/**
@@ -478,11 +488,21 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			}
         });
 		
+		toggleSwitchCustomTheme.selectedProperty().addListener(new ChangeListener <Boolean> () {
+            @Override
+			public void changed(
+				ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
+            {
+				themeHandler.toggleCustomTheme(toggleSwitchCustomTheme.isSelected());
+				isCustomTheme = toggleSwitchCustomTheme.isSelected();
+				darkModeChanged(isDarkMode);
+			}
+        });
+		
 		listViewAddedCSS.getItems().add(new AnchorPane());
 
 		colorPickerPrimaryColor.setOnAction((event) -> {
 		     Platform.runLater(() -> {
-		    	 revmoveStylesheets();
 		    	 themeHandler.changeColor(colorPickerPrimaryColor.getValue(),
 		    		CustomColor.primaryColor);
 			     });
@@ -490,7 +510,6 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		
 		colorPickerPrimaryTint.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
-		    	 revmoveStylesheets();
 		    	 themeHandler.changeColor(colorPickerPrimaryTint.getValue(),
 		    		CustomColor.primaryTint);
 		     });
@@ -498,7 +517,6 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		
 		colorPickerSecondaryColor.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
-		    	 revmoveStylesheets();
 		    	 themeHandler.changeColor(colorPickerSecondaryColor.getValue(),
 				    CustomColor.secondaryColor);
 		     });
@@ -506,7 +524,6 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		
 		colorPickerSecondaryTint.setOnAction((event) -> {
 	    	 Platform.runLater(() -> {
-		    	 revmoveStylesheets();
 		    	 themeHandler.changeColor(colorPickerSecondaryTint.getValue(),
 				    CustomColor.secondaryTint);
 		     });
@@ -514,25 +531,6 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	}
 	
 	/**
-	 * removes all current stylesheets.
-	 */
-	public void revmoveStylesheets() {
-		if(!isCustomTheme) {
-			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
-			var settingsPanelStylesheets = window.getScene().getStylesheets();
-			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-			var settingsPanelDarkMode = getClass().getResource(
-				"/zenit/settingspanel/settingspanelstylesheet.css").toExternalForm(
-			);
-			
-			stylesheets.remove(darkMode);
-			settingsPanelStylesheets.remove(settingsPanelDarkMode);
-			isCustomTheme = true;
-		}		
-	}
-	
-	/**
-	 * 
 	 * @return this stage
 	 */
 	public Stage getStage() {
@@ -544,5 +542,18 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	 */
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
+	}
+	
+	/**
+	 * @return the path the the active default stylesheet.
+	 */
+	public String getActiveStylesheet() {
+	
+		if(isDarkMode) {
+			return settingsPanelDarkMode;
+		}
+		else {
+			return settingsPanelLightMode;
+		}
 	}
 }

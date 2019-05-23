@@ -3,38 +3,38 @@
 }
 
 #spAnchorPane {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 	-fx-padding: 0.0;
 	-fx-background-insets: 0.0, 0.0;
   	-fx-border-width: 0.0;
-  	-fx-background-color: #B36680;
+  	-fx-background-color: #800080;
 }
 
 #spAnchorPane .button {
 	-fx-background-color: #CCCC66;
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #mainAnchorPane {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 		-fx-border-width: 0.0;
 }
 
 /* Text Appearance pane */
 #pnlTextAppearance {
-	-fx-background-color: #B36680;
-	-fx-text-fill: #B31A1A;
+	-fx-background-color: #800080;
+	-fx-text-fill: #CCFFCC;
 }
 
 #pnlTextAppearance .label {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #pnlTextAppearance #lblTxtAppeaSize {
-	-fx-text-fill: #008080;
+	-fx-text-fill: #00FF00;
 }
 #pnlTextAppearance #lblTxtAppeaFont {
-	-fx-text-fill: #008080;
+	-fx-text-fill: #00FF00;
 }
 
 #chcbxNewFont {
@@ -43,7 +43,7 @@
 }
 
 #chcbxNewFont .context-menu {	
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #chcbxNewFont .menu-item:focused {
@@ -51,16 +51,16 @@
 }
 
 #chcbxNewFont .menu-item > .label {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #chcbxNewFont > .label {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
  
 #fldNewSize {
  	-fx-background-color: rgba(100,100,100,0.4);
- 	-fx-text-fill: #B31A1A;
+ 	-fx-text-fill: #CCFFCC;
  }
  
 #sldrNewSize > .track {	
@@ -70,17 +70,17 @@
  
  /* Java Home pane */
 #pnlJavaHome {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #pnlJavaHome .label {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 /* Theme pane */
 
 #pnlTheme {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #pnlTheme #lblDarkModeTxt {
@@ -106,29 +106,29 @@
 
 /* Custom CSS pane */
 #pnlCustomCSS {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 #lblAddCustomCssLines {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 #fldCustomCSSInput {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 	-fx-border-color: rgba(255,255,255,0.4);
 	-fx-text-fill: #009911;
 }
 
 #scrollPaneAddedCSS{
-	  -fx-background-color: #B36680;
+	  -fx-background-color: #800080;
 	  -fx-border-color: transparent;
 }
 
 #listViewAddedCSS {
-	 -fx-background-color: #B36680;
+	 -fx-background-color: #800080;
 	 -fx-border-color: transparent;
 }
 #listViewAddedCSS .list-cell { 
-	-fx-background-color: #B36680; /* 5 */
-	-fx-text-fill: #B31A1A;
+	-fx-background-color: #800080; /* 5 */
+	-fx-text-fill: #CCFFCC;
 	
 }
 
@@ -137,7 +137,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-pane {
-    -fx-background-color: #B36680;
+    -fx-background-color: #800080;
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical{
@@ -150,7 +150,7 @@
 }
 
 #scrollPaneAddedCSS .scroll-bar:vertical .thumb {
-    -fx-background-color: #B31A1A;
+    -fx-background-color: #CCFFCC;
     -fx-background-radius: 5em;
 }
 
@@ -165,7 +165,7 @@
 }
 
 .lblCSSText {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #btnRemoveCSS {
@@ -193,7 +193,7 @@
  * 
  */
  #pnlCustomTheme {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
  #pnlCustomTheme .color-picker {
@@ -203,21 +203,21 @@
  
  #pnlCustomTheme .color-picker .color-picker-label{
 
--fx-text-fill: #B31A1A;
+-fx-text-fill: #CCFFCC;
 }
 
 .lblMainColor {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
  
  
 /* Support pane */
 #pnlSupport {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #pnlSupport .hyperlink {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 	-fx-border-color: transparent;
     -fx-padding: 4 0 4 0;
     -fx-underline: false;
@@ -228,7 +228,7 @@
 }
 
 .paneHeader {
-	-fx-text-fill: #008080;
+	-fx-text-fill: #00FF00;
 	-fx-font-size: 16px;
 }
 

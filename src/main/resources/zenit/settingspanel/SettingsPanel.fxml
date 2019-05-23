@@ -118,14 +118,16 @@
       <AnchorPane id="pnlCustomTheme" fx:id="pnlCustomTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
             <Label layoutX="14.0" layoutY="14.0" styleClass="paneHeader" text="Custom Theme" AnchorPane.leftAnchor="20.0" AnchorPane.topAnchor="15.0" />
-            <ColorPicker fx:id="colorPickerPrimaryColor" layoutX="406.0" layoutY="116.0" prefHeight="27.0" prefWidth="102.0" />
-            <ColorPicker fx:id="colorPickerSecondaryColor" layoutX="406.0" layoutY="211.0" prefHeight="27.0" prefWidth="102.0" />
-            <ColorPicker fx:id="colorPickerPrimaryTint" layoutX="406.0" layoutY="163.0" prefHeight="27.0" prefWidth="102.0" />
-            <ColorPicker fx:id="colorPickerSecondaryTint" layoutX="406.0" layoutY="258.0" prefHeight="27.0" prefWidth="102.0" />
-            <Label layoutX="61.0" layoutY="121.0" styleClass="lblMainColor" text="Primary Color" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="216.0" styleClass="lblMainColor" text="Secondary Color" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="168.0" styleClass="lblMainColor" text="Primary Tint" AnchorPane.leftAnchor="60.0" />
-            <Label layoutX="61.0" layoutY="263.0" styleClass="lblMainColor" text="Secondary Tint" AnchorPane.leftAnchor="60.0" />
+            <ColorPicker fx:id="colorPickerPrimaryColor" layoutX="390.0" layoutY="157.0" prefHeight="27.0" prefWidth="134.0" AnchorPane.rightAnchor="76.0" />
+            <ColorPicker fx:id="colorPickerSecondaryColor" layoutX="390.0" layoutY="252.0" prefHeight="27.0" prefWidth="134.0" />
+            <ColorPicker fx:id="colorPickerPrimaryTint" layoutX="390.0" layoutY="204.0" prefHeight="27.0" prefWidth="134.0" AnchorPane.rightAnchor="76.0" />
+            <ColorPicker fx:id="colorPickerSecondaryTint" layoutX="390.0" layoutY="299.0" prefHeight="27.0" prefWidth="134.0" />
+            <Label layoutX="76.0" layoutY="162.0" styleClass="lblMainColor" text="Primary Color" AnchorPane.leftAnchor="76.0" />
+            <Label layoutX="76.0" layoutY="257.0" styleClass="lblMainColor" text="Secondary Color" AnchorPane.leftAnchor="76.0" />
+            <Label layoutX="76.0" layoutY="209.0" styleClass="lblMainColor" text="Primary Tint" AnchorPane.leftAnchor="76.0" />
+            <Label layoutX="76.0" layoutY="304.0" styleClass="lblMainColor" text="Secondary Tint" AnchorPane.leftAnchor="76.0" />
+            <Label layoutX="76.0" layoutY="88.0" prefHeight="17.0" prefWidth="167.0" styleClass="lblMainColor" text="Toggel Custom Theme" AnchorPane.leftAnchor="76.0" />
+            <ToggleSwitch id="toggleSwitchCustomTheme" fx:id="toggleSwitchCustomTheme" layoutX="469.0" layoutY="86.0" AnchorPane.rightAnchor="76.0" />
          </children></AnchorPane>
    </children>
 </fx:root>
