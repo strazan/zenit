@@ -1,8 +1,13 @@
 package main.java.zenit.ui;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -12,9 +17,12 @@ import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
 import javafx.scene.control.Label;
+import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -730,11 +738,213 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
+}
+
 	@Override
 	public String getActiveStylesheet() {
 		// TODO Auto-generated method stub
 		return activeStylesheet;
 	}
 	
-	
+	/** 
+	 * If there isn't a comment at the start of the line the method comments 
+	 * and if there is a comment the method removes it.
+	 * 
+	 * @author Fredrik Eklundh
+	 */
+	public void commentAndUncomment() {
+
+		ZenCodeArea zenCodeArea = getSelectedTab().getZenCodeArea();
+		
+		int caretPos = zenCodeArea.getCaretPosition();
+		
+		int caretColumn = zenCodeArea.getCaretColumn();
+		
+		int length = zenCodeArea.getLength();
+		
+		int whereToReplaceFirstLine = caretPos - caretColumn;
+		
+		int rowNumber = zenCodeArea.getCurrentParagraph();
+		
+		int paragraphLength = zenCodeArea.getParagraphLength(rowNumber);
+		
+		List<Integer> whereToReplaceList = new ArrayList<>();
+		
+		IndexRange zen = zenCodeArea.getSelection();
+		
+		int endOfSelection = zen.getEnd();
+		
+		int startOfSelection = zen.getStart();
+		
+		boolean topDown = true;
+		
+		int n = 1;
+		
+		int whereToReplace = whereToReplaceFirstLine;
+		
+		whereToReplaceList.add(whereToReplaceFirstLine);
+		
+		//If the selection starts at least one row above the end of the selection 
+		if (caretPos == endOfSelection && whereToReplaceFirstLine > startOfSelection) {
+			topDown = true;
+			do {
+				
+				whereToReplace = whereToReplace - 1 - zenCodeArea.getParagraphLength(rowNumber - n);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while (whereToReplace > startOfSelection);
+		}
+		
+		//If the selection starts at least one row below the end of the selection 
+		if (caretPos == startOfSelection && whereToReplace + paragraphLength < endOfSelection) {
+			topDown = false;
+			do {
+				
+				whereToReplace = whereToReplace + 1 + zenCodeArea.getParagraphLength(rowNumber + n - 1);
+				n++;
+				whereToReplaceList.add(whereToReplace);
+				
+			}while (whereToReplace + zenCodeArea.getParagraphLength(rowNumber + n - 1) < endOfSelection);
+
+		}
+
+		boolean[] addComment = new boolean[whereToReplaceList.size()];
+		
+		//Comment or uncomment from the top and down then moves the caret to the "new" right position
+		if (topDown == true) {
+			
+			int stepsToMove = 0;
+			
+			for (int i = 0; i < n; i++) {
+				whereToReplace = whereToReplaceList.get(i);
+				
+				if (caretPos > length - 3) {
+					zenCodeArea.insertText(caretPos, "	  ");
+				}
+				
+				if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						stepsToMove = stepsToMove - 2;
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						addComment[i] = false;
+					}
+					
+				}else if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+						if (whereToReplace == caretPos) {
+							
+						}else if (whereToReplace + 1 == caretPos) {
+							stepsToMove--;
+							
+						}else {
+							stepsToMove = stepsToMove - 2;
+						}
+					
+					}else if(zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("    ")) {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "//");
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.insertText(whereToReplace, "//");
+						stepsToMove = stepsToMove + 2;
+						addComment[i] = true;
+					}		
+				}	
+			}
+			
+			if(whereToReplaceList.size() < 2) {
+				zenCodeArea.moveTo(caretPos + stepsToMove);
+				
+			}else if (addComment[0] && addComment[n - 1]) {
+				zenCodeArea.selectRange(startOfSelection + 2, endOfSelection + stepsToMove);
+
+			}else if (addComment[0] && addComment[n - 1] == false) {
+				zenCodeArea.selectRange(startOfSelection + 2, endOfSelection + stepsToMove);
+				
+			}else if (addComment[0] == false && addComment[n - 1]) {
+				zenCodeArea.selectRange(startOfSelection - 2, endOfSelection + stepsToMove + 2);
+				
+			}else {
+				zenCodeArea.selectRange(startOfSelection - 2, endOfSelection + stepsToMove);
+			}
+		}	
+		//Comment or uncomment from below and up
+		if (topDown == false) {
+			
+			for (int i = whereToReplaceList.size() - 1; i >= 0; i--) {
+				whereToReplace = whereToReplaceList.get(i);
+				
+				if (caretPos > length - 3) {
+					zenCodeArea.insertText(caretPos, "	  ");
+					zenCodeArea.moveTo(caretPos);
+				}
+				
+				if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ")) {
+
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 4).equals("// *")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+					}else {
+						zenCodeArea.replaceText(whereToReplace, whereToReplace + 2, "  ");
+						zenCodeArea.moveTo(caretPos);
+						addComment[i] = false;
+					}
+					
+				}else if (zenCodeArea.getText(whereToReplace, whereToReplace + 3).equals("// ") == false) {
+					
+					if (zenCodeArea.getText(whereToReplace, whereToReplace + 2).equals("//")) {
+						zenCodeArea.deleteText(whereToReplace, whereToReplace + 2);
+						addComment[i] = false;
+						
+						if (whereToReplace == caretPos) {
+							zenCodeArea.moveTo(caretPos);
+							
+						}else if (whereToReplace + 1 == caretPos) {
+							zenCodeArea.moveTo(caretPos - 1);
+							
+						}else {
+							zenCodeArea.moveTo(caretPos - 2);
+						}
+							
+					}else {
+						zenCodeArea.insertText(whereToReplace, "//");
+						zenCodeArea.moveTo(caretPos + 2);
+						addComment[i] = true;
+					}		
+				}	
+
+			if (addComment[0] && addComment[whereToReplaceList.size() - 1]) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) + 2,
+				rowNumber, caretColumn + 2);
+				
+			}else if(addComment[0] && addComment[whereToReplaceList.size() - 1] == false) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) - 2,
+				rowNumber, caretColumn + 2);
+				
+			}else if(addComment[0] == false && addComment[whereToReplaceList.size() - 1]) {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) + 2,
+				rowNumber, caretColumn - 2);
+				
+			}else {
+				zenCodeArea.selectRange(rowNumber + whereToReplaceList.size() - 1,
+				endOfSelection - whereToReplaceList.get(whereToReplaceList.size() - 1) - 2,
+				rowNumber, caretColumn - 2);
+				}
+			}	
+		}
+	}
 }

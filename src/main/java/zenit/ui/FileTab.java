@@ -312,6 +312,7 @@ public class FileTab extends Tab {
 	}
 	
 	public ZenCodeArea getZenCodeArea() {
-		return zenCodeArea;
+		return this.zenCodeArea;
+		
 	}
 }
