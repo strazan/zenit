@@ -38,12 +38,12 @@
 }
 
 #menuBar, #menuBar * {
-	-fx-background-color: #B36680;
-	-fx-text-fill: #B31A1A;
+	-fx-background-color: #800080;
+	-fx-text-fill: #CCFFCC;
 }
 
 #menuBar .arrow {
-	-fx-background-color: #B31A1A;
+	-fx-background-color: #CCFFCC;
 }
 
 .menu-item:hover, .menu-item:hover > * {
@@ -51,7 +51,7 @@
 }
 
 .menu {
-	-fx-fill: #B31A1A;
+	-fx-fill: #CCFFCC;
 }
 
 .menu:hover, .menu:hover > .label {
@@ -59,7 +59,7 @@
 }
 
 #cmiDarkMode:focused:checked > .left-container > .check {
-    -fx-background-color: #B31A1A;
+    -fx-background-color: #CCFFCC;
 }
 
 #cmiDarkMode:hover > .left-container {
@@ -78,8 +78,8 @@
 }
 
 #tabPane {
-	-fx-background-color: #B36680;
-	-fx-fill: #B31A1A;
+	-fx-background-color: #800080;
+	-fx-fill: #CCFFCC;
 	-fx-border-width: 0;
 	-fx-padding: 0;
 }
@@ -90,12 +90,12 @@
 }
 
 #treeView * {
-	-fx-background-color: #B36680;
-	-fx-fill: #B31A1Aaa;
+	-fx-background-color: #800080;
+	-fx-fill: #CCFFCCaa;
 }
 
 #treeView .arrow  {
-	-fx-background-color: #B31A1Abb;
+	-fx-background-color: #CCFFCCbb;
 }
 
 .split-pane:horizontal > .split-pane-divider {
@@ -122,15 +122,15 @@
  
  
  .tree-cell:hover {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
  }
  
  #treeView .thumb {
- 	-fx-background-color: #B31A1AEE;
+ 	-fx-background-color: #CCFFCCEE;
  }
  
  #treeView .thumb:hover, #treeView .thumb:pressed {
- 	-fx-background-color: #B31A1A;
+ 	-fx-background-color: #CCFFCC;
  }
  
  #treeView .increment-button, #treeView .decrement-button {
@@ -163,7 +163,7 @@
 }
 
 #tabPane .tab {
-	-fx-background-color: #B3668088;
+	-fx-background-color: #80008088;
 }
 
 #tabPane:focused > .tab-header-area > .headers-region > .tab:selected .focus-indicator {
@@ -171,63 +171,63 @@
 }
 
 #tabPane .tab .tab-label {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #tabPane .tab:selected {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #tabPane .tab-content-area * {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #consolePane {
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 }
 
 #consolePane .title {
 	-fx-background-color: #CCCC66;
-	-fx-text-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
 	-fx-border-radius: 0;
 }
 
 #consolePane .content {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 	-fx-border-width: 0;
-	-fx-border-color: #B36680;
+	-fx-border-color: #800080;
 }
 
 #consolePane .content * {
-	-fx-text-fill: #B31A1A;
-	-fx-fill: #B31A1A;
+	-fx-text-fill: #CCFFCC;
+	-fx-fill: #CCFFCC;
 	-fx-border-width: 0;
 	-fx-padding: 0;
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 }
 
 #consolePane .content .thumb {
-	-fx-background-color: #B31A1AAA;
+	-fx-background-color: #CCFFCCAA;
 }
 
 #consolePane .content .scroll-bar:vertical, #consolePane .content .corner {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 	-fx-pref-width: 14;
     -fx-padding: 3;
     -fx-border-width: 0;
-    -fx-border-color: #B36680;
+    -fx-border-color: #800080;
 }
 
 #consolePane .content .scroll-bar:horizontal {
-	-fx-background-color: #B36680;
+	-fx-background-color: #800080;
 	-fx-pref-height: 14;
 	-fx-padding: 3;
 	-fx-border-width: 0;
-	-fx-border-color: #B36680;
+	-fx-border-color: #800080;
 }
 
  #consolePane .content .thumb:hover, #consolePane .content .thumb:pressed {
- 	-fx-background-color: #B31A1A;
+ 	-fx-background-color: #CCFFCC;
  }
 
 #HBox, #HBox * {

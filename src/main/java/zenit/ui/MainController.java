@@ -49,6 +49,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private FileController fileController;
 	private int zenCodeAreasTextSize;
 	private String zenCodeAreasFontFamily;
+	private String activeStylesheet;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
 
@@ -148,6 +149,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 			initialize();
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
+			
+			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 	
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -707,5 +710,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
+	}
+
+	@Override
+	public String getActiveStylesheet() {
+		// TODO Auto-generated method stub
+		return activeStylesheet;
 	}
 }

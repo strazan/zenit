@@ -22,6 +22,12 @@
 #pnlTheme {
 	-fx-background-color: #fff;
 }
+#pnlCustomCSS {
+	-fx-background-color: #fff;
+}
+ #pnlCustomTheme {
+ 	-fx-background-color: #fff;
+ }
 
 /* Support pane */
 #pnlSupport {

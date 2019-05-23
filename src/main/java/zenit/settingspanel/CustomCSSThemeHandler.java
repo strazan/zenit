@@ -31,6 +31,8 @@ public class CustomCSSThemeHandler {
 	private String Color_PrimaryTint;
 	private String Color_Secondary ; 
 	private String Color_SecondaryTint ; 
+	
+	private boolean isCustomThemeToggled;
 
 	private List<ThemeCustomizable> stages;
 	
@@ -256,6 +258,7 @@ public class CustomCSSThemeHandler {
 	
 	/**
 	 * 
+	 * 
 	 * @param stage the stage to where the stylesheets are suppose to be added.
 	 * @param customThemeCSSfilepath full path
 	 * @param regex 'color' to be changed.
@@ -268,8 +271,8 @@ public class CustomCSSThemeHandler {
 		String fullPath =  System.getProperty("user.dir") + customThemeCSSfile;
 		var stylesheets = stage.getScene().getStylesheets();
 
-		if(stylesheets.contains("file:" +fullPath)) {
-			stylesheets.remove("file:" +fullPath);
+		if(stylesheets.contains("file:" + fullPath)) {
+			stylesheets.remove("file:" + fullPath);
 		}
 		List<String> lines = null;
 		try {
@@ -295,14 +298,62 @@ public class CustomCSSThemeHandler {
 		    writer.write(stringNewStylesheet);
 		    writer.close();
 			
-		    stylesheets = stage.getScene().getStylesheets();
-			stylesheets.add("file:" +fullPath);
-		
+		    if(isCustomThemeToggled) {
+		    	stylesheets = stage.getScene().getStylesheets();
+				stylesheets.add("file:" +fullPath);
+		    }
 		} catch (IOException e) {
 		// TODO Auto-generated catch block
 		e.printStackTrace();
 		}		
 	}
+	
+	/**
+	 * Adds or removes custom theme stylesheets.
+	 * 
+	 * @param isToggled 
+	 */
+	public void toggleCustomTheme(boolean isToggled) {	
+		if(isToggled) {		
+			updateDefaultStylesheets(true);
+			for(int i = 0; i < stages.size(); i++) {
+				String fullPath = "file:" + System.getProperty("user.dir") + 
+					stages.get(i).getCustomThemeCSS();	
+				var stylesheets = stages.get(i).getStage().getScene().getStylesheets();
+				stylesheets.add(fullPath);
+			}
+		}
+		else {
+			for(int i = 0; i < stages.size(); i++) {
+				String fullPath = "file:" + System.getProperty("user.dir") + 
+					stages.get(i).getCustomThemeCSS();	
+				var stylesheets = stages.get(i).getStage().getScene().getStylesheets();
+				if(stylesheets.contains(fullPath)) {
+					stylesheets.remove(fullPath);
+				}
+			}
+			updateDefaultStylesheets(false);
+		}	
+		isCustomThemeToggled = isToggled;
+	}
+	
+	/**
+	 * Updates all current default stylesheets.
+	 */
+	public void updateDefaultStylesheets(boolean isCustomTheme) {
+			
+			for (int i = 0; i < stages.size(); i++) {
+				var stylesheets = stages.get(i).getStage().getScene().getStylesheets();
+				var activeSheet = stages.get(i).getActiveStylesheet();
+				
+				if(isCustomTheme) {
+					stylesheets.remove(activeSheet);
+				}
+				else {
+					stylesheets.add(activeSheet);
+				}
+			}
+		}		
 	
 	/**
 	 * Converts a JavaFX Color to hex-format.
