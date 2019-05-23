@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
+import javafx.application.Platform;
+import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.ConsoleArea;
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
@@ -31,6 +35,7 @@ public class JavaSourceCodeCompiler {
 	protected boolean inBackground;
 	protected Buffer<?> buffer;
 	protected MainController cont;
+	protected ConsoleController consoleController;
 
 	/**
 	 * Creates a new JavaSourceCodeCompiler for single classes without metadata-file.
@@ -38,7 +43,7 @@ public class JavaSourceCodeCompiler {
 	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
 	public JavaSourceCodeCompiler(File file, boolean inBackground) {
-		this(file, null, inBackground, null, null);
+		this(file, null, inBackground, null, null, null);
 	}
 	
 	/**
@@ -49,12 +54,14 @@ public class JavaSourceCodeCompiler {
 	 * sourcepath and library buildpaths.
 	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
-	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont) {
+	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont, 
+			ConsoleController consoleController) {
 		this.file = file;
 		this.metadataFile = metadata;
 		this.inBackground = inBackground;
 		this.buffer = buffer;
 		this.cont = cont;
+		this.consoleController = consoleController;
 	}
 	
 	/**
@@ -263,8 +270,15 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(runPath.getPath());
 			
 			String command = cb.generateCommand();
+			ConsoleArea consoleArea = new ConsoleArea(file.getName());
+			new ConsoleRedirect(consoleArea);
 			
 			Process process = executeCommand(command, file.getParentFile());
+		
+			Platform.runLater(()-> {
+//				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
+				consoleController.newConsole(process, consoleArea);
+			});
 			redirectStreams(process);
 			return process;
 		}
@@ -290,7 +304,14 @@ public class JavaSourceCodeCompiler {
 					
 			String command = cb.generateCommand();
 			
+			ConsoleArea consoleArea = new ConsoleArea(file.getName());
+			new ConsoleRedirect(consoleArea);
+			
 			Process process = executeCommand(command, projectFile);
+			Platform.runLater(()-> {
+				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
+				consoleController.newConsole(process, consoleArea);
+			});
 			
 			// Runs command
 			redirectStreams(process);

@@ -375,7 +375,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		try {
 			if (file != null) {
 				DebugErrorBuffer buffer = new DebugErrorBuffer();
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this);
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this, null);
 				compiler.startCompile();
 			}
 		} catch (Exception e) {
@@ -569,12 +569,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		File metadataFile = getMetadataFile(file);
 	
 		 
-			consoleController.newConsole(null);
 	
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
-					false, buffer, this);
+					false, buffer, this, consoleController);
 			compiler.startCompileAndRun();
 			process = buffer.get();
 			
@@ -1065,8 +1064,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	private void terminate() {
 		if (process != null && process.isAlive()) {
-			process.destroy();
-			System.out.println("Process terminated");
+			System.err.println(process.pid() + " alive: " + process.isAlive());
+			
+			Platform.runLater(()-> {
+			
+				process.destroyForcibly();
+				
+			});
+			
+			
+			System.err.println(process.pid() + " alive: " + process.isAlive());
+
+//			System.out.println("Process terminated");
 		}
 		
 	}

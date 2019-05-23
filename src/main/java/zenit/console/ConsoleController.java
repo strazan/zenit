@@ -219,8 +219,8 @@ public class ConsoleController implements Initializable {
 	 * choiceBox.
 	 */
 	
-	public void newConsole(Process process) {
-		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
+	public void newConsole(Process process, ConsoleArea consoleArea) {
+//		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
 //		consoleArea.setId("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
@@ -233,7 +233,7 @@ public class ConsoleController implements Initializable {
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
 		// till hashmap
-		consoleList.put(consoleArea, null);
+		consoleList.put(consoleArea, process);
 		
 		consoleChoiceBox.getItems().add(consoleArea);
 		consoleChoiceBox.getSelectionModel().select(consoleArea);
@@ -389,18 +389,30 @@ public class ConsoleController implements Initializable {
 		});
 		
 		btnNewConsole.setOnMouseClicked(e -> {
-			newConsole(null);
+			newConsole(null, new ConsoleArea());
 		});
 		
 		iconTerminateProcess.setOnMouseClicked(e -> {
-//			for(var item : consoleList.entrySet()) {
-//				if(item.getKey().equals(activeConsole)) {
-//					if(item.getValue() != null) {
-//						item.getValue().destroy();
-//					}
-//				}
-//			}
-			mainController.terminate();
+			for(var item : consoleList.entrySet()) {
+				if(item.getKey().equals(activeConsole)) {
+//					System.err.println(item.getValue().pid() + " \r\n" + item.getValue().isAlive());
+					if(item.getValue() != null) {
+						System.err.println("BEFORE destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
+						
+						try {
+							Thread.sleep(300);
+							item.getValue().destroy();
+						} catch (Exception e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+						
+						
+						System.err.println("AFTER destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
+					}
+				}
+			}
+//			mainController.terminate();
 		});
 		
 	}
