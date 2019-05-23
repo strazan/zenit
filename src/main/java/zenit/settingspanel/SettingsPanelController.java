@@ -492,7 +492,7 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
             {
 				themeHandler.toggleCustomTheme(toggleSwitchCustomTheme.isSelected());
 				isCustomTheme = toggleSwitchCustomTheme.isSelected();
-				darkModeChanged(isDarkMode);
+				darkModeChanged(toggleDarkMode.isSelected());
 			}
         });
 		

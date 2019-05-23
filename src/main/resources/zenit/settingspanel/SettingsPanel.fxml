@@ -95,13 +95,13 @@
     <AnchorPane fx:id="spAnchorPane" minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="150.0">
          <children>
             <Button fx:id="btnTextAppearance" layoutX="20.0" layoutY="17.0" minHeight="38.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="38.0" prefWidth="84.0" text="Text Appearance" AnchorPane.bottomAnchor="362.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
-            <Button fx:id="btnTheme" layoutX="46.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Dark Mode" AnchorPane.bottomAnchor="282.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0">
+            <Button fx:id="btnTheme" layoutY="40.0" mnemonicParsing="false" onAction="#panelToFront" text="Dark Mode" AnchorPane.bottomAnchor="322.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="40.0">
                <opaqueInsets>
                   <Insets />
                </opaqueInsets></Button>
-            <Button fx:id="btnSupport" layoutX="8.0" layoutY="78.0" mnemonicParsing="false" onAction="#panelToFront" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
-            <Button fx:id="btnCustomCSS" layoutX="46.0" layoutY="129.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom CSS" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
-            <Button id="pnlCusomTheme" fx:id="btnCustomTheme" layoutX="46.0" layoutY="162.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom Theme" AnchorPane.bottomAnchor="202.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="160.0" />
+            <Button fx:id="btnSupport" layoutX="8.0" layoutY="320.0" mnemonicParsing="false" onAction="#panelToFront" prefHeight="80.0" prefWidth="150.0" text="Support" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="360.0" />
+            <Button fx:id="btnCustomCSS" layoutY="80.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom CSS" AnchorPane.bottomAnchor="282.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="80.0" />
+            <Button id="pnlCusomTheme" fx:id="btnCustomTheme" layoutY="120.0" mnemonicParsing="false" onAction="#panelToFront" text="Custom Theme" AnchorPane.bottomAnchor="242.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="120.0" />
          </children>
       </AnchorPane>
       <AnchorPane id="pnlCustomTheme" fx:id="pnlCustomTheme" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="150.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
