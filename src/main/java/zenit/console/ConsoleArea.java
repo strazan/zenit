@@ -84,4 +84,9 @@ public class ConsoleArea extends InlineCssTextArea {
 		    }
 		});
 	}
+	
+	@Override
+	public String toString() {
+		return this.ID;
+	}
 }

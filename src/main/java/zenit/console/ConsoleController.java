@@ -58,7 +58,6 @@ public class ConsoleController implements Initializable {
 	/*
 	 * These HashMaps are ugly.
 	 */
-//	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>(); 
 	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
 	private ArrayList<Terminal> terminalList = new ArrayList<Terminal>();
 	
@@ -222,6 +221,7 @@ public class ConsoleController implements Initializable {
 	
 	public void newConsole(Process process) {
 		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
+//		consoleArea.setId("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
 		fillAnchor(consoleArea);
@@ -233,7 +233,7 @@ public class ConsoleController implements Initializable {
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
 		// till hashmap
-		consoleList.put(consoleArea, process);
+		consoleList.put(consoleArea, null);
 		
 		consoleChoiceBox.getItems().add(consoleArea);
 		consoleChoiceBox.getSelectionModel().select(consoleArea);
@@ -390,6 +390,17 @@ public class ConsoleController implements Initializable {
 		
 		btnNewConsole.setOnMouseClicked(e -> {
 			newConsole(null);
+		});
+		
+		iconTerminateProcess.setOnMouseClicked(e -> {
+//			for(var item : consoleList.entrySet()) {
+//				if(item.getKey().equals(activeConsole)) {
+//					if(item.getValue() != null) {
+//						item.getValue().destroy();
+//					}
+//				}
+//			}
+			mainController.terminate();
 		});
 		
 	}
