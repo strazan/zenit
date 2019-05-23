@@ -40,6 +40,9 @@ public class TreeClickListener implements EventHandler<MouseEvent> {
 				mouseEvent.getButton().equals(MouseButton.PRIMARY) && mouseEvent.getClickCount() == 2) {
 			controller.openFile(selectedItem.getFile());
 		}
+		if (selectedItem != null) {
+			controller.updateStatusLeft(selectedItem.getFile().getPath());
+		}
 	}
 
 }

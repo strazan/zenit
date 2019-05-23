@@ -95,6 +95,7 @@ public class MainController extends VBox {
 	@FXML
 	private ConsoleController consoleController;
 
+	@FXML
 	private Label statusBarLeftLabel;
 	
 	@FXML
@@ -138,6 +139,7 @@ public class MainController extends VBox {
 			stage.setTitle("Zenit - " + workspace.getPath());
 
 			initialize();
+			
 			stage.show();
 			KeyboardShortcuts.setupMain(scene, this);
 			
@@ -157,6 +159,9 @@ public class MainController extends VBox {
 	 * Performs initialization steps when the controller is set.
 	 */
 	public void initialize() {
+		
+		statusBarLeftLabel.setText("");
+		statusBarRightLabel.setText("");
 
 		btnRun.setPickOnBounds(true);
 		btnRun.setOnAction(event -> compileAndRun());
@@ -611,12 +616,14 @@ public class MainController extends VBox {
 	 * @return The new Tab.
 	 */
 	public FileTab addTab() {
-		FileTab tab = new FileTab();
+		FileTab tab = new FileTab(this);
 		tab.setOnCloseRequest(event -> closeTab(event));
 		tabPane.getTabs().add(tab);
 
 		var selectionModel = tabPane.getSelectionModel();
 		selectionModel.select(tab);
+		
+		updateStatusRight("");
 
 		return tab;
 	}
@@ -655,6 +662,8 @@ public class MainController extends VBox {
 		} else {
 			tabPane.getTabs().remove(selectedTab);
 		}
+		
+		updateStatusRight("");
 	}
 
 	/**

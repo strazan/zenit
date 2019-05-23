@@ -5,6 +5,8 @@ import java.util.Arrays;
 
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
+import javafx.event.Event;
+import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
 import main.java.zenit.filesystem.FileController;
@@ -25,6 +27,7 @@ public class FileTab extends Tab {
 	private File initialFile;
 	private File file;
 	private String initialTitle;
+	private MainController mc;
 	
 	private ZenCodeArea zenCodeArea;
 	
@@ -33,9 +36,14 @@ public class FileTab extends Tab {
 	/**
 	 * Constructs a new FileTab without a file, setting the title to "Untitled".
 	 */
-	public FileTab() {
+	public FileTab(MainController mc) {
 		zenCodeArea = new ZenCodeArea();
+		this.mc = mc;
 		initialTitle = "Untitled";
+		
+		
+		zenCodeArea.setOnMouseClicked(new updateDetector());
+		zenCodeArea.setOnKeyPressed(new updateDetector());
 		
 		initializeUI();
 	}
@@ -313,5 +321,15 @@ public class FileTab extends Tab {
 		});
 		
 		return wrapper.response;
+	}
+	
+	private class updateDetector implements EventHandler<Event> {
+
+		@Override
+		public void handle(Event event) {
+			int row = zenCodeArea.getCurrentParagraph();
+			int col = zenCodeArea.getCaretColumn();
+			mc.updateStatusRight((row+1) + " : " + (col+1));
+		}
 	}
 }
