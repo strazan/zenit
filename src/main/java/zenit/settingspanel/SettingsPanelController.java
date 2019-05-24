@@ -57,7 +57,7 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	private CustomCSSThemeHandler themeHandler;
 	
 	private boolean isCustomTheme = false;
-	private boolean isDarkMode;
+	private boolean isDarkMode = true;
 
 	private String settingsPanelDarkMode = getClass().getResource(
 		"/zenit/settingspanel/settingspanelDarkMode.css").toExternalForm();
@@ -71,9 +71,6 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 
 	@FXML
 	private TextField fldNewSize;
-	
-	@FXML
-	private TextField fldCSSLineInput;
 
 	@FXML
 	private Slider sldrNewSize;
@@ -301,25 +298,25 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	@FXML
 	private void addCSSLine() {
 		
-		String CSSLine = fldCSSLineInput.getText();
-		try {
-			Scene mockScene = new Scene(new Region());
-			mockScene.getRoot().setStyle(CSSLine);
-			
-			String allCusomLinesOfCSS = "";
-			addedCSSLines.addFirst(CSSLine);
-			
-			for(int i = 0; i < addedCSSLines.size(); i++) {
-				allCusomLinesOfCSS += addedCSSLines.get(i);
-			}
-			this.window.getScene().getRoot().setStyle(allCusomLinesOfCSS);
-			
-			updateCustomCSSListView();
-		}
-		
-		catch(Exception e) {
-			e.printStackTrace();
-		}
+//		String CSSLine = fldCSSLineInput.getText();
+//		try {
+//			Scene mockScene = new Scene(new Region());
+//			mockScene.getRoot().setStyle(CSSLine);
+//			
+//			String allCusomLinesOfCSS = "";
+//			addedCSSLines.addFirst(CSSLine);
+//			
+//			for(int i = 0; i < addedCSSLines.size(); i++) {
+//				allCusomLinesOfCSS += addedCSSLines.get(i);
+//			}
+//			this.window.getScene().getRoot().setStyle(allCusomLinesOfCSS);
+//			
+//			updateCustomCSSListView();
+//		}
+//		
+//		catch(Exception e) {
+//			e.printStackTrace();
+//		}
 	}
 	
 	/**
@@ -495,7 +492,7 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
             {
 				themeHandler.toggleCustomTheme(toggleSwitchCustomTheme.isSelected());
 				isCustomTheme = toggleSwitchCustomTheme.isSelected();
-				darkModeChanged(isDarkMode);
+				darkModeChanged(toggleDarkMode.isSelected());
 			}
         });
 		
