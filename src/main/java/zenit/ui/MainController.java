@@ -1064,19 +1064,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 	
 	private void terminate() {
-		if (process != null && process.isAlive()) {
-			System.err.println(process.pid() + " alive: " + process.isAlive());
+		if (process != null ) {
+			process.destroy();
 			
-			Platform.runLater(()-> {
-			
-				process.destroyForcibly();
-				
-			});
-			
-			
-			System.err.println(process.pid() + " alive: " + process.isAlive());
-
-//			System.out.println("Process terminated");
 		}
 		
 	}

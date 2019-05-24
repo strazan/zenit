@@ -309,7 +309,7 @@ public class JavaSourceCodeCompiler {
 			
 			Process process = executeCommand(command, projectFile);
 			Platform.runLater(()-> {
-				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
+//				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
 				consoleController.newConsole(process, consoleArea);
 			});
 			

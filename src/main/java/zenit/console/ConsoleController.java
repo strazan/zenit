@@ -395,12 +395,10 @@ public class ConsoleController implements Initializable {
 		iconTerminateProcess.setOnMouseClicked(e -> {
 			for(var item : consoleList.entrySet()) {
 				if(item.getKey().equals(activeConsole)) {
-//					System.err.println(item.getValue().pid() + " \r\n" + item.getValue().isAlive());
 					if(item.getValue() != null) {
-						System.err.println("BEFORE destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
-						
+//						System.err.println("BEFORE destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
 						try {
-							Thread.sleep(300);
+							Thread.sleep(10);
 							item.getValue().destroy();
 						} catch (Exception e1) {
 							// TODO Auto-generated catch block
@@ -408,7 +406,7 @@ public class ConsoleController implements Initializable {
 						}
 						
 						
-						System.err.println("AFTER destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
+//						System.err.println("AFTER destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
 					}
 				}
 			}
