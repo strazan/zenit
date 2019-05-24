@@ -15,7 +15,7 @@
 
 <AnchorPane id="rootNode" prefHeight="653.0" prefWidth="344.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane id="setup-header" prefHeight="65.0" prefWidth="381.0">
+      <AnchorPane id="setup-header" fx:id="header" prefHeight="65.0" prefWidth="381.0">
          <children>
             <Text fx:id="title" fill="#515151" layoutX="14.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
                <font>

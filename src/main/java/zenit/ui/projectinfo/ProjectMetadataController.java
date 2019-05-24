@@ -3,6 +3,7 @@ package main.java.zenit.ui.projectinfo;
 import java.io.File;
 import java.util.List;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,6 +14,7 @@ import javafx.scene.control.SelectionMode;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Text;
 import javafx.stage.DirectoryChooser;
@@ -52,6 +54,8 @@ public class ProjectMetadataController extends AnchorPane {
 	
 	private FileChooser.ExtensionFilter libraryFilter = new FileChooser.ExtensionFilter("Libraries", "*.jar", "*.zip");
 
+	@FXML private AnchorPane header;
+	
 	@FXML
 	private ImageView logo;
 	@FXML
@@ -87,6 +91,9 @@ public class ProjectMetadataController extends AnchorPane {
 	private Button save;
 	@FXML
 	private Button run;
+	
+    private double xOffset = 0;
+    private double yOffset = 0;
 
 	/**
 	 * Sets up new object. Use {@link #start()} to open window.
@@ -194,6 +201,23 @@ public class ProjectMetadataController extends AnchorPane {
 		taProgramArguments.setEditable(false);
 		taVMArguments.setText("<select a runnable class>");
 		taVMArguments.setEditable(false);
+		
+	    header.setOnMousePressed(new EventHandler<MouseEvent>() {
+	    	   @Override
+	    	   public void handle(MouseEvent event) {
+	    	       xOffset = event.getSceneX();
+	    	       yOffset = event.getSceneY();
+	    	   }
+	    	});
+
+	    	//move around here
+	    header.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	    	   @Override
+	    	   public void handle(MouseEvent event) {
+	    	       propertyStage.setX(event.getScreenX() - xOffset);
+	    	       propertyStage.setY(event.getScreenY() - yOffset);
+	    	   }
+	    	});
 	}
 
 	/**
@@ -480,10 +504,13 @@ public class ProjectMetadataController extends AnchorPane {
 	 */
 	private RunnableClass getSelectedRunnableClass() {
 		String selected = runnableClassesList.getSelectionModel().getSelectedItem();
-		
-		for (RunnableClass runnableClass : runnableClasses) {
-			if (runnableClass.getPath().equals(selected)) {
-				return runnableClass;
+
+		if (runnableClasses != null) {
+
+			for (RunnableClass runnableClass : runnableClasses) {
+				if (runnableClass.getPath().equals(selected)) {
+					return runnableClass;
+				}
 			}
 		}
 		return null;
@@ -516,4 +543,6 @@ public class ProjectMetadataController extends AnchorPane {
 		list.getItems().clear();
 		list.getItems().add(string);
 	}
+	
+
 }

@@ -366,7 +366,7 @@ public class FileController {
 		String content;
 		try {
 			content = JavaFileHandler.readFile(classFile);
-			if (content.contains("public static void main(String[] args")) {
+			if (content.contains("public static void main")) {
 				return true;
 			}
 		} catch (IOException e) {

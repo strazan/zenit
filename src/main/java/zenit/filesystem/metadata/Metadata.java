@@ -127,19 +127,21 @@ public class Metadata {
 	}
 	
 	public boolean addRunnableClass(RunnableClass runnableClass) {
-		if (runnableClasses != null) {
-			RunnableClass[] temp = new RunnableClass[runnableClasses.length + 1];
-			for (int i = 0; i < runnableClasses.length; i++) {
-				if (runnableClasses[i].getPath().equals(runnableClass.getPath())) {
-					return false;
-				} else {
-					temp[i] = runnableClasses[i];
-				}
-			}
-
-			temp[temp.length - 1] = runnableClass;
-			runnableClasses = temp;
+		if (runnableClasses == null) {
+			runnableClasses = new RunnableClass[0];
 		}
+		
+		RunnableClass[] temp = new RunnableClass[runnableClasses.length + 1];
+		for (int i = 0; i < runnableClasses.length; i++) {
+			if (runnableClasses[i].getPath().equals(runnableClass.getPath())) {
+				return false;
+			} else {
+				temp[i] = runnableClasses[i];
+			}
+		}
+
+		temp[temp.length - 1] = runnableClass;
+		runnableClasses = temp;
 
 		return true;
 	}

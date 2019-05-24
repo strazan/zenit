@@ -36,7 +36,7 @@ public class JDKVerifier {
 			path = JDKPath + File.separator + "Contents" + File.separator + 
 					"Home" + File.separator + "bin" + File.separator + tool;
 		} else if (OS.equals("Windows")) {
-//			java = new File(JDK.getPath() + File.separator;
+			path = JDKPath + File.separator + "bin" + File.separator + tool;
 		} else if (OS.equals("Linux")) {
 			path = JDKPath + File.separator + "bin" + File.separator + tool;
 		}

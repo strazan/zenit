@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.regex.Matcher;
 
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +12,7 @@ import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
@@ -29,6 +31,10 @@ public class ProjectRunnableClassesController extends AnchorPane {
 	
 	@FXML private ImageView logo;
 	@FXML private TreeView<String> treeView;
+	@FXML private AnchorPane header;
+	
+    private double xOffset = 0;
+    private double yOffset = 0;
 	
 	
 	public ProjectRunnableClassesController(ProjectFile projectFile, boolean darkmode, FileController fc) {
@@ -82,6 +88,23 @@ public class ProjectRunnableClassesController extends AnchorPane {
 			RunnableClassTreeItem<String> t2 = (RunnableClassTreeItem<String>) o2;
 			return (t1.getValue().compareTo(t2.getValue()));
 		});	
+		
+	    header.setOnMousePressed(new EventHandler<MouseEvent>() {
+	    	   @Override
+	    	   public void handle(MouseEvent event) {
+	    	       xOffset = event.getSceneX();
+	    	       yOffset = event.getSceneY();
+	    	   }
+	    	});
+
+	    	//move around here
+	    header.setOnMouseDragged(new EventHandler<MouseEvent>() {
+	    	   @Override
+	    	   public void handle(MouseEvent event) {
+	    	       stage.setX(event.getScreenX() - xOffset);
+	    	       stage.setY(event.getScreenY() - yOffset);
+	    	   }
+	    	});
 	}
 	
 	private void populateTree(File root) {
