@@ -216,7 +216,7 @@ public class SetupController extends AnchorPane {
 		if (tgGroup.getSelectedToggle().equals(rb2)) {
 			String userPath = System.getProperty("user.home");
 			String documentsPath = getDocumentsPath();
-			File defaultWorkspace = new File(userPath + File.separator + documentsPath + File.separator +
+			File defaultWorkspace = new File(userPath + File.separator + documentsPath +
 					"Zenit" + File.separator + "Default Workspace");
 			if (!defaultWorkspace.exists()) {
 				defaultWorkspace.mkdirs();
@@ -236,11 +236,11 @@ public class SetupController extends AnchorPane {
 	private String getDocumentsPath() {
 		String OS = Zenit.OS;
 		if (OS.equals("Mac OS X")) {
-			return "documents";
+			return "documents" + File.separator;
 		} else if (OS.equals("Windows")) {
-			return "my documents";
+			return "my documents" + File.separator;
 		} else if (OS.equals("Linux")) {
-			return "documents";
+			return "";
 		} else {
 			return null;
 		}
