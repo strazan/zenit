@@ -14,7 +14,6 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.Pane?>
-<?import javafx.scene.layout.Region?>
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.paint.Color?>
 <?import javafx.scene.text.Font?>
@@ -39,6 +38,7 @@
 						<MenuItem mnemonicParsing="false" text="Revert" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" onAction="#openSettingsPanel" text="Settings" />
+                        <MenuItem fx:id="JREVersions" mnemonicParsing="false" onAction="#openJREVersions" text="JRE Versions" />
 						<MenuItem fx:id="importProject" mnemonicParsing="false" onAction="#importProject" text="Import project..." />
 						<MenuItem fx:id="changeWorkspace" mnemonicParsing="false" onAction="#changeWorkspace" text="Change workspace" />
 						<SeparatorMenuItem mnemonicParsing="false" />
@@ -86,7 +86,7 @@
 														<TabPane fx:id="tabPane" accessibleRole="PARENT" prefHeight="549.0" prefWidth="669.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
 														<HBox alignment="TOP_RIGHT" fillHeight="false" layoutX="555.0" layoutY="4.0" prefHeight="22.0" prefWidth="112.0" snapToPixel="false" spacing="2.0" AnchorPane.rightAnchor="0.0">
 															<children>
-																<Button mnemonicParsing="false" prefWidth="20.0" prefHeight="20.0" minWidth="20.0" minHeight="20.0" fx:id="btnRun" id="btnRun" alignment="CENTER">
+                                                <Button id="btnRun" fx:id="btnRun" alignment="CENTER" minHeight="20.0" minWidth="20.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="20.0">
 																	<padding>
 																		<Insets top="1.0"/>
 																	</padding>

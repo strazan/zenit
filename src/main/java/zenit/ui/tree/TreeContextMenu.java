@@ -11,6 +11,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
 import javafx.scene.image.ImageView;
+import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.ui.MainController;
 
@@ -31,7 +32,8 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 	private MenuItem createPackage = new MenuItem("New package");
 	private MenuItem renameItem = new MenuItem("Rename");
 	private MenuItem deleteItem = new MenuItem("Delete");
-	private MenuItem typeCode = new MenuItem();
+	private MenuItem importJar = new MenuItem("Import jar");
+	private MenuItem properties = new MenuItem("Properties");
 	
 	/**
 	 * Creates a new {@link TreeContextMenu} that can manipulate a specific {@link
@@ -64,6 +66,14 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		} else {
 			createItem.getItems().remove(createPackage);
 		}
+		FileTreeItem<String> selectedItem = (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
+		if (selectedItem.getType() == FileTreeItem.PROJECT) {
+			getItems().add(importJar);
+			getItems().add(properties);
+		} else {
+			getItems().remove(importJar);
+			getItems().remove(properties);
+		}
 	}
 	
 	/**
@@ -90,12 +100,13 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 		createItem.getItems().add(createClass);
 		createItem.getItems().add(createInterface);
 		getItems().addAll(createItem, renameItem, deleteItem);
-		getItems().add(typeCode);
 		createClass.setOnAction(this);
 		createInterface.setOnAction(this);
 		renameItem.setOnAction(this);
 		deleteItem.setOnAction(this);
 		createPackage.setOnAction(this);
+		importJar.setOnAction(this);
+		properties.setOnAction(this);
 	}
 	
 	/**
@@ -142,6 +153,12 @@ public class TreeContextMenu extends ContextMenu implements EventHandler<ActionE
 				FileTreeItem<String> packageNode = new FileTreeItem<String>(packageFile, packageFile.getName(), FileTreeItem.PACKAGE);
 				selectedItem.getChildren().add(packageNode);
 			}
+		} else if (actionEvent.getSource().equals(importJar)) {
+			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
+			controller.chooseAndImportLibraries(projectFile);
+		} else if (actionEvent.getSource().equals(properties) && selectedItem.getType() == FileTreeItem.PROJECT) {
+			ProjectFile projectFile = new ProjectFile(selectedFile.getPath());
+			controller.showProjectProperties(projectFile);
 		}
 	}
 }
