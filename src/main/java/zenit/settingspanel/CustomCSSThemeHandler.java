@@ -268,7 +268,7 @@ public class CustomCSSThemeHandler {
 	public void changeStyleSheet(
 		Stage stage, File customThemeCSSfile, String regex, String replacement
 	) {
-		String fullPath =  System.getProperty("user.dir") + customThemeCSSfile;
+		String fullPath = System.getProperty("user.dir") + customThemeCSSfile;
 		var stylesheets = stage.getScene().getStylesheets();
 
 		if(stylesheets.contains("file:" + fullPath)) {
@@ -340,7 +340,7 @@ public class CustomCSSThemeHandler {
 	/**
 	 * Updates all current default stylesheets.
 	 */
-	public void updateDefaultStylesheets(boolean isCustomTheme) {
+	private void updateDefaultStylesheets(boolean isCustomTheme) {
 			
 			for (int i = 0; i < stages.size(); i++) {
 				var stylesheets = stages.get(i).getStage().getScene().getStylesheets();

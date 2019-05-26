@@ -56,8 +56,8 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	private MainController mainController;
 	private CustomCSSThemeHandler themeHandler;
 	
-	private boolean isCustomTheme = false;
-	private boolean isDarkMode = true;
+	private boolean isCustomTheme;
+	private boolean isDarkMode;
 
 	private String settingsPanelDarkMode = getClass().getResource(
 		"/zenit/settingspanel/settingspanelDarkMode.css").toExternalForm();
@@ -166,8 +166,10 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	 * @param codeArea the ZenCodeArea that will be modified.
 	 */
 	
-	public SettingsPanelController(MainController mainController, int oldFontSize, String oldFontFamily) {
+	public SettingsPanelController(MainController mainController, int oldFontSize, String oldFontFamily, boolean isDarkMode, boolean isCustomTheme) {
 		this.mainController = mainController;
+		this.isDarkMode = isDarkMode;
+		this.isCustomTheme = isCustomTheme;
 		
 		oldSize = oldFontSize;
 		oldFont = oldFontFamily;
@@ -206,6 +208,7 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		stages.add(this);
 	
 		themeHandler = new CustomCSSThemeHandler(stages);
+		themeHandler.toggleCustomTheme(isCustomTheme);
 	}
 	
 	/**
@@ -475,16 +478,18 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			operatingSystem = OS.LINUX;
 		}
 		
-		toggleDarkMode.setSelected(true);
+		toggleDarkMode.setSelected(isDarkMode);
 		toggleDarkMode.selectedProperty().addListener(new ChangeListener <Boolean> () {
             @Override
 			public void changed(
 				ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
             {
 				darkModeChanged(toggleDarkMode.isSelected());
+				mainController.setIsDarkMode(toggleDarkMode.isSelected());
 			}
         });
 		
+		toggleSwitchCustomTheme.setSelected(isCustomTheme);
 		toggleSwitchCustomTheme.selectedProperty().addListener(new ChangeListener <Boolean> () {
             @Override
 			public void changed(
@@ -493,6 +498,7 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 				themeHandler.toggleCustomTheme(toggleSwitchCustomTheme.isSelected());
 				isCustomTheme = toggleSwitchCustomTheme.isSelected();
 				darkModeChanged(toggleDarkMode.isSelected());
+				mainController.setIsCustomTheme(toggleDarkMode.isSelected());
 			}
         });
 		

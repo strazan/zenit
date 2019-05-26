@@ -1,13 +1,8 @@
 package main.java.zenit.ui;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.LinkedList;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Scanner;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -20,8 +15,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextInputDialog;
 import javafx.scene.control.TreeView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
@@ -60,7 +53,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private String activeStylesheet;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
-	private boolean isDarkMode = false;
+	private boolean isDarkMode;
+	private boolean isCustomTheme;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -116,6 +110,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		this.zenCodeAreasFontFamily = "Menlo";
 		this.activeZenCodeAreas = new LinkedList<ZenCodeArea>();
 		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
+		this.isDarkMode = true;
 
 		try {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
@@ -190,7 +185,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @author Sigge Labor
 	 */
 	public void openSettingsPanel() {
-		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);
+		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily, isDarkMode, isCustomTheme);
 	}
 
 	/**
@@ -742,5 +737,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public String getActiveStylesheet() {
 		// TODO Auto-generated method stub
 		return activeStylesheet;
+	}
+	
+	public void setIsCustomTheme(boolean isCustomTheme) {
+		this.isCustomTheme = isCustomTheme;
+	}
+	
+	public void setIsDarkMode(boolean isDarkMode) {
+	this.isDarkMode = isDarkMode;
 	}
 }
