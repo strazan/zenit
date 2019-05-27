@@ -43,7 +43,7 @@ public class JavaSourceCodeCompiler {
 	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
 	public JavaSourceCodeCompiler(File file, boolean inBackground) {
-		this(file, null, inBackground, null, null, null);
+		this(file, null, inBackground, null, null);
 	}
 	
 	/**
@@ -54,14 +54,12 @@ public class JavaSourceCodeCompiler {
 	 * sourcepath and library buildpaths.
 	 * @param inBackground {@code true} if only compiled in background, otherwise false.
 	 */
-	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont, 
-			ConsoleController consoleController) {
+	public JavaSourceCodeCompiler(File file, File metadata, boolean inBackground, Buffer<?> buffer, MainController cont) {
 		this.file = file;
 		this.metadataFile = metadata;
 		this.inBackground = inBackground;
 		this.buffer = buffer;
 		this.cont = cont;
-		this.consoleController = consoleController;
 	}
 	
 	/**
@@ -270,15 +268,9 @@ public class JavaSourceCodeCompiler {
 			cb.setRunPath(runPath.getPath());
 			
 			String command = cb.generateCommand();
-			ConsoleArea consoleArea = new ConsoleArea(file.getName());
-			new ConsoleRedirect(consoleArea);
 			
 			Process process = executeCommand(command, file.getParentFile());
 		
-			Platform.runLater(()-> {
-//				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
-				consoleController.newConsole(process, consoleArea);
-			});
 			redirectStreams(process);
 			return process;
 		}
@@ -304,14 +296,7 @@ public class JavaSourceCodeCompiler {
 					
 			String command = cb.generateCommand();
 			
-			ConsoleArea consoleArea = new ConsoleArea(file.getName());
-			new ConsoleRedirect(consoleArea);
-			
 			Process process = executeCommand(command, projectFile);
-			Platform.runLater(()-> {
-//				System.err.println("JCD  " + process.pid() + "  " + " isAlive " + process.isAlive());
-				consoleController.newConsole(process, consoleArea);
-			});
 			
 			// Runs command
 			redirectStreams(process);

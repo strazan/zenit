@@ -54,12 +54,5 @@
     -fx-text-fill:white;
 }
 
-#iconBtn{
-	-fx-background-color:#666;
-}
-#iconBtn:hover{
-	-fx-background-color:white;
-}
-
 
 

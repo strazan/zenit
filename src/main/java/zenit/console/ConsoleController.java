@@ -114,8 +114,12 @@ public class ConsoleController implements Initializable {
 	
 	public void setMainController(MainController mainController) {
 		this.mainController = mainController;
+		
 	}
 	
+	public List<String> getStylesheets() {
+		return rootNode.getStylesheets();
+	}
 	
 	
 	/**
@@ -220,8 +224,6 @@ public class ConsoleController implements Initializable {
 	 */
 	
 	public void newConsole(Process process, ConsoleArea consoleArea) {
-//		ConsoleArea consoleArea = new ConsoleArea("Console ("+ consoleList.size()+")");
-//		consoleArea.setId("Console ("+ consoleList.size()+")");
 		consoleAnchorPane = new AnchorPane();
 		
 		fillAnchor(consoleArea);
@@ -345,7 +347,6 @@ public class ConsoleController implements Initializable {
 		});
 		
 		showConsoleTabs();
-//		newConsole(null);
 		
 		//Console
 		iconCloseConsoleInstance.setOnMouseClicked(e -> {
@@ -389,28 +390,23 @@ public class ConsoleController implements Initializable {
 		});
 		
 		btnNewConsole.setOnMouseClicked(e -> {
-			newConsole(null, new ConsoleArea());
+			newConsole(null, new ConsoleArea("Console(" + consoleList.size() + ")"));
 		});
 		
 		iconTerminateProcess.setOnMouseClicked(e -> {
 			for(var item : consoleList.entrySet()) {
 				if(item.getKey().equals(activeConsole)) {
 					if(item.getValue() != null) {
-//						System.err.println("BEFORE destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
 						try {
 							Thread.sleep(10);
 							item.getValue().destroy();
 						} catch (Exception e1) {
-							// TODO Auto-generated catch block
 							e1.printStackTrace();
 						}
-						
-						
-//						System.err.println("AFTER destroy   " + item.getValue().pid() + " IsAlive " + item.getValue().isAlive());
+												
 					}
 				}
 			}
-//			mainController.terminate();
 		});
 		
 	}

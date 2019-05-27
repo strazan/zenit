@@ -27,6 +27,7 @@ import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import main.java.zenit.Zenit;
+import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
@@ -376,7 +377,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		try {
 			if (file != null) {
 				DebugErrorBuffer buffer = new DebugErrorBuffer();
-				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this, null);
+				JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile, true, buffer, this);
 				compiler.startCompile();
 			}
 		} catch (Exception e) {
@@ -568,13 +569,14 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
-	
-		 
+		
+		ConsoleArea consoleArea = new ConsoleArea(file.getName());
+		consoleController.newConsole(process, consoleArea);
 	
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
-					false, buffer, this, consoleController);
+					false, buffer, this);
 			compiler.startCompileAndRun();
 			process = buffer.get();
 			
