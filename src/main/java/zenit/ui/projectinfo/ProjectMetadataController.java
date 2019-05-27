@@ -115,7 +115,7 @@ public class ProjectMetadataController extends AnchorPane {
 		try {
 			//setup scene
 			FXMLLoader loader = new FXMLLoader();
-			loader.setLocation(getClass().getResource("/zenit/ui/projectInfo/ProjectMetadata.fxml"));
+			loader.setLocation(getClass().getResource("/zenit/ui/projectinfo/ProjectMetadata.fxml"));
 			loader.setController(this);
 			AnchorPane root = (AnchorPane) loader.load();
 			Scene scene = new Scene(root);

@@ -563,8 +563,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
-	
-			consoleController.newConsole(); // TODO: Maybe but in a better place ?
+		consoleController.newConsole(); // TODO: Maybe but in a better place ?
 	
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();

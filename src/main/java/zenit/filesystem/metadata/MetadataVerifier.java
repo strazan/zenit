@@ -43,7 +43,7 @@ public class MetadataVerifier {
 		if (metadata != null) {
 			metadataFile = metadata.getMetadataFile();
 		}
-		if (metadataFile == null || !metadataFile.exists()) {
+		if (metadataFile == null || !metadataFile.exists() || metadataFile.isDirectory()) {
 			return true;
 		}
 		
