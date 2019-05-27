@@ -1,0 +1,51 @@
+.root {
+	-fx-border-color: transparent;
+}
+
+#spAnchorPane .button {
+	-fx-border-color: transparent;
+		-fx-background-insets: 0.0, 0.0;
+  	-fx-border-width: 0.0;
+}
+/* Text Appearance pane */
+#pnlTextAppearance {
+	-fx-background-color: #fff;
+}
+
+ /* Java Home pane */
+#pnlJavaHome {
+	-fx-background-color: #fff;
+}
+
+/* Theme pane */
+
+#pnlTheme {
+	-fx-background-color: #fff;
+}
+#pnlCustomCSS {
+	-fx-background-color: #fff;
+}
+ #pnlCustomTheme {
+ 	-fx-background-color: #fff;
+ }
+
+/* Support pane */
+#pnlSupport {
+	-fx-background-color: #fff;
+}
+
+#pnlSupport .hyperlink {
+	-fx-text-fill: #222;
+	-fx-border-color: transparent;
+    -fx-padding: 4 0 4 0;
+    -fx-underline: false;
+}
+
+#pnlSupport .hyperlink:hover {
+	-fx-text-fill: #000;
+}
+
+.paneHeader, #lblDarkMode {
+	-fx-text-fill: #222;
+	-fx-font-size: 16px;
+}
