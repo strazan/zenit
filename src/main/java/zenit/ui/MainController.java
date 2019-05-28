@@ -585,6 +585,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 		fileController.deleteFile(file);
 		// TODO Remove open tab as well
+		
+		var tabs = tabPane.getTabs();
+		
+		if (tabs != null) {
+			for (var tab : tabs) {
+				var fileTab = (FileTab) tab;
+				
+				if (fileTab != null && fileTab.getFile().equals(file)) {
+					closeTab(null);
+				}
+			}
+		}
 	}
 	
 	/**
@@ -608,7 +620,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 			String text = deletedTexts.get(file);
 			saveFile(false, file, text);
 
-			historyIndex--;
+			if (historyIndex != 0) {
+				historyIndex--;
+			}
+			
 			System.out.println(historyIndex);
 		}
 	}
