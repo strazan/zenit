@@ -65,15 +65,8 @@ public class FileTree {
 			return;
 		}
 		
-		if (parent.getChildren().size() > 0) {
-			// Prevents adding the file to the tree if it already exists
-			for (var child : parent.getChildren()) {
-				var fileTreeItem = (FileTreeItem<String>) child;
-				
-				if (fileTreeItem.getFile().getName().contentEquals(file.getName())) {
-					return;
-				}
-			}
+		if (fileExistsInTree(file, parent)) {
+			return;
 		}
 		
 		int type = calculateType(parent, file.getName());
@@ -170,5 +163,34 @@ public class FileTree {
 		}
 		
 		return type;
+	}
+	
+	/**
+	 * Checks if the given file is present in the tree hierarchy from the given root.
+	 * @param file The file to check if it exists.
+	 * @param root The root tree item to search through.
+	 * @return True if any tree item under root contains the given file, else false.
+	 * @author Pontus Laos
+	 */
+	private static boolean fileExistsInTree(File file, FileTreeItem<String> root) {
+		if (root == null || file == null) {
+			return false;
+		}
+
+		File rootFile = root.getFile();
+		
+		if (rootFile.getAbsolutePath().contentEquals(file.getAbsolutePath())) {
+			return true;
+		}
+		
+		for (var child : root.getChildren()) {
+			var fileTreeItem = (FileTreeItem<String>) child;
+
+			if (fileExistsInTree(file, fileTreeItem)) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 }

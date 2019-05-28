@@ -364,6 +364,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
+		
+		if (tab == null) {
+			return false;
+		}
+		
 		File file = tab.getFile();
 
 		if (file == null) {
