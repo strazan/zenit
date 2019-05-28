@@ -2,6 +2,9 @@ package main.java.zenit.searchinfile;
 
 import java.io.IOException;
 
+import com.sun.javafx.event.EventQueue;
+
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -11,6 +14,7 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import main.java.zenit.zencodearea.ZenCodeArea;
 
 public class SearchInFileController extends AnchorPane {
 
@@ -82,15 +86,14 @@ public class SearchInFileController extends AnchorPane {
 	
 	private void makeNewSearch(String searchWord) {
 		
-		search.clearZen();
+//		search.clearZen();
 		
 		occurrences = search.searchInFile(searchWord);
-//		System.out.println("clear");
+
 		if(occurrences < 1) {
 			if(fldInputField.getText().length() > 0) {
 				lblOccurrences.setText("0/" + occurrences);
 			}else {
-//				lblOccurrences.setText("0/" + occurrences);		vet inte vad som är snyggast
 				lblOccurrences.setText("");
 			}
 
@@ -100,9 +103,10 @@ public class SearchInFileController extends AnchorPane {
 	}
 
 	private void initialize() {
-		
 		fldInputField.textProperty().addListener((observable, oldValue, newValue) -> {	
-			makeNewSearch(newValue);
+//			System.out.println(fldInputField.getText());
+			search.clearZen();
+			makeNewSearch(fldInputField.getText());
 		});
 		
 		btnReplaceAll.setPickOnBounds(true);

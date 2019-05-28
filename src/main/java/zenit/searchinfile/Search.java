@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 
+import javafx.application.Platform;
 import javafx.scene.control.Label;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -57,7 +59,9 @@ public class Search {
 	}
 	
 	public int searchInFile(String word) {
-//		clearZen();
+//		 clearZen();
+
+//		zenCodeArea.layout();
 		
 		line = new ArrayList<>();
 		wordPos = new ArrayList<>();
