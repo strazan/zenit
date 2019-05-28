@@ -53,7 +53,7 @@
 						<MenuItem mnemonicParsing="false" text="Cut" />
 						<MenuItem mnemonicParsing="false" text="Copy" />
 						<MenuItem mnemonicParsing="false" text="Paste" />
-						<MenuItem mnemonicParsing="false" text="Delete" />
+						<MenuItem fx:id="delete" mnemonicParsing="false" onAction="#delete" text="Delete" />
 						<SeparatorMenuItem mnemonicParsing="false" />
 						<MenuItem mnemonicParsing="false" text="Select All" />
 						<MenuItem mnemonicParsing="false" text="Unselect All" />

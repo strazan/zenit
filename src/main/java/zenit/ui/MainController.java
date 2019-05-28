@@ -99,6 +99,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	private MenuItem redo;
+	
+	@FXML
+	private MenuItem delete;
 
 	@FXML
 	private TabPane tabPane;
@@ -123,9 +126,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 	private Process process;
 	
-	private LinkedList<File> deletedFiles = new LinkedList<>();
 	private HashMap<File, String> deletedTexts = new HashMap<>();
-
 	private ArrayList<File> fileHistory = new ArrayList<>();
 	private int historyIndex = -1;
 
@@ -198,8 +199,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void deleteFileFromTreeView() {
 		var selectedItem = getSelectedFileTreeItem();
-		deleteFile(selectedItem.getFile());
-		selectedItem.getParent().getChildren().remove(selectedItem);
+		
+		if (selectedItem != null) {
+			deleteFile(selectedItem.getFile());
+			selectedItem.getParent().getChildren().remove(selectedItem);
+		}
 	}
 
 	/**
@@ -576,7 +580,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param file The file to be deleted.
 	 */
 	public void deleteFile(File file) {
-		deletedFiles.add(file);
 		deletedTexts.put(file, FileController.readFile(file));
 		
 		fileHistory.add(0, file);
@@ -593,7 +596,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 				var fileTab = (FileTab) tab;
 				
 				if (fileTab != null && fileTab.getFile().equals(file)) {
-					closeTab(null);
+					Platform.runLater(() -> closeTab(null));
+					return;
 				}
 			}
 		}
@@ -609,22 +613,28 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 		
 		if (historyIndex >= 0) {
+			System.out.print("Undo deletion: ");
 			File file = fileHistory.get(fileHistory.size() - 1 - historyIndex);
+			System.out.print("file [" + file.getAbsolutePath() + "] ");
 			
 			if (!file.exists()) {
+				System.out.print("(does not exist) ");
 				try { 
 					file.createNewFile();
+					System.out.print("- created it - ");
 				} catch (IOException ex) {}
 			}
 			
 			String text = deletedTexts.get(file);
-			saveFile(false, file, text);
+			System.out.print("GOTTEN TEXT: " + (text.length() > 5 ? text.substring(0, 5) + "..." : text));
+			boolean saved = saveFile(false, file, text);
+			System.out.print(" was able to save: " + saved);
 
 			if (historyIndex != 0) {
 				historyIndex--;
 			}
 			
-			System.out.println(historyIndex);
+			System.out.print(". Current history index: " + historyIndex);
 		}
 	}
 	
@@ -635,17 +645,22 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 		
 		if (historyIndex >= 0) {
-			System.out.println("index: " + historyIndex);
+			System.out.print("Redo deletion: ");
 			
 			File file = fileHistory.get(historyIndex);
+			System.out.print("file [" + file.getAbsolutePath() + "] ");
 			
 			if (file.exists()) {
-				System.out.println("file exists: " + file.getAbsolutePath());
-				
+				System.out.print("(does not exist) ");
 				this.deleteFile(file);
+				System.out.print("- called deleteFile - ");
 			} else {
 				System.out.println("file does not exist");
 			}
+			
+			System.out.print(". Current history index: " + historyIndex);
+			treeView.layout();
+			treeView.refresh();
 		} else {
 			System.out.println("illegal history index: " + historyIndex);
 		}
@@ -695,6 +710,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 				zenCodeArea.redo();
 			}
 		}
+	}
+	
+	@FXML
+	public void delete(Event event) {
+		deleteFileFromTreeView();
 	}
 
 	/**
