@@ -142,6 +142,30 @@ public class FileTree {
 	}
 	
 	/**
+	 * Searches the children of the given root and removes the one that contains the given file.
+	 * @param root The root element from which to begin searching.
+	 * @param file The file to search for.
+	 * @return True if an element was removed, else false.
+	 * @author Pontus Laos
+	 */
+	public static boolean removeFromFile(FileTreeItem<String> root, File file) {
+		if (file == null) {
+			return false;
+		}
+		
+		var item = getTreeItemFromFile(root, file);
+		
+		if (item != null) {
+			boolean removed = root.getChildren().remove(item);
+			System.out.println("removed: " + removed);
+			return removed;
+		}
+		
+		System.out.println("not removed");
+		return false;
+	}
+	
+	/**
 	 * Calculates the type of the tree node; workspace, package, class or source-folder.
 	 * @param parent Nodes parent node
 	 * @param itemName Name of the node

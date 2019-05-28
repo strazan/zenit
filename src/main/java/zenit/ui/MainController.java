@@ -6,9 +6,6 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.LinkedList;
 import java.util.ArrayList;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
 
 import javafx.application.Platform;
 import javafx.event.Event;
@@ -28,6 +25,7 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+
 import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.FileController;
@@ -46,6 +44,7 @@ import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
+import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.FileTab;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
@@ -126,9 +125,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 	private Process process;
 	
-	private HashMap<File, String> deletedTexts = new HashMap<>();
-	private ArrayList<File> fileHistory = new ArrayList<>();
-	private int historyIndex = -1;
+	private Tuple<File, String> deletedFile = new Tuple<>();
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -580,14 +577,15 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param file The file to be deleted.
 	 */
 	public void deleteFile(File file) {
-		deletedTexts.put(file, FileController.readFile(file));
+//		deletedTexts.put(file, FileController.readFile(file));
+//		
+//		fileHistory.add(0, file);
+//		historyIndex++;
+//		System.out.println(historyIndex);
 		
-		fileHistory.add(0, file);
-		historyIndex++;
-		System.out.println(historyIndex);
+		deletedFile.set(file, FileController.readFile(file));
 		
 		fileController.deleteFile(file);
-		// TODO Remove open tab as well
 		
 		var tabs = tabPane.getTabs();
 		
@@ -612,29 +610,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 			return;
 		}
 		
-		if (historyIndex >= 0) {
-			System.out.print("Undo deletion: ");
-			File file = fileHistory.get(fileHistory.size() - 1 - historyIndex);
-			System.out.print("file [" + file.getAbsolutePath() + "] ");
-			
-			if (!file.exists()) {
-				System.out.print("(does not exist) ");
-				try { 
-					file.createNewFile();
-					System.out.print("- created it - ");
-				} catch (IOException ex) {}
-			}
-			
-			String text = deletedTexts.get(file);
-			System.out.print("GOTTEN TEXT: " + (text.length() > 5 ? text.substring(0, 5) + "..." : text));
-			boolean saved = saveFile(false, file, text);
-			System.out.print(" was able to save: " + saved);
-
-			if (historyIndex != 0) {
-				historyIndex--;
-			}
-			
-			System.out.print(". Current history index: " + historyIndex);
+		if (deletedFile.fst() != null && !deletedFile.fst().exists()) {
+			try {
+				deletedFile.fst().createNewFile();
+				fileController.writeFile(deletedFile.fst(), deletedFile.snd());
+				saveFile(false, deletedFile.fst(), deletedFile.snd());
+			} catch (IOException ex) {}
 		}
 	}
 	
@@ -644,25 +625,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 			return;
 		}
 		
-		if (historyIndex >= 0) {
-			System.out.print("Redo deletion: ");
-			
-			File file = fileHistory.get(historyIndex);
-			System.out.print("file [" + file.getAbsolutePath() + "] ");
-			
-			if (file.exists()) {
-				System.out.print("(does not exist) ");
-				this.deleteFile(file);
-				System.out.print("- called deleteFile - ");
-			} else {
-				System.out.println("file does not exist");
-			}
-			
-			System.out.print(". Current history index: " + historyIndex);
-			treeView.layout();
-			treeView.refresh();
-		} else {
-			System.out.println("illegal history index: " + historyIndex);
+		if (deletedFile.fst() != null && deletedFile.fst().exists()) {
+			deleteFile(deletedFile.fst());
+			FileTree.removeFromFile((FileTreeItem<String>) treeView.getRoot(), deletedFile.fst());
 		}
 	}
 
@@ -800,10 +765,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 
 	/**
-		
-		if (pmc != null) {
-			pmc.ifDarkModeChanged(isDarkMode);
-		}
 	 * Finds the metadata file for the project of a file.
 	 * 
 	 * @param file File within project to find metadata file in.
