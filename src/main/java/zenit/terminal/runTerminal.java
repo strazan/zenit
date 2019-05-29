@@ -12,18 +12,18 @@ public class runTerminal extends Application {
 	public void start(Stage stage) {
 		
 		try {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setLocation(getClass().getResource("/zenit/terminal/Terminal.fxml"));
-		
-		
-		TerminalController controller = new TerminalController();
-		loader.setController(controller);
-		Parent root = loader.load();
-		Scene scene = new Scene(root);
-		stage.setScene(scene);
-		stage.setTitle("Zenit");
-
-		stage.show();
+			FXMLLoader loader = new FXMLLoader();
+			loader.setLocation(getClass().getResource("/zenit/terminal/Terminal.fxml"));
+			
+			
+			TerminalController controller = new TerminalController();
+			loader.setController(controller);
+			Parent root = loader.load();
+			Scene scene = new Scene(root);
+			stage.setScene(scene);
+			stage.setTitle("Zenit");
+	
+			stage.show();
 		} catch (Exception e ) {
 			e.printStackTrace();
 		}

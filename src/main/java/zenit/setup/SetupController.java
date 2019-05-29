@@ -20,6 +20,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import main.java.zenit.Zenit;
 import main.java.zenit.filesystem.WorkspaceHandler;
 import main.java.zenit.filesystem.jreversions.JREVersions;

@@ -1,7 +1,5 @@
 package main.java.zenit.ui;
 
-import java.io.IOException;
-
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.stage.Stage;
@@ -12,16 +10,13 @@ import javafx.stage.Stage;
  *
  */
 public class TestUI extends Application {
-	
 	@Override
-	public void start(Stage stage) throws IOException {
-		
-	 new MainController(stage);
-	
+	public void start(Stage stage) {
+		new MainController(stage);
 	}
 	
 	/**
-	 * Calls Platform.exit() as well as System.exit().
+	 * Exits the application by calling Platform.exit() as well as System.exit().
 	 * @author Pontus Laos
 	 */
 	@Override

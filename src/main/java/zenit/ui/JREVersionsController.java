@@ -12,8 +12,8 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-import main.java.zenit.filesystem.jreversions.JREVersions;
 
+import main.java.zenit.filesystem.jreversions.JREVersions;
 
 public class JREVersionsController extends AnchorPane {
 	

@@ -28,7 +28,7 @@ import javafx.stage.Stage;
 
 import main.java.zenit.Zenit;
 import main.java.zenit.console.ConsoleController;
-import main.java.zenit.filesystem.FileController;
+import main.java.zenit.filesystem.FileController; // Aggregation
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -38,16 +38,15 @@ import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.settingspanel.SettingsPanelController;
-import main.java.zenit.settingspanel.ThemeCustomizable;
+import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
 import main.java.zenit.util.Tuple;
-import main.java.zenit.ui.FileTab;
-import main.java.zenit.ui.projectinfo.ProjectMetadataController;
-import main.java.zenit.zencodearea.ZenCodeArea;
+import main.java.zenit.ui.projectinfo.ProjectMetadataController; // Aggregation
+import main.java.zenit.zencodearea.ZenCodeArea; // Aggregation
 
 /**
  * The controller part of the main GUI.
