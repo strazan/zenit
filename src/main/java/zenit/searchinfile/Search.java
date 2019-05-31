@@ -13,6 +13,7 @@ import org.reactfx.value.Var;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import main.java.zenit.util.Tuple;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
@@ -33,9 +34,8 @@ public class Search {
 	private File file;
 	
 	private List<Integer> line;
-	private List<Integer> wordPos; 
-	private List<Integer> absolutePos;
-	private List<Integer> absolutePos2;
+	private List<Integer> wordPos;
+	private List<Tuple<Integer, Integer>> absolutePos;
 
 	private int numberOfTimes = 0;
 	private int numberOfLines = -1;
@@ -64,14 +64,9 @@ public class Search {
 	}
 	
 	public int searchInFile(String word) {
-//		 clearZen();
-
-//		zenCodeArea.layout();
-		
 		line = new ArrayList<>();
 		wordPos = new ArrayList<>();
 		absolutePos = new ArrayList<>();
-		absolutePos2 = new ArrayList<>();
 		
 		numberOfTimes = 0;
 		numberOfLines = -1;
@@ -97,20 +92,19 @@ public class Search {
 				}
 
 			if (numberOfTimes > 0) {
-					
 					for (int i = 0; i < numberOfTimes; i++) {
-						if (isDarkMode) {
-							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
-							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-							absolutePos2.add(searchWord.length());
-							
-						}else {
-							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
-							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-							absolutePos2.add(searchWord.length());
-						}
+						int start = zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i));
+						int end = start + searchWord.length();
+						
+						absolutePos.add(new Tuple<>(start, end));
+						zenCodeArea.setStyle(
+							line.get(i), 
+							wordPos.get(i), 
+							wordPos.get(i) + searchWord.length(), 
+							List.of(isDarkMode ? "search-dark-mode" : "search-light-mode")
+						);
 					}
-				zenCodeArea.moveTo(absolutePos.get(0));
+				zenCodeArea.moveTo(absolutePos.get(0).fst());
 				zenCodeArea.requestFollowCaret();
 			}
 			return numberOfTimes;
@@ -124,7 +118,7 @@ public class Search {
 	public void clearZen() {
 		if (absolutePos != null) {
 			for (int i = 0; i < absolutePos.size(); i++) {
-				zenCodeArea.clearStyle(absolutePos.get(i), absolutePos.get(i) + absolutePos2.get(i));
+				zenCodeArea.clearStyle(absolutePos.get(i).fst(), absolutePos.get(i).snd());
 				zenCodeArea.update();
 			}
 		}
@@ -139,7 +133,7 @@ public class Search {
 	 */	
 	public void replaceAll(String wordAfter) {
 		for (int i = absolutePos.size() -1; i >= 0; i--) {
-			zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + searchWord.length(), wordAfter);
+			zenCodeArea.replaceText(absolutePos.get(i).fst(), absolutePos.get(i).snd(), wordAfter);
 		}
 	}
 	
@@ -151,7 +145,7 @@ public class Search {
 	 * @param absolutePos
 	 */
 	public void replaceOne(String wordAfter) {
-		zenCodeArea.replaceText(absolutePos.get(i), absolutePos.get(i) + searchWord.length(), wordAfter);
+		zenCodeArea.replaceText(absolutePos.get(i).fst(), absolutePos.get(i).snd(), wordAfter);
 	}
 	
 	/**
@@ -165,7 +159,7 @@ public class Search {
 			
 		}
 		
-		zenCodeArea.moveTo(absolutePos.get(i));
+		zenCodeArea.moveTo(absolutePos.get(i).fst());
 		zenCodeArea.requestFollowCaret();
 		return i;
 	}
@@ -180,7 +174,7 @@ public class Search {
 			i = absolutePos.size() - 1;
 		}
 		
-		zenCodeArea.moveTo(absolutePos.get(i));
+		zenCodeArea.moveTo(absolutePos.get(i).fst());
 		zenCodeArea.requestFollowCaret();	
 		return i;
 	}

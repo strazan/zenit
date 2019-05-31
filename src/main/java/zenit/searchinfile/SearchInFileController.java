@@ -104,7 +104,6 @@ public class SearchInFileController extends AnchorPane {
 
 	private void initialize() {
 		fldInputField.textProperty().addListener((observable, oldValue, newValue) -> {	
-//			System.out.println(fldInputField.getText());
 			search.clearZen();
 			makeNewSearch(fldInputField.getText());
 		});
