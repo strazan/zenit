@@ -274,6 +274,24 @@ public class SetupController extends AnchorPane {
 	@FXML
 	private void done() {
 		
+		//Check if workspace input text has been updated since save
+		boolean notSavedWorkspace = true;
+		
+		while (notSavedWorkspace) {
+			if (tgGroup.getSelectedToggle().equals(rb1) && workspaceFile != null && 
+					!workspaceFile.getPath().equals(workspacePath.getText())) {
+				int choice = DialogBoxes.twoChoiceDialog("Save changes to workspace", "",
+						"The changes to workspace has not been saved, would you like : " + 
+						workspacePath.getText() + " to be your workspace?", "Yes", "No");
+				if (choice == 1) {
+					onEnter();
+				}
+			} else {
+				notSavedWorkspace = false;
+			}
+		}
+		
+		//Check if default workspace is selected
 		if (tgGroup.getSelectedToggle().equals(rb2)) {
 			String userPath = System.getProperty("user.home");
 			String documentsPath = getDocumentsPath();
@@ -367,8 +385,12 @@ public class SetupController extends AnchorPane {
 
 		@Override
 		public void changed(ObservableValue<? extends Toggle> observable, Toggle oldValue, Toggle newValue) {
-            if (tgGroup.getSelectedToggle().equals(rb1) && workspacePath.getText().equals("")) {
-            	browse();
+            if (tgGroup.getSelectedToggle().equals(rb1)) {
+            	if (workspacePath.getText().equals("")) {
+            		browse();
+            	} else {
+            		onEnter();
+            	}
             }
 		}
 	}
