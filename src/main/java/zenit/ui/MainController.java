@@ -842,6 +842,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return this.customThemeCSS;
 	}
 
+	@FXML
 	public void search() {
 
 		FileTab selectedTab = getSelectedTab();
