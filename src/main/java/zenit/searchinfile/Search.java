@@ -75,40 +75,40 @@ public class Search {
 		
 		if(word.length() < 1) {
 			return 0;
-		}else {
-			
-			try {
-				txtscan = new Scanner(file);
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			}	
-			
-				//caseSensetive needs to be change from the panel
-				searchWord = word;
-				if (caseSensetive == false) {
-					notCaseSensetive();
-				}else {
-					caseSensetive();   
-				}
-
-			if (numberOfTimes > 0) {
-					for (int i = 0; i < numberOfTimes; i++) {
-						int start = zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i));
-						int end = start + searchWord.length();
-						
-						absolutePos.add(new Tuple<>(start, end));
-						zenCodeArea.setStyle(
-							line.get(i), 
-							wordPos.get(i), 
-							wordPos.get(i) + searchWord.length(), 
-							List.of(isDarkMode ? "search-dark-mode" : "search-light-mode")
-						);
-					}
-				zenCodeArea.moveTo(absolutePos.get(0).fst());
-				zenCodeArea.requestFollowCaret();
-			}
-			return numberOfTimes;
 		}
+		
+		try {
+			txtscan = new Scanner(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}	
+		
+		//caseSensetive needs to be change from the panel
+		searchWord = word;
+		if (caseSensetive == false) {
+			notCaseSensetive();
+		} else {
+			caseSensetive();   
+		}
+
+		if (numberOfTimes > 0) {
+			for (int i = 0; i < numberOfTimes; i++) {
+				int start = zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i));
+				int end = start + searchWord.length();
+				
+				absolutePos.add(new Tuple<>(start, end));
+				zenCodeArea.setStyle(
+					line.get(i), 
+					wordPos.get(i), 
+					wordPos.get(i) + searchWord.length(), 
+					List.of(isDarkMode ? "search-dark-mode" : "search-light-mode")
+				);
+			}
+			
+			zenCodeArea.moveTo(absolutePos.get(0).fst());
+			zenCodeArea.requestFollowCaret();
+		}
+		return numberOfTimes;
 	}
 
 	/**
