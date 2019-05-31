@@ -212,7 +212,7 @@ public class SetupController extends AnchorPane {
 					updateList();
 				} else {
 					DialogBoxes.errorDialog("Not a valid JDK folder", "", "The chosen folder is not"
-							+ " a valid JDK folder, must contain a java and" + "javac executable");
+							+ " a valid JDK folder, must contain a java and javac executable");
 				}
 			}
 		}
@@ -281,10 +281,12 @@ public class SetupController extends AnchorPane {
 			if (tgGroup.getSelectedToggle().equals(rb1) && workspaceFile != null && 
 					!workspaceFile.getPath().equals(workspacePath.getText())) {
 				int choice = DialogBoxes.twoChoiceDialog("Save changes to workspace", "",
-						"The changes to workspace has not been saved, would you like : " + 
+						"The changes to workspace has not been saved, would you like: " + 
 						workspacePath.getText() + " to be your workspace?", "Yes", "No");
 				if (choice == 1) {
 					onEnter();
+				} else {
+					notSavedWorkspace = false;
 				}
 			} else {
 				notSavedWorkspace = false;
