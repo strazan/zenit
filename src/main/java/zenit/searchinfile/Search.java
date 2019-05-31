@@ -3,9 +3,13 @@ package main.java.zenit.searchinfile;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
 import java.util.stream.Collectors;
+
+import org.fxmisc.richtext.model.StyleSpan;
+import org.reactfx.value.Var;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
@@ -31,7 +35,8 @@ public class Search {
 	private List<Integer> line;
 	private List<Integer> wordPos; 
 	private List<Integer> absolutePos;
-	
+	private List<Integer> absolutePos2;
+
 	private int numberOfTimes = 0;
 	private int numberOfLines = -1;
 	private int lineLenght = 0;
@@ -66,6 +71,7 @@ public class Search {
 		line = new ArrayList<>();
 		wordPos = new ArrayList<>();
 		absolutePos = new ArrayList<>();
+		absolutePos2 = new ArrayList<>();
 		
 		numberOfTimes = 0;
 		numberOfLines = -1;
@@ -96,11 +102,12 @@ public class Search {
 						if (isDarkMode) {
 							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-dark-mode"));
 							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
-							
+							absolutePos2.add(searchWord.length());
 							
 						}else {
 							zenCodeArea.setStyle(line.get(i), wordPos.get(i), wordPos.get(i) + searchWord.length(), List.of("search-light-mode"));				
 							absolutePos.add(zenCodeArea.getAbsolutePosition(line.get(i), wordPos.get(i)));
+							absolutePos2.add(searchWord.length());
 						}
 					}
 				zenCodeArea.moveTo(absolutePos.get(0));
@@ -111,12 +118,16 @@ public class Search {
 	}
 
 	/**
-	 * Appends a Char to make the highlight disappear from 
-	 * the highlighted words then removes it again
+	 * Clears the "found match"-styling.
+	 * @author Fredrik Eklundh, Pontus Laos
 	 */
 	public void clearZen() {
-		zenCodeArea.appendText(" ");
-		zenCodeArea.deletePreviousChar();
+		if (absolutePos != null) {
+			for (int i = 0; i < absolutePos.size(); i++) {
+				zenCodeArea.clearStyle(absolutePos.get(i), absolutePos.get(i) + absolutePos2.get(i));
+				zenCodeArea.update();
+			}
+		}
 	}
 	
 	/**

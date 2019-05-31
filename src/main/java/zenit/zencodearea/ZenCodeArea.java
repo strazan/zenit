@@ -89,6 +89,11 @@ public class ZenCodeArea extends CodeArea {
 		setStyle("-fx-font-size: " + textSize +";-fx-font-family: " + font);
 	}
 	
+	public void update() {
+		var highlighting = computeHighlighting(getText());
+		applyHighlighting(highlighting);
+	}
+	
 //	public int getFontSize() {
 //		return fontSize;	
 //	}
