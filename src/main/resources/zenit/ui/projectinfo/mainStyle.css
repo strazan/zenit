@@ -73,11 +73,11 @@
     -fx-text-fill: #fffa;
 }
 
-#directoryPathList, #sourcepathList {
+#directoryPathList, #sourcepathList, #filepath {
 	-fx-background-color: #444;
 }
 
-#directoryPathList .list-cell, #sourcepathList .list-cell {
+#directoryPathList .list-cell, #sourcepathList .list-cell, #filepath .list-cell {
 	-fx-background-color: #444;
 }
 
@@ -147,8 +147,18 @@
     -fx-background-color: #333;
 }
 
-#directoryPathList .corner , #sourcepathList .corner{
+#directoryPathList .corner , #sourcepathList .corner, #filepath .corner {
 	-fx-background-color: #444;
+}
+
+/* Text filed styling */
+.text-input {
+	-fx-text-fill: #fffa;
+	-fx-background-color: #303030;
+	-fx-highlight-fill: #606060;
+    -fx-highlight-text-fill: #fffa;
+    -fx-prompt-text-fill: #404040;
+	
 }
 
 /* Combo box styling */

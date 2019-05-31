@@ -144,7 +144,7 @@ public class ProjectFile extends File {
 	 * If no metadata-file is found, returns null.
 	 */
 	public File getMetadata() {
-		if (metadata == null) {
+		if (metadata == null && isDirectory()) {
 			File[] files = listFiles();
 		
 			for (File file : files) {
