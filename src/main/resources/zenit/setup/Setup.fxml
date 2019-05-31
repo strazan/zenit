@@ -18,7 +18,7 @@
             <Separator layoutX="-4.0" layoutY="69.0" prefHeight="3.0" prefWidth="574.0" />
             <RadioButton fx:id="rb2" layoutX="64.0" layoutY="160.0" mnemonicParsing="false" text="Default workspace" />
             <RadioButton fx:id="rb1" layoutX="64.0" layoutY="120.0" mnemonicParsing="false" text="Own workspace" />
-            <TextField fx:id="workspacePath" layoutX="189.0" layoutY="115.0" prefHeight="27.0" prefWidth="281.0" />
+            <TextField fx:id="workspacePath" layoutX="189.0" layoutY="115.0" onAction="#onEnter" prefHeight="27.0" prefWidth="281.0" />
             <Button layoutX="483.0" layoutY="115.0" mnemonicParsing="false" onAction="#browse" text="Browse" />
             <Text layoutX="74.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Choose workspace">
                <font>
