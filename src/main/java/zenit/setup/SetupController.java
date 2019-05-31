@@ -302,6 +302,10 @@ public class SetupController extends AnchorPane {
 		if (file.exists() && file.isDirectory()) {
 			workspaceFile = file;
 			toggleRadiobutton(true);
+		} else if (file.exists() && !file.isDirectory()) {
+			DialogBoxes.errorDialog("File selected", "", "You have selected a file as workspace. A"
+					+ " workspace must be a directory");
+			toggleRadiobutton(false);
 		} else if (!file.exists()) {
 			int choice = DialogBoxes.twoChoiceDialog("Folder doesn't exist", "", "The folder " + 
 					input + " doesn't exist. Would you like to create it?", "Yes, create folder",
