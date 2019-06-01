@@ -58,7 +58,8 @@ public class ConsoleController implements Initializable {
 	/*
 	 * These HashMaps are ugly.
 	 */
-	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
+//	private HashMap<ConsoleArea, Process> consoleList = new HashMap<ConsoleArea, Process>();
+	private ArrayList<ConsoleArea> consoleList = new ArrayList<ConsoleArea>();
 	private ArrayList<Terminal> terminalList = new ArrayList<Terminal>();
 	
 	@FXML 
@@ -177,8 +178,7 @@ public class ConsoleController implements Initializable {
 		AnchorPane.setLeftAnchor(label, 0.0);
 		AnchorPane.setRightAnchor(label, 0.0);
 		label.setAlignment(Pos.CENTER);
-		noConsolePane.setStyle("-fx-background-color:#444;");
-		
+		noConsolePane.setId("empty");
 		rootAnchor.getChildren().add(noConsolePane);
 		noConsolePane.toFront();
 	}
@@ -223,9 +223,10 @@ public class ConsoleController implements Initializable {
 	 * choiceBox.
 	 */
 	
-	public void newConsole(Process process, ConsoleArea consoleArea) {
+	public void newConsole(ConsoleArea consoleArea) {
 		consoleAnchorPane = new AnchorPane();
-		
+		consoleArea.setId("consoleArea");
+		consoleAnchorPane.setId("consoleAnchor");
 		fillAnchor(consoleArea);
 		fillAnchor(consoleAnchorPane);
 		
@@ -235,7 +236,8 @@ public class ConsoleController implements Initializable {
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
 		// till hashmap
-		consoleList.put(consoleArea, process);
+//		consoleList.put(consoleArea, consoleArea.getProcess());
+		consoleList.add(consoleArea);
 		
 		consoleChoiceBox.getItems().add(consoleArea);
 		consoleChoiceBox.getSelectionModel().select(consoleArea);
@@ -319,13 +321,12 @@ public class ConsoleController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 
 		consoleChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
-			
-				
+						
 			if(newValue != null) {
-				for(var item : consoleList.entrySet()) {
-					if(newValue.equals(item.getKey())) {
-						item.getKey().getParent().toFront();
-						activeConsole = item.getKey();
+				for(ConsoleArea console : consoleList) {
+					if(newValue.equals(console)) {
+						console.getParent().toFront();
+						activeConsole = console;
 					}
 				}
 			}
@@ -390,16 +391,16 @@ public class ConsoleController implements Initializable {
 		});
 		
 		btnNewConsole.setOnMouseClicked(e -> {
-			newConsole(null, new ConsoleArea("Console(" + consoleList.size() + ")"));
+			newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null));
 		});
 		
 		iconTerminateProcess.setOnMouseClicked(e -> {
-			for(var item : consoleList.entrySet()) {
-				if(item.getKey().equals(activeConsole)) {
-					if(item.getValue() != null) {
+			for(var item : consoleList) {
+				if(item.equals(activeConsole)) {
+					if(item != null) {
 						try {
 							Thread.sleep(10);
-							item.getValue().destroy();
+							item.getProcess().destroy();
 						} catch (Exception e1) {
 							e1.printStackTrace();
 						}
@@ -407,6 +408,7 @@ public class ConsoleController implements Initializable {
 					}
 				}
 			}
+							
 		});
 		
 	}

@@ -8,6 +8,8 @@ import java.util.LinkedList;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -18,6 +20,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
+import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -203,7 +206,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @author Sigge Labor
 	 */
 	public void openSettingsPanel() {
-		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);
+		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily, consoleController);
 	}
 
 	/**
@@ -570,8 +573,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
 		
-		ConsoleArea consoleArea = new ConsoleArea(file.getName());
-		consoleController.newConsole(process, consoleArea);
+		ConsoleArea consoleArea = new ConsoleArea(file.getName(), null);
+		consoleController.newConsole(consoleArea);
 	
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
@@ -592,8 +595,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 					metadata.encode();
 				}
 				
-				if (process.isAlive()) {
-					// TODO Create new console tab from here.
+				if (process != null) {
+					consoleArea.setProcess(process);
 				}
 			}
 			
@@ -1073,22 +1076,45 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 	}
 	
+//	@FXML
+//	private AnchorPane content;
+//	private ChangeListener<Number> listener;
+//	private Divider divider;
+//	
+//	@FXML
+//	private AnchorPane splitPaneItem;
 	
 	public void closeConsoleComponent() {
-		consolePane.setMinHeight(0.0);
-		consolePane.setVisible(false);
-		consolePane.setDisable(true);
+		
+	    
+//		
+//		listener = new ChangeListener<Number>() {
+//			@Override
+//			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+//				divider.setPosition(1.0);
+//			}
+//		};
+//		divider.positionProperty().addListener(listener);
 		
 		splitPane.setDividerPosition(0, 1.0);
-		splitPane.resize(splitPane.getWidth() + 1, splitPane.getHeight() + 1);
+	    consolePane.setMinHeight(0.0);
+		consolePane.setVisible(false);
+		consolePane.setDisable(true);
+		splitPane.resize(splitPane.getWidth() + 2, splitPane.getHeight() + 2);
+		
 	}
 	
 	public void openConsoleComponent() {
-		consolePane.setMinHeight(34.0);
+		
 		consolePane.setVisible(true);
 		consolePane.setDisable(false);
+//		if(listener != null) {
+//			divider.positionProperty().removeListener(listener);
+//		}
 		splitPane.setDividerPosition(0, 0.85);
-		splitPane.resize(splitPane.getWidth() + 1 , splitPane.getHeight() + 1);
+		consolePane.setMinHeight(34.0);
+		splitPane.resize(splitPane.getWidth() + 2 , splitPane.getHeight() + 2);
+		
 	}
 	
 }

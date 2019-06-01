@@ -54,12 +54,16 @@
     -fx-text-fill:white;
 }
 
-#iconBtn{
-	-fx-background-color:#666;
-}
-#iconBtn:hover{
-	-fx-background-color:white;
+#empty{
+	-fx-background-color:#444;
 }
 
+#consoleArea{
+	-fx-background-color:#444;
+}
+
+#consoleAnchor{
+	-fx-background-color:#444;
+}
 
 

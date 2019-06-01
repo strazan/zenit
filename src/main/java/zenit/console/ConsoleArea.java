@@ -13,6 +13,7 @@ import javafx.application.Platform;
 public class ConsoleArea extends InlineCssTextArea {
 	
 	private final String ID;
+	private Process process;
 	
 	/*
 	 * README
@@ -25,19 +26,29 @@ public class ConsoleArea extends InlineCssTextArea {
 	 * constructs a new ConsoleArea with identity "UNKNOWN".
 	 */
 	public ConsoleArea(){
-		this("UNKNOWN");
+		this("UNKNOWN", null);
 	}
 
 	/**
-	 * constructs a new ConsoleArea with chosen identity. also adds stylesheet.  
+	 * constructs a new ConsoleArea with chosen identity and process. 
 	 */
-	public ConsoleArea(String identity) {
+	public ConsoleArea(String identity, Process process) {
 		this.ID = identity;
+		this.process = process;
 		
 		// TODO maybe remove this one and add to main.css
-//		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
-//		this.setEditable(false);
-		setStyle("-fx-background-color:#444");
+		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
+		this.setEditable(false);
+		
+		
+	}
+	
+	public Process getProcess() {
+		return this.process;
+	}
+	
+	public void setProcess(Process p) {
+		this.process = p;
 	}
 	
 	/**

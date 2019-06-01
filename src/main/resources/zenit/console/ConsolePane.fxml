@@ -73,7 +73,7 @@
                   <Cursor fx:constant="HAND" /> 
                </cursor>
             </FontIcon>
-            <FontIcon  fx:id="iconTerminateProcess" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="65.0" 
+            <FontIcon id="btnIcon" fx:id="iconTerminateProcess" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="65.0" 
 	        	iconLiteral="fa-stop" iconColor="#666" iconSize="14">
 				<cursor>
                   <Cursor fx:constant="HAND" /> 
