@@ -104,6 +104,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private Label statusBarRightLabel;
+	
+	@FXML
+	private FXMLLoader loader;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -117,7 +120,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 		this.customThemeCSS = new File("/customtheme/mainCustomTheme.css");
 
 		try {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
+//			FXMLLoader 
+			loader = new FXMLLoader(getClass().getResource("/zenit/ui/Main.fxml"));
 
 			/*
 			 * TODO Test if you like this idea. Saves and opens a local File-instance of
@@ -163,6 +167,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 	}
 
+	public FXMLLoader getFXMLLoader() {
+		return loader;
+	}
+	
 	/**
 	 * Setter for FileController instance. Used to access the file system.
 	 */
@@ -733,7 +741,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		File file = selectedTab.getFile();
 		
 		if (selectedTab != null) {
-			new Search(zenCodeArea, file, isDarkMode);
+			new Search(zenCodeArea, file, isDarkMode, this);
 			
 		}
 	}

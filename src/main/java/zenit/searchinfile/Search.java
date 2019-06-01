@@ -13,6 +13,7 @@ import org.reactfx.value.Var;
 
 import javafx.application.Platform;
 import javafx.scene.control.Label;
+import main.java.zenit.ui.MainController;
 import main.java.zenit.util.Tuple;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -52,9 +53,9 @@ public class Search {
 	 * 
 	 * @throws FileNotFoundException
 	 */
-	public Search(ZenCodeArea zenCodeArea, File file, boolean isDarkMode) {
+	public Search(ZenCodeArea zenCodeArea, File file, boolean isDarkMode, MainController mainController) {
 		
-		new SearchInFileController(this);
+		new SearchInFileController(this, mainController);
 		
 		this.zenCodeArea = zenCodeArea;
 		this.file = file;
@@ -122,6 +123,16 @@ public class Search {
 				zenCodeArea.update();
 			}
 		}
+	}
+	
+	/**
+	 * When you close the search panel the highlight disappears
+	 */
+	public void cleanZen() {
+		int carPos = zenCodeArea.getCaretPosition();
+		zenCodeArea.appendText(" ");
+		zenCodeArea.deletePreviousChar();
+		zenCodeArea.moveTo(carPos);
 	}
 	
 	/**
