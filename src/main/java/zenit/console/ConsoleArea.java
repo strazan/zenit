@@ -7,12 +7,15 @@ import javafx.application.Platform;
  * A console area with prints string in two different colors. All error prints in one and all other
  * in one
  * 
- * @author sigge labor
+ * @author sigge labor , Oskar Molander
  *
  */
 public class ConsoleArea extends InlineCssTextArea {
 	
-	private final String ID;
+	private String ID;
+	private Process process;
+	private String backgroundColor;
+	private String fileName;
 	
 	/*
 	 * README
@@ -25,19 +28,47 @@ public class ConsoleArea extends InlineCssTextArea {
 	 * constructs a new ConsoleArea with identity "UNKNOWN".
 	 */
 	public ConsoleArea(){
-		this("UNKNOWN");
+		this("UNKNOWN", null, "");
 	}
 
 	/**
-	 * constructs a new ConsoleArea with chosen identity. also adds stylesheet.  
+	 * constructs a new ConsoleArea with chosen identity and process. 
 	 */
-	public ConsoleArea(String identity) {
+	public ConsoleArea(String identity, Process process, String backgroundColor) {
 		this.ID = identity;
+		this.process = process;
 		
 		// TODO maybe remove this one and add to main.css
-//		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
+		getStylesheets().add(getClass().getResource("/zenit/console/consoleStyle.css").toString());
+		this.setStyle(backgroundColor);
 		this.setEditable(false);
-		setStyle("-fx-background-color:#444");
+		
+		
+	}
+	
+	public String getFileName() {
+		return this.fileName;
+	}
+	
+	public void setFileName(String name) {
+		this.fileName = name;
+	}
+	
+	public String getBackgroundColor() {
+		return this.backgroundColor;
+	}
+	
+	public void setBackgroundColor(String color ) {
+		this.backgroundColor = color;
+		this.setStyle(color);
+	}
+	
+	public Process getProcess() {
+		return this.process;
+	}
+	
+	public void setProcess(Process p) {
+		this.process = p;
 	}
 	
 	/**
@@ -83,5 +114,14 @@ public class ConsoleArea extends InlineCssTextArea {
 					}	   
 		    }
 		});
+	}
+	
+	public void setID(String ID) {
+		this.ID = ID;
+	}
+	
+	@Override
+	public String toString() {
+		return this.ID;
 	}
 }

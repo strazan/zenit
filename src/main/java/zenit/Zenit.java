@@ -36,7 +36,7 @@ public class Zenit extends Application {
 			new MacOSLauncher(stage);
 		} else if (OS.equals("Linux")){
 			new MainController(stage);
-		} else if (OS.equals("Windows")) {
+		} else if (OS.startsWith("Windows")) {
 			new MainController(stage);
 		}
 	}

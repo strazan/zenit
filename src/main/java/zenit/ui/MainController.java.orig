@@ -4,13 +4,10 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
-
 import java.util.LinkedList;
 import java.util.ArrayList;
 
 import javafx.application.Platform;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +18,6 @@ import javafx.scene.control.Label;
 import javafx.scene.control.IndexRange;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.SplitPane.Divider;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TreeView;
@@ -30,11 +26,9 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-
 import main.java.zenit.Zenit;
-import main.java.zenit.console.ConsoleArea;
 import main.java.zenit.console.ConsoleController;
-import main.java.zenit.filesystem.FileController; // Aggregation
+import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.WorkspaceHandler;
@@ -44,13 +38,12 @@ import main.java.zenit.javacodecompiler.DebugErrorBuffer;
 import main.java.zenit.javacodecompiler.JavaSourceCodeCompiler;
 import main.java.zenit.javacodecompiler.ProcessBuffer;
 import main.java.zenit.settingspanel.SettingsPanelController;
-import main.java.zenit.settingspanel.ThemeCustomizable; // Implements
+import main.java.zenit.settingspanel.ThemeCustomizable;
 import main.java.zenit.searchinfile.Search;
 import main.java.zenit.ui.tree.FileTree;
 import main.java.zenit.ui.tree.FileTreeItem;
 import main.java.zenit.ui.tree.TreeClickListener;
 import main.java.zenit.ui.tree.TreeContextMenu;
-import main.java.zenit.util.Tuple;
 import main.java.zenit.ui.FileTab;
 import main.java.zenit.ui.projectinfo.ProjectMetadataController;
 import main.java.zenit.zencodearea.ZenCodeArea;
@@ -63,40 +56,23 @@ import main.java.zenit.zencodearea.ZenCodeArea;
  */
 public class MainController extends VBox implements ThemeCustomizable {
 	private Stage stage;
-	
 	private FileController fileController;
-
 	private ProjectMetadataController pmc;
-	
 	private int zenCodeAreasTextSize;
-	
 	private String zenCodeAreasFontFamily;
 	private String activeStylesheet;
-	
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
-	
 	private File customThemeCSS;
-	
-	private boolean isDarkMode = true;
-	
-	private Process process;
-	
-	private Tuple<File, String> deletedFile = new Tuple<>();
+	private boolean isDarkMode = false;
 
 	@FXML
 	private AnchorPane consolePane;
 		
-	@FXML 
+	@FXML
 	private SplitPane splitPane;
 
 	@FXML
-	private MenuItem newTab;
-	
-	@FXML 
 	private MenuItem newFile;
-	
-	@FXML 
-	private MenuItem newFolder;
 
 	@FXML
 	private MenuItem newProject;
@@ -118,15 +94,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	private CheckMenuItem cmiDarkMode;
-	
-	@FXML
-	private MenuItem undo;
-	
-	@FXML
-	private MenuItem redo;
-	
-	@FXML
-	private MenuItem delete;
 
 	@FXML
 	private TabPane tabPane;
@@ -148,9 +115,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private Label statusBarRightLabel;
-	
-	@FXML
-	private FXMLLoader loader;
+		
+	private Process process;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -201,36 +167,17 @@ public class MainController extends VBox implements ThemeCustomizable {
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-			
-			stage.setOnCloseRequest(event -> quit());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	public FXMLLoader getFXMLLoader() {
-		return loader;
-	}
-	
 	/**
 	 * Setter for FileController instance. Used to access the file system.
 	 */
 	public void setFileController(FileController fileController) {
 		this.fileController = fileController;
-	}
-	
-	public FileTreeItem<String> getSelectedFileTreeItem() {
-		return (FileTreeItem<String>) treeView.getSelectionModel().getSelectedItem();
-	}
-	
-	public void deleteFileFromTreeView() {
-		var selectedItem = getSelectedFileTreeItem();
-		
-		if (selectedItem != null) {
-			deleteFile(selectedItem.getFile());
-			selectedItem.getParent().getChildren().remove(selectedItem);
-		}
 	}
 
 	/**
@@ -254,7 +201,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @author Sigge Labor
 	 */
 	public void openSettingsPanel() {
-		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily, consoleController);
+		new SettingsPanelController(this, zenCodeAreasTextSize, zenCodeAreasFontFamily);
 	}
 
 	/**
@@ -322,12 +269,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 		TreeClickListener tcl = new TreeClickListener(this, treeView);
 		treeView.setContextMenu(tcm);
 		treeView.setOnMouseClicked(tcl);
-		
-		rootItem.getChildren().sort((o1,o2)->{
-			FileTreeItem<String> t1 = (FileTreeItem<String>) o1;
-			FileTreeItem<String> t2 = (FileTreeItem<String>) o2;
-			return (t1.getValue().compareTo(t2.getValue()));
-		});
 	}
 
 	/**
@@ -402,11 +343,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 */
 	private boolean saveFile(boolean backgroundCompile) {
 		FileTab tab = getSelectedTab();
-		
-		if (tab == null) {
-			return false;
-		}
-		
 		File file = tab.getFile();
 
 		if (file == null) {
@@ -417,8 +353,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 		if (didWrite) {
 			tab.update(file);
-			FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), file);
-			
+
 			if (backgroundCompile) {
 				backgroundCompiling(file);
 			}
@@ -429,36 +364,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return didWrite;
 	}
 
-	/**
-	 * Saves an arbitrary string to a file.
-	 * @param backgroundCompile Whether or not the saving should initiate a compiling process.
-	 * @param file The file to save the text to.
-	 * @param text The text to write to the file.
-	 * @return True if the file was written to, else false.
-	 * @author Pontus Laos
-	 */
-	private boolean saveFile(boolean backgroundCompile, File file, String text) {
-		if (file == null) {
-			return saveFile(backgroundCompile);
-		}
-
-		boolean didWrite = fileController.writeFile(file, text);
-		
-		if (didWrite) {
-			FileTreeItem<String> root = FileTree.getTreeItemFromFile((FileTreeItem<String>) treeView.getRoot(), file.getParentFile());
-			System.out.println(root);
-			FileTree.createParentNode(root, file);
-			treeView.refresh();
-			treeView.layout();
-			
-			if (backgroundCompile) {
-				backgroundCompiling(file);
-			}
-		}
-		
-		return didWrite;
-	}
-	
 	/**
 	 * Compiles a file in the background.
 	 * 
@@ -509,31 +414,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param event
 	 */
 	@FXML
-	public void newTab(Event event) {
+	public void newFile(Event event) {
 		addTab();
-	}
-	
-	@FXML
-	public void newFile() {
-		NewFileController nfc = new NewFileController(fileController.getWorkspace(), isDarkMode);
-		nfc.start();
-		File newFile = nfc.getNewFile();
-
-		if (newFile != null) {
-			initTree();
-			openFile(newFile);
-		}
-	}
-	
-	@FXML
-	public void newFolder() {
-		new NewFolderController(fileController.getWorkspace(), isDarkMode).start();
-		initTree();
-	}
-	
-	@FXML
-	public void quit() {
-		System.exit(0);
 	}
 
 	/**
@@ -547,9 +429,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			File workspace = fileController.getWorkspace();
-			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text files", "*.txt", "*.java");
-			fileChooser.getExtensionFilters().add(extFilter);
-			
 			if (workspace != null) {
 				fileChooser.setInitialDirectory(fileController.getWorkspace());
 			}
@@ -596,26 +475,14 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @return {@code true} if file format is supported, otherwise {@code false}
 	 */
 	private boolean supportedFileFormat(File file) {
-		boolean supported = false;
-		
-		String fileName = file.getName();
-		int periodIndex = fileName.lastIndexOf('.');
-		if (periodIndex >= 0) {
-			String fileType = fileName.substring(periodIndex);
+		String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
 		
 		switch (fileType) {
 		case ".java":
-		case ".txt": supported = true; break;
-		default: 
-		
+		case ".txt": break;
+		default: return false;
 		}
-		
-		} else if (file.isFile()){
-			supported = true;
-		}
-		
-		return supported;
-
+		return true;
 	}
 
 	/**
@@ -652,58 +519,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param file The file to be deleted.
 	 */
 	public void deleteFile(File file) {
-//		deletedTexts.put(file, FileController.readFile(file));
-//		
-//		fileHistory.add(0, file);
-//		historyIndex++;
-//		System.out.println(historyIndex);
-		
-		deletedFile.set(file, FileController.readFile(file));
-		
 		fileController.deleteFile(file);
-		
-		var tabs = tabPane.getTabs();
-		
-		if (tabs != null) {
-			for (var tab : tabs) {
-				var fileTab = (FileTab) tab;
-				
-				if (fileTab != null && fileTab.getFile().equals(file)) {
-					Platform.runLater(() -> closeTab(null));
-					return;
-				}
-			}
-		}
-	}
-	
-	/**
-	 * Attempts to undo the latest delete invocation.
-	 */
-	public void undoDeleteFile() {
-		if (!treeView.isFocused()) {
-			System.out.println("not focused");
-			return;
-		}
-		
-		if (deletedFile.fst() != null && !deletedFile.fst().exists()) {
-			try {
-				deletedFile.fst().createNewFile();
-				fileController.writeFile(deletedFile.fst(), deletedFile.snd());
-				saveFile(false, deletedFile.fst(), deletedFile.snd());
-			} catch (IOException ex) {}
-		}
-	}
-	
-	public void redoDeleteFile() {
-		if (!treeView.isFocused()) {
-			System.out.println("not focused");
-			return;
-		}
-		
-		if (deletedFile.fst() != null && deletedFile.fst().exists()) {
-			deleteFile(deletedFile.fst());
-			FileTree.removeFromFile((FileTreeItem<String>) treeView.getRoot(), deletedFile.fst());
-		}
+		// TODO Remove open tab aswell
 	}
 
 	/**
@@ -722,39 +539,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 				FileTree.createParentNode((FileTreeItem<String>) treeView.getRoot(), newProject);
 			}
 		}
-	}
-	
-	@FXML
-	public void undo(Event event) {
-		FileTab selectedTab = getSelectedTab();
-		ZenCodeArea zenCodeArea = selectedTab == null ? null : selectedTab.getZenCodeArea();
-		
-		if (treeView.isFocused()) {
-			undoDeleteFile();
-		} else if (zenCodeArea != null && zenCodeArea.isFocused()) {
-			if (zenCodeArea.isUndoAvailable()) {
-				zenCodeArea.undo();
-			}
-		}
-	}
-	
-	@FXML
-	public void redo(Event event) {
-		FileTab selectedTab = getSelectedTab();
-		ZenCodeArea zenCodeArea = selectedTab == null ? null : selectedTab.getZenCodeArea();
-		
-		if (treeView.isFocused()) {
-			redoDeleteFile();
-		} else if (zenCodeArea != null && zenCodeArea.isFocused()) {
-			if (zenCodeArea.isRedoAvailable()) {
-				zenCodeArea.redo();
-			}
-		}
-	}
-	
-	@FXML
-	public void delete(Event event) {
-		deleteFileFromTreeView();
 	}
 
 	/**
@@ -783,26 +567,16 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
-		ConsoleArea consoleArea;
-		
 	
-		if(isDarkMode) {
-			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#444");
-		}
-		else {
-			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#989898");
-		}
-		consoleArea.setFileName(file.getName());
-		consoleController.newConsole(consoleArea);
-		
-		
+		 
+			consoleController.newConsole(null);
+	
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
 					false, buffer, this);
 			compiler.startCompileAndRun();
 			process = buffer.get();
-			
 			
 			if (process != null && metadataFile != null) {
 				//If process compiled, add to RunnableClass
@@ -816,22 +590,14 @@ public class MainController extends VBox implements ThemeCustomizable {
 					metadata.encode();
 				}
 				
-				
-				consoleArea.setProcess(process);
-				if(consoleArea.getProcess().isAlive()) {
-					consoleArea.setID(consoleArea.getFileName() + " <Running>");
-					
+				if (process.isAlive()) {
+					// TODO Create new console tab from here.
 				}
-				else {
-					consoleArea.setID(consoleArea.getFileName()+ " <Terminated>");
-				}
-				
-				
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-			
+
 			// TODO: handle exception
 		}
 	
@@ -842,7 +608,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * If the file of the current tab is a .java file if will be compiled, into the
 	 * same folder/directory, and the executed with only java standard lib.
 	 */
-	@FXML
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
@@ -861,6 +626,10 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 
 	/**
+		
+		if (pmc != null) {
+			pmc.ifDarkModeChanged(isDarkMode);
+		}
 	 * Finds the metadata file for the project of a file.
 	 * 
 	 * @param file File within project to find metadata file in.
@@ -870,7 +639,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		File[] files = file.listFiles();
 		if (files != null) {
 			for (File entry : files) {
-				if (entry.getName().equals(".metadata") && entry.isFile()) {
+				if (entry.getName().equals(".metadata")) {
 					return entry;
 				}
 			}
@@ -907,7 +676,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * has been modified, a dialog is shown asking if the user wants to save or not,
 	 * or abort.
 	 */
-	@FXML
 	public void closeTab(Event event) {
 		FileTab selectedTab = getSelectedTab();
 
@@ -1035,18 +803,15 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
 	}
-		
-	/**
-	 * Opens the search panel if there is a selected tab.
-	 */
-	@FXML
+
 	public void search() {
+
 		FileTab selectedTab = getSelectedTab();
+		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+		File file = selectedTab.getFile();
 
 		if (selectedTab != null) {
-			ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
-			File file = selectedTab.getFile();
-			new Search(zenCodeArea, file, isDarkMode, this);
+			new Search(zenCodeArea, file, isDarkMode);
 		}
 	}
 
@@ -1289,52 +1054,39 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param projectFile Project to open settings for
 	 */
 	public void showProjectProperties(ProjectFile projectFile) {
-		pmc = new ProjectMetadataController(fileController, projectFile, isDarkMode, this);
+		pmc = new ProjectMetadataController(fileController, projectFile, true, this);
 		pmc.start();
 	}
 	
 	public void openJREVersions() {
-		JREVersionsController jvc = new JREVersionsController(true);
+		JREVersionsController jvc = new JREVersionsController(cmiDarkMode.isSelected());
 		jvc.start();
 	}
 	
-	@FXML
 	private void terminate() {
-		if (process != null ) {
+		if (process != null && process.isAlive()) {
 			process.destroy();
-			
+			System.out.println("Process terminated");
 		}
-	}
-	
-	public boolean isDarkmode() {
-		return isDarkMode;
-	}
-	
-	public void setDarkmode(boolean isDarkmode) {
-		this.isDarkMode = isDarkmode;
+		
 	}
 	
 	
 	public void closeConsoleComponent() {
-		
-		splitPane.setDividerPosition(0, 1.0);
-	    consolePane.setMinHeight(0.0);
+		consolePane.setMinHeight(0.0);
 		consolePane.setVisible(false);
 		consolePane.setDisable(true);
-		splitPane.resize(splitPane.getWidth() + 2, splitPane.getHeight() + 2);
 		
+		splitPane.setDividerPosition(0, 1.0);
+		splitPane.resize(splitPane.getWidth() + 1, splitPane.getHeight() + 1);
 	}
 	
 	public void openConsoleComponent() {
-		
+		consolePane.setMinHeight(34.0);
 		consolePane.setVisible(true);
 		consolePane.setDisable(false);
 		splitPane.setDividerPosition(0, 0.85);
-		consolePane.setMinHeight(34.0);
-		splitPane.resize(splitPane.getWidth() + 2 , splitPane.getHeight() + 2);
-		
+		splitPane.resize(splitPane.getWidth() + 1 , splitPane.getHeight() + 1);
 	}
-	
-	
 	
 }

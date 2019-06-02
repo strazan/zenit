@@ -29,7 +29,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.text.Font;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
-
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.ui.MainController;
 import main.java.zenit.zencodearea.ZenCodeArea;
 
@@ -153,6 +153,8 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	@FXML
 	private AnchorPane pnlCustomTheme;
 	
+	private ConsoleController consoleController;
+	
 	
 
 	/**
@@ -160,9 +162,9 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 	 * @param codeArea the ZenCodeArea that will be modified.
 	 */
 	
-	public SettingsPanelController(MainController mainController, int oldFontSize, String oldFontFamily) {
+	public SettingsPanelController(MainController mainController, int oldFontSize, String oldFontFamily, ConsoleController consoleController) {
 		this.mainController = mainController;
-		
+		this.consoleController = consoleController;
 		oldSize = oldFontSize;
 		oldFont = oldFontFamily;
 		addedCSSLines = new LinkedList<String>();
@@ -401,11 +403,17 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 			var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 			var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
+			var darkModeConsole = getClass().getResource("/zenit/console/consoleStyle.css").toExternalForm();
+			var lightModeConsole = getClass().getResource("/zenit/console/consoleStyleLight.css").toExternalForm();
+			
 		
 			if (isDarkMode) {
 
 				settingsPanelStylesheets.clear();
 				settingsPanelStylesheets.add(settingsPanelDarkMode);
+				consoleController.getStylesheets().remove(lightModeConsole);
+				consoleController.getStylesheets().add(darkModeConsole);
+				consoleController.changeAllConsoleAreaColors("-fx-background-color:#444");
 
 				stylesheets.clear();
 				stylesheets.add(darkModeKeywords);
@@ -414,6 +422,10 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			} else {
 				settingsPanelStylesheets.clear();
 				settingsPanelStylesheets.add(settingsPanelLightMode);
+				consoleController.getStylesheets().remove(darkModeConsole);
+				consoleController.getStylesheets().add(lightModeConsole);
+				consoleController.changeAllConsoleAreaColors("-fx-background-color:#989898");
+
 
 				stylesheets.clear();
 				stylesheets.add(lightModeKeywords);

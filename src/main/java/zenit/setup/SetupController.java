@@ -358,10 +358,10 @@ public class SetupController extends AnchorPane {
 		String OS = Zenit.OS;
 		if (OS.equals("Mac OS X")) {
 			return "documents" + File.separator;
-		} else if (OS.equals("Windows")) {
-			return "my documents" + File.separator;
+		} else if (OS.startsWith("Windows")) {
+			return "Documents";
 		} else if (OS.equals("Linux")) {
-			return "";
+			return "Documents";
 		} else {
 			return null;
 		}

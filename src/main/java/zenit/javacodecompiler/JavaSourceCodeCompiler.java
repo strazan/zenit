@@ -4,6 +4,10 @@ import java.io.File;
 import java.util.concurrent.Executors;
 import java.util.regex.Matcher;
 
+import javafx.application.Platform;
+import main.java.zenit.ConsoleRedirect;
+import main.java.zenit.console.ConsoleArea;
+import main.java.zenit.console.ConsoleController;
 import main.java.zenit.filesystem.RunnableClass;
 import main.java.zenit.filesystem.metadata.Metadata;
 import main.java.zenit.ui.MainController;
@@ -31,6 +35,7 @@ public class JavaSourceCodeCompiler {
 	protected boolean inBackground;
 	protected Buffer<?> buffer;
 	protected MainController cont;
+	protected ConsoleController consoleController;
 
 	/**
 	 * Creates a new JavaSourceCodeCompiler for single classes without metadata-file.
@@ -265,6 +270,7 @@ public class JavaSourceCodeCompiler {
 			String command = cb.generateCommand();
 			
 			Process process = executeCommand(command, file.getParentFile());
+		
 			redirectStreams(process);
 			return process;
 		}
