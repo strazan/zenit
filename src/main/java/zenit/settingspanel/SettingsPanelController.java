@@ -191,11 +191,13 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 		Scene scene = new Scene(this);
 		
 		window.setScene(scene);
-		window.setTitle("preferences");
+		window.setTitle("Preferences");
 		initialize();
-		scene.getStylesheets().add(getClass().getResource(
-			"/zenit/settingspanel/settingspanelDarkMode.css").toString(
-		));
+//		scene.getStylesheets().add(getClass().getResource(
+//			"/zenit/settingspanel/settingspanelDarkMode.css").toString(
+//		));
+		
+		darkModeChanged(mainController.isDarkmode());
 
 		window.show();
 		
@@ -401,31 +403,31 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			var stylesheets = this.mainController.getStage().getScene().getStylesheets();
 			var settingsPanelStylesheets = window.getScene().getStylesheets();
 			
+			var lightMode = getClass().getResource("/zenit/ui/mainStyle-lm.css").toExternalForm();
 			var darkMode = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
 			var darkModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords.css").toExternalForm();
 			var lightModeKeywords = ZenCodeArea.class.getResource("/zenit/ui/keywords-lm.css").toExternalForm();
 		
 			if (isDarkMode) {
-				stylesheets.add(darkMode);
-				settingsPanelStylesheets.remove(settingsPanelLightMode);
+
+				settingsPanelStylesheets.clear();
 				settingsPanelStylesheets.add(settingsPanelDarkMode);
-				
-				if (stylesheets.contains(lightModeKeywords)) {
-					stylesheets.remove(lightModeKeywords);
-				}
+
+				stylesheets.clear();
 				stylesheets.add(darkModeKeywords);
+				stylesheets.add(darkMode);
+
 			} else {
-				stylesheets.remove(darkMode);
-				settingsPanelStylesheets.remove(settingsPanelDarkMode);
+				settingsPanelStylesheets.clear();
 				settingsPanelStylesheets.add(settingsPanelLightMode);
-				
-				if (stylesheets.contains(darkModeKeywords)) {
-					stylesheets.remove(darkModeKeywords);
-				}
+
+				stylesheets.clear();
 				stylesheets.add(lightModeKeywords);
+				stylesheets.add(lightMode);
 			}
 		}
 		this.isDarkMode = isDarkMode;
+		mainController.setDarkmode(this.isDarkMode);
 	}
 
 	/**
@@ -475,13 +477,13 @@ public class SettingsPanelController extends AnchorPane implements ThemeCustomiz
 			operatingSystem = OS.LINUX;
 		}
 		
-		toggleDarkMode.setSelected(true);
+		toggleDarkMode.setSelected(mainController.isDarkmode());
 		toggleDarkMode.selectedProperty().addListener(new ChangeListener <Boolean> () {
             @Override
 			public void changed(
 				ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue)
             {
-				darkModeChanged(toggleDarkMode.isSelected());
+				darkModeChanged(newValue);
 			}
         });
 		

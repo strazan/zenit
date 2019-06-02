@@ -63,7 +63,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private String activeStylesheet;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
-	private boolean isDarkMode = false;
+	private boolean isDarkMode = true;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -271,7 +271,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 			FileTreeItem<String> t1 = (FileTreeItem<String>) o1;
 			FileTreeItem<String> t2 = (FileTreeItem<String>) o2;
 			return (t1.getValue().compareTo(t2.getValue()));
-		});	
+		});
 	}
 
 	/**
@@ -423,7 +423,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	public void newFile() {
-		NewFileController nfc = new NewFileController(fileController.getWorkspace(), true);
+		NewFileController nfc = new NewFileController(fileController.getWorkspace(), isDarkMode);
 		nfc.start();
 		File newFile = nfc.getNewFile();
 
@@ -435,7 +435,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	public void newFolder() {
-		new NewFolderController(fileController.getWorkspace(), true).start();
+		new NewFolderController(fileController.getWorkspace(), isDarkMode).start();
 		initTree();
 	}
 	
@@ -455,6 +455,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 		try {
 			FileChooser fileChooser = new FileChooser();
 			File workspace = fileController.getWorkspace();
+			FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("Text files", "*.txt", "*.java");
+			fileChooser.getExtensionFilters().add(extFilter);
+			
 			if (workspace != null) {
 				fileChooser.setInitialDirectory(fileController.getWorkspace());
 			}
@@ -676,7 +679,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		File[] files = file.listFiles();
 		if (files != null) {
 			for (File entry : files) {
-				if (entry.getName().equals(".metadata")) {
+				if (entry.getName().equals(".metadata") && entry.isFile()) {
 					return entry;
 				}
 			}
@@ -1093,7 +1096,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param projectFile Project to open settings for
 	 */
 	public void showProjectProperties(ProjectFile projectFile) {
-		pmc = new ProjectMetadataController(fileController, projectFile, true, this);
+		pmc = new ProjectMetadataController(fileController, projectFile, isDarkMode, this);
 		pmc.start();
 	}
 	
@@ -1108,6 +1111,13 @@ public class MainController extends VBox implements ThemeCustomizable {
 			process.destroy();
 			System.out.println("Process terminated");
 		}
-		
+	}
+	
+	public boolean isDarkmode() {
+		return isDarkMode;
+	}
+	
+	public void setDarkmode(boolean isDarkmode) {
+		this.isDarkMode = isDarkmode;
 	}
 }
