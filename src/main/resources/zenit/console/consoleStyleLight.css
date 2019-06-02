@@ -47,7 +47,7 @@
 #btn{
 	 -fx-font-family: "Consolas", 'Courier New', monospace;
 	 -fx-background-color:transparent;
-	 -fx-text-fill:#cdcdcd;
+	 -fx-text-fill:black;
 }
 
 #btn:hover{

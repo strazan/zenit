@@ -796,7 +796,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		}
 		consoleArea.setFileName(file.getName());
 		consoleController.newConsole(consoleArea);
-		
+		openConsoleComponent();
 		
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
