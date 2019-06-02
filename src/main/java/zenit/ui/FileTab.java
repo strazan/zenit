@@ -9,14 +9,14 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.Tab;
 import javafx.scene.layout.AnchorPane;
-import main.java.zenit.filesystem.FileController;
-import main.java.zenit.zencodearea.ZenCodeArea;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.ButtonBar.ButtonData;
 import javafx.scene.control.ButtonType;
 
+import main.java.zenit.filesystem.FileController;
 import main.java.zenit.util.StringUtilities;
+import main.java.zenit.zencodearea.ZenCodeArea;
 
 /**
  * A Tab extension that holds a File.
@@ -42,8 +42,8 @@ public class FileTab extends Tab {
 		initialTitle = "Untitled";
 		
 		
-		zenCodeArea.setOnMouseClicked(new updateDetector());
-		zenCodeArea.setOnKeyPressed(new updateDetector());
+		zenCodeArea.setOnMouseClicked(new UpdateDetector());
+		zenCodeArea.setOnKeyPressed(new UpdateDetector());
 		
 		initializeUI();
 	}
@@ -323,7 +323,7 @@ public class FileTab extends Tab {
 		return wrapper.response;
 	}
 	
-	private class updateDetector implements EventHandler<Event> {
+	private class UpdateDetector implements EventHandler<Event> {
 
 		@Override
 		public void handle(Event event) {

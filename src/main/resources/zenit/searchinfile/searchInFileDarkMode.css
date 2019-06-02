@@ -1,0 +1,17 @@
+
+
+#mainAnchorPane {
+	-fx-background-color: #444444;
+}
+
+.button {
+	
+	-fx-background-color: transparent;
+}
+#textFieldInputWord {
+	-fx-background-color: #555555;
+}
+
+#textFieldReplacementWord {
+	-fx-background-color: #555555;
+}
