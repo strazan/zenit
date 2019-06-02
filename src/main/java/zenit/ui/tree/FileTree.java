@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 
 import javafx.scene.control.TreeItem;
+import main.java.zenit.filesystem.ProjectFile;
 
 /**
  * Handles the nodes of a filetree
@@ -35,7 +36,7 @@ public class FileTree {
 		for (int index = 0; index < files.length; index++) {
 			itemName = files[index].getName();
 			if (!itemName.startsWith(".") && !itemName.equals("bin") && !itemName.endsWith(".class")) { //Doesn't include hidden files
-				type = calculateType(parent, itemName);
+				type = calculateType(parent, files[index]);
 				FileTreeItem<String> item = new FileTreeItem<String> (files[index], itemName, type);
 				items.add(item);
 				
@@ -69,7 +70,7 @@ public class FileTree {
 			return;
 		}
 		
-		int type = calculateType(parent, file.getName());
+		int type = calculateType(parent, file);
 		
 		FileTreeItem<String> item = new FileTreeItem<String> (file, file.getName(), type);
 		parent.getChildren().add(item);
@@ -171,19 +172,40 @@ public class FileTree {
 	 * @param itemName Name of the node
 	 * @return An integer representing the node type.
 	 */
-	private static int calculateType(FileTreeItem<String> parent, String itemName) {
+	private static int calculateType(FileTreeItem<String> parent, File file) {
 		int type = 0;
 		
-		if (parent.getType() == FileTreeItem.WORKSPACE) {
+		String itemName = file.getName();
+		ProjectFile projectFile = new ProjectFile(file);
+		
+		//Project
+		if (projectFile.getMetadata() != null) {
 			type = FileTreeItem.PROJECT;
-		} else if (parent.getValue().equals("src")) {
+		}
+		//Package
+		else if (parent.getValue().equals("src") && file.isDirectory()) {
 			type = FileTreeItem.PACKAGE;
 		}
-		
-		if (itemName.endsWith(".java")) {
-			type = FileTreeItem.CLASS;
-		} else if (itemName.equals("src")) {
+		else if (itemName.equals("src")) {
 			type = FileTreeItem.SRC;
+		}
+		//Folder
+		else if (projectFile.getMetadata() == null && file.isDirectory()) {
+			type = FileTreeItem.FOLDER;
+		}
+
+		//Java-file
+		else if (itemName.endsWith(".java")) {
+			type = FileTreeItem.CLASS;
+		} 
+		//Text-file
+		else if (itemName.endsWith(".txt")) {
+			type = FileTreeItem.FILE;
+		}
+		else if (file.isFile() && itemName.indexOf('.') == -1) {
+			type = FileTreeItem.FILE;
+		} else {
+			type = FileTreeItem.INCOMPATIBLE;
 		}
 		
 		return type;

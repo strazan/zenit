@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.regex.Matcher;
+
 import java.util.LinkedList;
 import java.util.ArrayList;
 
@@ -68,8 +69,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 	@FXML
 	private AnchorPane consolePane;
 
-	@FXML
-	private MenuItem newFile;
+	@FXML private MenuItem newTab;
+	@FXML private MenuItem newFile;
+	@FXML private MenuItem newFolder;
 
 	@FXML
 	private MenuItem newProject;
@@ -175,7 +177,6 @@ public class MainController extends VBox implements ThemeCustomizable {
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
-			openSettingsPanel();
 
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -290,6 +291,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 		TreeClickListener tcl = new TreeClickListener(this, treeView);
 		treeView.setContextMenu(tcm);
 		treeView.setOnMouseClicked(tcl);
+		
+		rootItem.getChildren().sort((o1,o2)->{
+			FileTreeItem<String> t1 = (FileTreeItem<String>) o1;
+			FileTreeItem<String> t2 = (FileTreeItem<String>) o2;
+			return (t1.getValue().compareTo(t2.getValue()));
+		});	
 	}
 
 	/**
@@ -471,8 +478,31 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @param event
 	 */
 	@FXML
-	public void newFile(Event event) {
+	public void newTab(Event event) {
 		addTab();
+	}
+	
+	@FXML
+	public void newFile() {
+		NewFileController nfc = new NewFileController(fileController.getWorkspace(), true);
+		nfc.start();
+		File newFile = nfc.getNewFile();
+
+		if (newFile != null) {
+			initTree();
+			openFile(newFile);
+		}
+	}
+	
+	@FXML
+	public void newFolder() {
+		new NewFolderController(fileController.getWorkspace(), true).start();
+		initTree();
+	}
+	
+	@FXML
+	public void quit() {
+		System.exit(0);
 	}
 
 	/**
@@ -532,14 +562,26 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * @return {@code true} if file format is supported, otherwise {@code false}
 	 */
 	private boolean supportedFileFormat(File file) {
-		String fileType = file.getName().substring(file.getName().lastIndexOf('.'));
+		boolean supported = false;
+		
+		String fileName = file.getName();
+		int periodIndex = fileName.lastIndexOf('.');
+		if (periodIndex >= 0) {
+			String fileType = fileName.substring(periodIndex);
 		
 		switch (fileType) {
 		case ".java":
-		case ".txt": break;
-		default: return false;
+		case ".txt": supported = true; break;
+		default: 
+		
 		}
-		return true;
+		
+		} else if (file.isFile()){
+			supported = true;
+		}
+		
+		return supported;
+
 	}
 
 	/**
@@ -746,6 +788,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * If the file of the current tab is a .java file if will be compiled, into the
 	 * same folder/directory, and the executed with only java standard lib.
 	 */
+	@FXML
 	public void compileAndRun() {
 		if (getSelectedTab() != null) {
 			File file = getSelectedTab().getFile();
@@ -810,6 +853,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	 * has been modified, a dialog is shown asking if the user wants to save or not,
 	 * or abort.
 	 */
+	@FXML
 	public void closeTab(Event event) {
 		FileTab selectedTab = getSelectedTab();
 
@@ -938,6 +982,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		return this.customThemeCSS;
 	}
 
+	@FXML
 	public void search() {
 
 		FileTab selectedTab = getSelectedTab();
@@ -1197,6 +1242,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 		jvc.start();
 	}
 	
+	@FXML
 	private void terminate() {
 		if (process != null && process.isAlive()) {
 			process.destroy();
