@@ -10,7 +10,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
-import javafx.scene.image.ImageView;
+
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.helpers.CodeSnippets;
 import main.java.zenit.ui.MainController;

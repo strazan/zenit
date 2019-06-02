@@ -1,29 +1,19 @@
 package main.java.zenit.console;
 
-import java.awt.AWTException;
-import java.awt.Robot;
-import java.awt.event.KeyEvent;
-import java.io.IOException;
 import java.net.URL;
 import java.nio.file.FileSystems;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 
 import com.kodedu.terminalfx.Terminal;
-import com.kodedu.terminalfx.TerminalBuilder;
-import com.kodedu.terminalfx.TerminalTab;
 import com.kodedu.terminalfx.config.TerminalConfig;
 
-import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import main.java.zenit.ConsoleRedirect;
@@ -215,8 +205,8 @@ public class ConsoleController implements Initializable {
 		darkConfig.setForegroundColor(Color.WHITE);
 		darkConfig.setCursorBlink(true);
 		darkConfig.setCursorColor(Color.WHITE);
-//		darkConfig.setFontFamily("consolas");
-		darkConfig.setFontSize(12);
+		darkConfig.setFontFamily("Ubuntu Mono");
+		darkConfig.setFontSize(14);
 		
 		
 		Terminal terminal = new Terminal(darkConfig, FileSystems.getDefault().getPath(".").toAbsolutePath());

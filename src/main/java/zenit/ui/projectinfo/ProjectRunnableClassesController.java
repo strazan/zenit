@@ -16,6 +16,7 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+
 import main.java.zenit.filesystem.FileController;
 import main.java.zenit.filesystem.ProjectFile;
 import main.java.zenit.filesystem.RunnableClass;
@@ -87,7 +88,7 @@ public class ProjectRunnableClassesController extends AnchorPane {
 			RunnableClassTreeItem<String> t1 = (RunnableClassTreeItem<String>) o1;
 			RunnableClassTreeItem<String> t2 = (RunnableClassTreeItem<String>) o2;
 			return (t1.getValue().compareTo(t2.getValue()));
-		});	
+		});
 		
 	    header.setOnMousePressed(new EventHandler<MouseEvent>() {
 	    	   @Override
