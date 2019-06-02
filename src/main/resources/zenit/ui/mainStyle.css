@@ -242,6 +242,14 @@
 	-fx-border-width: 0;
 }
 
+#splitPane{
+	-fx-background-color:#444;
+}
+
+
+.split-pane:vertical > .split-pane-divider {
+}
+
 /* #iconRun{
 	-fx-icon-color: rgb(0,200,0);
 } */

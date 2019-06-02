@@ -25,6 +25,7 @@ import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
+import javafx.scene.control.Label;
 import javafx.scene.control.TabPane;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
@@ -375,7 +376,7 @@ public class ConsoleController implements Initializable {
 		
 		
 		btnNewConsole.setOnMouseClicked(e -> {
-			if(mainController.isDarkMode) {
+			if(mainController.isDarkmode()) {
 				newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null, "-fx-background-color:#444"));
 			}else {
 				newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null, "-fx-background-color:#989898"));

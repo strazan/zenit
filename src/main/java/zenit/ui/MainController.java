@@ -14,6 +14,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.CheckMenuItem;
@@ -151,6 +152,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	@FXML
 	private FXMLLoader loader;
+	
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -1315,6 +1317,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 	}
 	
 	
+	
+	
 	public void closeConsoleComponent() {
 		
 		splitPane.setDividerPosition(0, 1.0);
@@ -1322,6 +1326,11 @@ public class MainController extends VBox implements ThemeCustomizable {
 		consolePane.setVisible(false);
 		consolePane.setDisable(true);
 		splitPane.resize(splitPane.getWidth() + 2, splitPane.getHeight() + 2);
+		
+		Node divider = splitPane.lookup(".split-pane-divider");
+	    if(divider!=null){
+	        divider.setStyle("-fx-padding: 0");
+	    }
 		
 	}
 	
@@ -1331,7 +1340,15 @@ public class MainController extends VBox implements ThemeCustomizable {
 		consolePane.setDisable(false);
 		splitPane.setDividerPosition(0, 0.85);
 		consolePane.setMinHeight(34.0);
+		
+		Node divider = splitPane.lookup(".split-pane-divider");
+
+		if(divider != null) {
+			divider.setStyle("-fx-padding: 1");
+		}
 		splitPane.resize(splitPane.getWidth() + 2 , splitPane.getHeight() + 2);
+		
+		
 		
 	}
 	
