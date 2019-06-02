@@ -57,21 +57,37 @@ import main.java.zenit.zencodearea.ZenCodeArea; // Aggregation
  */
 public class MainController extends VBox implements ThemeCustomizable {
 	private Stage stage;
+	
 	private FileController fileController;
+
 	private ProjectMetadataController pmc;
+	
 	private int zenCodeAreasTextSize;
+	
 	private String zenCodeAreasFontFamily;
 	private String activeStylesheet;
+	
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
+	
 	private File customThemeCSS;
-	private boolean isDarkMode = false;
+	
+	private boolean isDarkMode = true;
+	
+	private Process process;
+	
+	private Tuple<File, String> deletedFile = new Tuple<>();
 
 	@FXML
 	private AnchorPane consolePane;
 
-	@FXML private MenuItem newTab;
-	@FXML private MenuItem newFile;
-	@FXML private MenuItem newFolder;
+	@FXML 
+	private MenuItem newTab;
+	
+	@FXML 
+	private MenuItem newFile;
+	
+	@FXML 
+	private MenuItem newFolder;
 
 	@FXML
 	private MenuItem newProject;
@@ -123,10 +139,9 @@ public class MainController extends VBox implements ThemeCustomizable {
 
 	@FXML
 	private Label statusBarRightLabel;
-		
-	private Process process;
 	
-	private Tuple<File, String> deletedFile = new Tuple<>();
+	@FXML
+	private FXMLLoader loader;
 
 	/**
 	 * Loads a file Main.fxml, sets this MainController as its Controller, and loads
@@ -177,12 +192,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 			KeyboardShortcuts.setupMain(scene, this);
 
 			this.activeStylesheet = getClass().getResource("/zenit/ui/mainStyle.css").toExternalForm();
+			
+			stage.setOnCloseRequest(event -> quit());
 
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
+	public FXMLLoader getFXMLLoader() {
+		return loader;
+	}
+	
 	/**
 	 * Setter for FileController instance. Used to access the file system.
 	 */
@@ -981,16 +1002,18 @@ public class MainController extends VBox implements ThemeCustomizable {
 	public File getCustomThemeCSS() {
 		return this.customThemeCSS;
 	}
-
+		
+	/**
+	 * Opens the search panel if there is a selected tab.
+	 */
 	@FXML
 	public void search() {
-
 		FileTab selectedTab = getSelectedTab();
-		ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
-		File file = selectedTab.getFile();
 
 		if (selectedTab != null) {
-			new Search(zenCodeArea, file, isDarkMode);
+			ZenCodeArea zenCodeArea = selectedTab.getZenCodeArea();
+			File file = selectedTab.getFile();
+			new Search(zenCodeArea, file, isDarkMode, this);
 		}
 	}
 

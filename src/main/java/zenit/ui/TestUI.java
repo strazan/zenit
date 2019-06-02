@@ -10,9 +10,11 @@ import javafx.stage.Stage;
  *
  */
 public class TestUI extends Application {
+	private MainController controller;
+	
 	@Override
 	public void start(Stage stage) {
-		new MainController(stage);
+		controller = new MainController(stage);
 	}
 	
 	/**
@@ -21,8 +23,8 @@ public class TestUI extends Application {
 	 */
 	@Override
 	public void stop() {
+		controller.quit();
 		Platform.exit();
-		System.exit(0);
 	}
 	
 	/**
