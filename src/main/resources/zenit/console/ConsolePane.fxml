@@ -61,19 +61,19 @@
                   <Cursor fx:constant="HAND" /> 
                </cursor>
 	        </Button>
-	        <FontIcon fx:id="iconCloseConsoleInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
+	        <FontIcon id="btnIcon" fx:id="iconCloseConsoleInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
 	        	iconLiteral="fa-trash" iconColor="#666" iconSize="17">
 				<cursor>
                   <Cursor fx:constant="HAND" /> 
                </cursor>
             </FontIcon>
-            <FontIcon  fx:id="iconCloseTerminalInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
+            <FontIcon  id="btnIcon" fx:id="iconCloseTerminalInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
 	        	iconLiteral="fa-trash" iconColor="#666" iconSize="17">
 				<cursor>
                   <Cursor fx:constant="HAND" /> 
                </cursor>
             </FontIcon>
-            <FontIcon id="btnIcon" fx:id="iconTerminateProcess" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="65.0" 
+            <FontIcon fx:id="iconTerminateProcess" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="65.0" 
 	        	iconLiteral="fa-stop" iconColor="#666" iconSize="14">
 				<cursor>
                   <Cursor fx:constant="HAND" /> 

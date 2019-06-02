@@ -67,7 +67,7 @@ public class MainController extends VBox implements ThemeCustomizable {
 	private String activeStylesheet;
 	private LinkedList<ZenCodeArea> activeZenCodeAreas;
 	private File customThemeCSS;
-	private boolean isDarkMode = false;
+	public boolean isDarkMode = true;
 
 	@FXML
 	private AnchorPane consolePane;
@@ -572,16 +572,26 @@ public class MainController extends VBox implements ThemeCustomizable {
 	
 	public void compileAndRun(File file) {
 		File metadataFile = getMetadataFile(file);
+		ConsoleArea consoleArea;
 		
-		ConsoleArea consoleArea = new ConsoleArea(file.getName(), null);
-		consoleController.newConsole(consoleArea);
 	
+		if(isDarkMode) {
+			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#444");
+		}
+		else {
+			consoleArea = new ConsoleArea(file.getName(), null, "-fx-background-color:#989898");
+		}
+		consoleArea.setFileName(file.getName());
+		consoleController.newConsole(consoleArea);
+		
+		
 		try {
 			ProcessBuffer buffer = new ProcessBuffer();
 			JavaSourceCodeCompiler compiler = new JavaSourceCodeCompiler(file, metadataFile,
 					false, buffer, this);
 			compiler.startCompileAndRun();
 			process = buffer.get();
+			
 			
 			if (process != null && metadataFile != null) {
 				//If process compiled, add to RunnableClass
@@ -595,14 +605,22 @@ public class MainController extends VBox implements ThemeCustomizable {
 					metadata.encode();
 				}
 				
-				if (process != null) {
-					consoleArea.setProcess(process);
+				
+				consoleArea.setProcess(process);
+				if(consoleArea.getProcess().isAlive()) {
+					consoleArea.setID(consoleArea.getFileName() + " <Running>");
+					
 				}
+				else {
+					consoleArea.setID(consoleArea.getFileName()+ " <Terminated>");
+				}
+				
+				
 			}
 			
 		} catch (Exception e) {
 			e.printStackTrace();
-
+			
 			// TODO: handle exception
 		}
 	
@@ -1076,25 +1094,8 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 	}
 	
-//	@FXML
-//	private AnchorPane content;
-//	private ChangeListener<Number> listener;
-//	private Divider divider;
-//	
-//	@FXML
-//	private AnchorPane splitPaneItem;
 	
 	public void closeConsoleComponent() {
-		
-	    
-//		
-//		listener = new ChangeListener<Number>() {
-//			@Override
-//			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-//				divider.setPosition(1.0);
-//			}
-//		};
-//		divider.positionProperty().addListener(listener);
 		
 		splitPane.setDividerPosition(0, 1.0);
 	    consolePane.setMinHeight(0.0);
@@ -1108,13 +1109,12 @@ public class MainController extends VBox implements ThemeCustomizable {
 		
 		consolePane.setVisible(true);
 		consolePane.setDisable(false);
-//		if(listener != null) {
-//			divider.positionProperty().removeListener(listener);
-//		}
 		splitPane.setDividerPosition(0, 0.85);
 		consolePane.setMinHeight(34.0);
 		splitPane.resize(splitPane.getWidth() + 2 , splitPane.getHeight() + 2);
 		
 	}
+	
+	
 	
 }

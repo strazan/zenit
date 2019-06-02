@@ -66,4 +66,17 @@
 	-fx-background-color:#989898;
 }
 
+#btnIcon{
+	-fx-icon-color:#989898;
+}
+
+#btnIcon:hover{
+	-fx-icon-color:#666;
+}
+
+#iconTerminate{
+	-fx-icon-color:#989898;
+}
+
+
 

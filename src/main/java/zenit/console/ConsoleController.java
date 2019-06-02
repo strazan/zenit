@@ -23,6 +23,8 @@ import com.kodedu.terminalfx.config.TerminalConfig;
 import javafx.application.Platform;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.Event;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -235,8 +237,6 @@ public class ConsoleController implements Initializable {
 		consoleAnchorPane.getChildren().add(consoleArea);
 		rootAnchor.getChildren().add(consoleAnchorPane);
 		
-		// till hashmap
-//		consoleList.put(consoleArea, consoleArea.getProcess());
 		consoleList.add(consoleArea);
 		
 		consoleChoiceBox.getItems().add(consoleArea);
@@ -314,6 +314,13 @@ public class ConsoleController implements Initializable {
 		mainController.closeConsoleComponent();
 	}
 	
+	
+	public void changeAllConsoleAreaColors(String color) {
+		for(ConsoleArea c : consoleList) {
+			c.setBackgroundColor(color);
+		}
+	}
+	
 	/**
 	 * Performs initialization steps.
 	 */
@@ -332,7 +339,9 @@ public class ConsoleController implements Initializable {
 			}
 			
 		});
-		
+				
+					
+				
 		terminalChoiceBox.getSelectionModel().selectedItemProperty().addListener( (v, oldValue, newValue) -> {
 			if(newValue != null) {
 				for(Terminal t : terminalList) {
@@ -361,14 +370,6 @@ public class ConsoleController implements Initializable {
 				}
 		});
 		
-		iconCloseConsoleInstance.setOnMouseEntered(e -> {
-			iconCloseConsoleInstance.setIconColor(Paint.valueOf("rgb(255,255,255)"));
-		});
-		
-		iconCloseConsoleInstance.setOnMouseExited(e -> {
-			iconCloseConsoleInstance.setIconColor(Paint.valueOf("#666"));
-		});
-		
 		//Terminal
 		iconCloseTerminalInstance.setOnMouseClicked(e ->{
 			
@@ -382,34 +383,27 @@ public class ConsoleController implements Initializable {
 			
 		});
 		
-		iconCloseTerminalInstance.setOnMouseEntered(e -> {
-			iconCloseTerminalInstance.setIconColor(Paint.valueOf("rgb(255,255,255)"));
-		});
-		
-		iconCloseTerminalInstance.setOnMouseExited(e -> {
-			iconCloseTerminalInstance.setIconColor(Paint.valueOf("#666"));
-		});
 		
 		btnNewConsole.setOnMouseClicked(e -> {
-			newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null));
+			if(mainController.isDarkMode) {
+				newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null, "-fx-background-color:#444"));
+			}else {
+				newConsole(new ConsoleArea("Console(" + consoleList.size() + ")", null, "-fx-background-color:#989898"));
+			}
+			
 		});
 		
 		iconTerminateProcess.setOnMouseClicked(e -> {
 			for(var item : consoleList) {
 				if(item.equals(activeConsole)) {
 					if(item != null) {
-						try {
-							Thread.sleep(10);
-							item.getProcess().destroy();
-						} catch (Exception e1) {
-							e1.printStackTrace();
-						}
-												
-					}
+						item.getProcess().destroy();
+					}	
 				}
 			}
 							
 		});
+		
 		
 	}
 }
