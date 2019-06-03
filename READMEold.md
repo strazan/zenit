@@ -1,12 +1,5 @@
 To run the program:
 
-• Open Eclipse
-• Choose "File->Import...->General->Existing projects into workspace"
-• Click "Next >".
-• Click "Browse..." and choose the newly unzipped folder namned "Zenit"
-• Click "Open"
-• Click "Finish"
-
 • change JRE System Library for the project to [Java SE 11.0.2]
 (if not downloaded)
 Download:  https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html
@@ -28,10 +21,8 @@ javafx.graphics/com.sun.javafx.scene=ALL-UNNAMED
 javafx.graphics/com.sun.javafx.geom=ALL-UNNAMED
 -Dprism.allowhidpi=true
 
-(If TestUI class doesn't show up in Java Application list, try running 'TestUI' first. You'll get an error but the class will show up in the Java Application list.)
+(If TestUI class doesn't show up in Java Application list, try running the class first. You'll get an error but the class will show up in the Java Application list.)
 
-• Uncheck "Use the -XstartOnFirstThread argument when launching with SWT"
+• (macOS) Uncheck "Use the -XstartOnFirstThread argument when launching with SWT"
 
-• Run src/zenit/ui/TestUI.java
-
-Github: https://github.com/strazan/zenit
+• Run src/zenit/ui/TestUI.java 
