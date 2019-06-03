@@ -1,0 +1,82 @@
+/*   .TextArea {
+	-fx-background-color: rgba(255,255,255,0); 
+} */
+
+.choice-box .context-menu {
+	
+	-fx-background-color: #cdcdcd;
+}
+/* Focused item background color in the list */
+
+.choice-box .menu-item:focused {
+	-fx-background-color: rgba(100,100,100,0.4);
+}
+/*  Text color of non-focused items in the list */
+.choice-box .menu-item > .label {
+	-fx-text-fill: black;
+}
+/* Text color of focused item in the list*/
+.choice-box .menu-item:focused > .label {
+	-fx-text-fill: black;
+}
+
+/*  Background color of the control itself*/
+.choice-box {
+  -fx-background-color: rgba(255,255,255,0);
+  -fx-mark-color: black; /*  arrow color */
+}
+
+/*  Selected item text color on the control itself*/
+.choice-box > .label {
+ -fx-text-fill: black; }
+ 
+.paragraph-box:has-caret {
+	 -fx-background-color: rgba(255,255,255,0);
+}
+
+#rootNode {
+	-fx-border-color:#adadad;
+	-fx-border-width:1px;
+	-fx-background-color: #bdbdbd;
+}
+
+#rootAnchor{
+	-fx-background-color:#c3c3c3;
+}
+
+#btn{
+	 -fx-font-family: "Consolas", 'Courier New', monospace;
+	 -fx-background-color:transparent;
+	 -fx-text-fill:black;
+}
+
+#btn:hover{
+    -fx-text-fill:#545454;
+}
+
+#empty{
+	-fx-background-color:#989898;
+}
+
+#consoleArea{
+	-fx-background-color:#989898;
+}
+
+#consoleAnchor{
+	-fx-background-color:#989898;
+}
+
+#btnIcon{
+	-fx-icon-color:#989898;
+}
+
+#btnIcon:hover{
+	-fx-icon-color:#666;
+}
+
+#iconTerminate{
+	-fx-icon-color:#989898;
+}
+
+
+

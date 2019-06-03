@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.Cursor?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+<?import org.kordamp.ikonli.javafx.FontIcon?>
+
+<AnchorPane id="rootNode" fx:id="rootNode" prefHeight="300.0" prefWidth="700.0" stylesheets="@consoleStyle.css" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="main.java.zenit.console.ConsoleController">
+   <children>
+      <AnchorPane id="rootAnchor" fx:id="rootAnchor" layoutY="33.0" prefHeight="300.0" prefWidth="700.0"  AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="32.0">
+         <children>
+            <Text layoutX="291.0" layoutY="41.0" strokeType="OUTSIDE" strokeWidth="0.0" textAlignment="CENTER" AnchorPane.topAnchor="30.0">
+               <font>
+                  <Font size="14.0" />
+               </font>
+            </Text>
+         </children></AnchorPane>
+      <AnchorPane layoutX="2.0" layoutY="2.0" minHeight="20.0" prefHeight="32.0" prefWidth="698.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <Button id="btn" fx:id="btnConsole" layoutX="23.0" layoutY="5.0" onMouseClicked="#showConsoleTabs" prefHeight="0.0" stylesheets="@consoleStyle.css" text="CONSOLE" textFill="#666666">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnTerminal" layoutX="99.0" layoutY="5.0" onMouseClicked="#showTerminalTabs" prefHeight="0.0" stylesheets="@consoleStyle.css" text="TERMINAL" textFill="#666666">
+               <font>
+                  <Font size="12.0" />
+               </font>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor>
+            </Button>
+            <ChoiceBox fx:id="consoleChoiceBox" layoutX="530.0" layoutY="4.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="27.0" prefWidth="100.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="4.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ChoiceBox>
+            <ChoiceBox fx:id="terminalChoiceBox" layoutX="530.0" layoutY="4.0" nodeOrientation="LEFT_TO_RIGHT" prefHeight="27.0" prefWidth="100.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="4.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></ChoiceBox>
+            <Button id="btn" fx:id="btnNewConsole" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnNewTerminal" layoutX="180.0" layoutY="4.0" mnemonicParsing="false" onMouseClicked="#newTerminal" stylesheets="@consoleStyle.css" text="+" textFill="#666666" AnchorPane.leftAnchor="180.0">
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnClearConsole" layoutX="444.0" layoutY="6.0" mnemonicParsing="false" onMouseClicked="#clearConsole" stylesheets="@consoleStyle.css" text="CLEAR" textFill="#666666" AnchorPane.rightAnchor="204.39999999999998">
+               <opaqueInsets>
+                  <Insets />
+               </opaqueInsets>
+               <cursor>
+                  <Cursor fx:constant="HAND" />
+               </cursor></Button>
+            <Button id="btn" fx:id="btnClose" layoutX="676.0" layoutY="4.0" mnemonicParsing="false" style="-fx-font-size:14px;" onMouseClicked="#closeComponent" stylesheets="@consoleStyle.css" text="X" AnchorPane.rightAnchor="0.0">
+	           	<cursor>
+                  <Cursor fx:constant="HAND" /> 
+               </cursor>
+	        </Button>
+	        <FontIcon id="btnIcon" fx:id="iconCloseConsoleInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
+	        	iconLiteral="fa-trash" iconColor="#666" iconSize="17">
+				<cursor>
+                  <Cursor fx:constant="HAND" /> 
+               </cursor>
+            </FontIcon>
+            <FontIcon  id="btnIcon" fx:id="iconCloseTerminalInstance" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="35.0" 
+	        	iconLiteral="fa-trash" iconColor="#666" iconSize="17">
+				<cursor>
+                  <Cursor fx:constant="HAND" /> 
+               </cursor>
+            </FontIcon>
+            <FontIcon fx:id="iconTerminateProcess" layoutX="6.0" layoutY="22.0" AnchorPane.rightAnchor="65.0" 
+	        	iconLiteral="fa-stop" iconColor="#666" iconSize="14">
+				<cursor>
+                  <Cursor fx:constant="HAND" /> 
+               </cursor>
+            </FontIcon>
+	        
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

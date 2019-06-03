@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane id="anchor" prefHeight="203.0" prefWidth="348.0">
+         <children>
+            <TextField fx:id="tfName" layoutX="12.0" layoutY="69.0" prefHeight="27.0" prefWidth="327.0" promptText="new folder name" />
+            <Button layoutX="272.0" layoutY="115.0" mnemonicParsing="false" onAction="#browse" prefHeight="27.0" prefWidth="68.0" text="Browse" />
+            <Button layoutX="276.0" layoutY="165.0" mnemonicParsing="false" onAction="#create" text="Create" />
+            <Button layoutX="208.0" layoutY="165.0" mnemonicParsing="false" onAction="#cancel" text="Cancel" />
+            <Separator layoutY="152.0" prefHeight="9.0" prefWidth="348.0" />
+            <ListView fx:id="filepath" layoutX="12.0" layoutY="114.0" prefHeight="40.0" prefWidth="252.0" />
+         </children>
+      </Pane>
+      <AnchorPane id="setup-header" fx:id="header" prefHeight="61.0" prefWidth="348.0">
+         <children>
+            <ImageView fx:id="logo" fitHeight="45.0" fitWidth="45.0" layoutX="289.0" layoutY="8.0" pickOnBounds="true" preserveRatio="true" />
+            <Text fill="#515151" layoutX="21.0" layoutY="38.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Create new folder">
+               <font>
+                  <Font name="Rockwell" size="24.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

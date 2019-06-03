@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.fxmisc.undo</groupId>
+  <artifactId>undofx</artifactId>
+  <version>2.1.0</version>
+  <name>UndoFX</name>
+  <description>Undo manager for JavaFX</description>
+  <url>http://www.fxmisc.org/undo/</url>
+  <licenses>
+    <license>
+      <name>The BSD 2-Clause License</name>
+      <url>http://opensource.org/licenses/BSD-2-Clause</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Tomas Mikula</name>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git@github.com:TomasMikula/UndoFX.git</connection>
+    <developerConnection>scm:git@github.com:TomasMikula/UndoFX.git</developerConnection>
+    <url>scm:git@github.com:TomasMikula/UndoFX.git</url>
+  </scm>
+  <dependencies>
+    <dependency>
+      <groupId>org.reactfx</groupId>
+      <artifactId>reactfx</artifactId>
+      <version>2.0-M5</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>[4.0,)</version>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+</project>

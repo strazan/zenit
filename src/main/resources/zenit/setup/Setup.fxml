@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<AnchorPane id="anchor" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Pane prefHeight="440.0" prefWidth="568.0">
+         <children>
+            <Separator layoutX="-4.0" layoutY="69.0" prefHeight="3.0" prefWidth="574.0" />
+            <RadioButton fx:id="rb2" layoutX="64.0" layoutY="160.0" mnemonicParsing="false" text="Default workspace" />
+            <RadioButton fx:id="rb1" layoutX="64.0" layoutY="120.0" mnemonicParsing="false" text="Own workspace" />
+            <TextField fx:id="workspacePath" layoutX="189.0" layoutY="115.0" onAction="#onEnter" prefHeight="27.0" prefWidth="281.0" />
+            <Button layoutX="483.0" layoutY="115.0" mnemonicParsing="false" onAction="#browse" text="Browse" />
+            <Text layoutX="74.0" layoutY="99.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Choose workspace">
+               <font>
+                  <Font size="17.0" />
+               </font>
+            </Text>
+            <Separator layoutX="24.0" layoutY="195.0" prefHeight="3.0" prefWidth="518.0" />
+            <Text layoutX="74.0" layoutY="234.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="Choose JDKs">
+               <font>
+                  <Font size="16.0" />
+               </font>
+            </Text>
+            <ListView fx:id="jdkList" layoutX="85.0" layoutY="245.0" prefHeight="117.0" prefWidth="281.0" />
+            <Button layoutX="392.0" layoutY="245.0" mnemonicParsing="false" onAction="#addJDK" text="Add JDK" />
+            <Button layoutX="392.0" layoutY="289.0" mnemonicParsing="false" onAction="#removeJDK" text="Remove JDK" />
+            <Button layoutX="392.0" layoutY="334.0" mnemonicParsing="false" onAction="#setDefaultJDK" text="Set default JDK" />
+            <Text layoutX="213.0" layoutY="173.0" strokeType="OUTSIDE" strokeWidth="0.0" styleClass="text" text="(Creates a new folder in Documents)" />
+            <Button layoutX="480.0" layoutY="399.0" mnemonicParsing="false" onAction="#done" text="Done" />
+            <Button layoutX="427.0" layoutY="399.0" mnemonicParsing="false" onAction="#quit" text="Quit" />
+            <Separator layoutX="25.0" layoutY="377.0" prefHeight="3.0" prefWidth="518.0" />
+         </children>
+      </Pane>
+      <AnchorPane id="setup-header" prefHeight="70.0" prefWidth="568.0">
+         <children>
+            <ImageView fx:id="logo" fitHeight="55.0" fitWidth="55.0" layoutX="500.0" layoutY="9.0" pickOnBounds="true" preserveRatio="true" />
+            <Text fill="#515151" layoutX="17.0" layoutY="48.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Setup Zenit">
+               <font>
+                  <Font name="Rockwell" size="36.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </children>
+</AnchorPane>

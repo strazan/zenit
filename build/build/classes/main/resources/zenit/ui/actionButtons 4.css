@@ -1,0 +1,33 @@
+
+.btn-run {
+    -icon-paint: green;
+    -fx-background-color: -icon-paint;
+    -size: 24;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+
+    -fx-shape: "M 100 100 L 100 300 L 180 200 Z";
+    }
+
+.btn-run:hover {
+    -icon-paint: DarkGreen;
+}
+
+
+.btn-stop {
+    -icon-paint: red;
+    -fx-background-color: -icon-paint;
+    -size: 24;
+    -fx-min-height: -size;
+    -fx-min-width: -size;
+    -fx-max-height: -size;
+    -fx-max-width: -size;
+
+    -fx-shape: "M 100 100 L 100 300 L 300 300 L 300 100 Z";
+    }
+
+.btn-stop:hover {
+    -icon-paint: DarkRed;
+}

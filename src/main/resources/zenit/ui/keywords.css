@@ -1,0 +1,79 @@
+.styled-text-area .text {
+  -fx-fill: #fff;
+}
+
+.styled-text-area .keyword {
+  /*-fx-fill: purple;*/
+  -fx-fill: #569cc3;
+  -fx-font-weight: bold;
+}
+
+.styled-text-area .semicolon {
+  -fx-font-weight: bold;
+}
+
+.styled-text-area .paren {
+  /*-fx-fill: firebrick;*/
+  -fx-fill: #d4c28f;
+  -fx-font-weight: bold;
+}
+
+.styled-text-area .bracket {
+  /*-fx-fill: darkgreen;*/
+  -fx-fill: lightgreen;
+  -fx-font-weight: bold;
+}
+
+.styled-text-area .brace {
+  -fx-fill: teal;
+  -fx-font-weight: bold;
+}
+
+.styled-text-area .string {
+  /*-fx-fill: blue;*/
+  -fx-fill: #c36537;
+}
+
+.styled-text-area .comment {
+  /*-fx-fill: cadetblue;*/
+  -fx-fill: #00ee00;
+}
+
+.paragraph-box:has-caret {
+  -fx-border-width: 1px;
+  -fx-border-color: #ffffff1f;
+  -fx-border-style: solid inside;
+}
+
+.paragraph-box {
+  -fx-background-color: #444;
+  -fx-border-width: 1px;
+  -fx-border-color: transparent;
+  -fx-border-style: solid inside;
+}
+
+.styled-text-area .selection {
+  -fx-fill: #666 !important;
+}
+
+.styled-text-area .lineno {
+  -fx-background-color: #333;
+  -fx-fill: #fff;
+  -fx-pref-width: 50px;
+}
+
+.caret {
+  -fx-stroke: #fff;
+}
+
+.underline {
+  -fx-underline: true;
+}
+
+.search-dark-mode {
+  -fx-effect: dropshadow(gaussian, grey, 3, 1, 0, 0);
+}
+
+.search-light-mode {
+  -fx-effect: dropshadow(gaussian, yellow, 3, 1, 0, 0);
+}
