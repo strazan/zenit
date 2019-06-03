@@ -33,7 +33,6 @@ import javafx.scene.paint.Paint;
 import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 import main.java.zenit.ConsoleRedirect;
-import main.java.zenit.console.helpers.ConsoleHelpers;
 import main.java.zenit.ui.MainController;
 
 /**
@@ -273,10 +272,13 @@ public class ConsoleController implements Initializable {
 		windowsConfig.setFontSize(12);
 		windowsConfig.setScrollbarVisible(false);
 		
-		//TODO Non-windows config (if needed).
+
+		TerminalConfig macConfig = new TerminalConfig();
+		macConfig.setBackgroundColor(Color.BLACK);
+		macConfig.setForegroundColor(Color.WHITE);
+		macConfig.setScrollbarVisible(false);
 		
-		
-		return (System.getProperty("os.name").startsWith("W") ? windowsConfig : new TerminalConfig());
+		return (System.getProperty("os.name").startsWith("W") ? windowsConfig : macConfig);
 	}
 	
 
@@ -351,12 +353,13 @@ public class ConsoleController implements Initializable {
 		
 		//Console
 		iconCloseConsoleInstance.setOnMouseClicked(e -> {
-				rootAnchor.getChildren().remove(activeConsole.getParent());
-				consoleList.remove(activeConsole);
-				consoleChoiceBox.getItems().remove(activeConsole);
-				consoleChoiceBox.getSelectionModel().selectLast();
-
-				if(consoleList.size() == 0) {
+				if(consoleList.size() > 0) {
+					rootAnchor.getChildren().remove(activeConsole.getParent());
+					consoleList.remove(activeConsole);
+					consoleChoiceBox.getItems().remove(activeConsole);
+					consoleChoiceBox.getSelectionModel().selectLast();
+				}
+				else if(consoleList.size() == 0) {
 					createEmptyConsolePane();
 				}
 		});
